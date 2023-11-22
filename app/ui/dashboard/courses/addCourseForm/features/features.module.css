@@ -1,0 +1,29 @@
+form .addFeatureBtn {
+    border: 2px solid #b7bac1b8;
+    background-color: transparent;
+    padding: 15px;
+    width: 10%;
+    margin-top: -20px;
+    margin-bottom: 30px;
+    transition: 0.2s;
+
+    color: var(--text);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+form .addFeatureBtn:hover {
+    background-color: #b7bac16e;
+}
+
+form .featureItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+form .removeFeatureBtn {
+    cursor: pointer;
+    color: #e84118;
+}
