@@ -1,4 +1,7 @@
 form .addFeatureBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 2px solid #b7bac1b8;
     background-color: transparent;
     padding: 15px;

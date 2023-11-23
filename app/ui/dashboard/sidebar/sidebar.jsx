@@ -18,7 +18,7 @@ import { auth, signOut } from "@/app/auth";
 
 const menuItems = [
     {
-        title: "Pages",
+        title: "General",
         list: [
             {
                 title: "Dashboard",
@@ -43,37 +43,22 @@ const menuItems = [
         ],
     },
     {
-        title: "Analytics",
+        title: "Website",
         list: [
             {
-                title: "Revenue",
+                title: "Content Change",
                 path: "/dashboard/revenue",
                 icon: <MdWork />,
             },
             {
-                title: "Reports",
+                title: "...",
                 path: "/dashboard/reports",
                 icon: <MdAnalytics />,
             },
             {
-                title: "Teams",
+                title: "...",
                 path: "/dashboard/teams",
                 icon: <MdPeople />,
-            },
-        ],
-    },
-    {
-        title: "User",
-        list: [
-            {
-                title: "Settings",
-                path: "/dashboard/settings",
-                icon: <MdOutlineSettings />,
-            },
-            {
-                title: "Help",
-                path: "/dashboard/help",
-                icon: <MdHelpCenter />,
             },
         ],
     },
@@ -84,15 +69,12 @@ const Sidebar = async () => {
     return (
         <div className={styles.container}>
             <div className={styles.user}>
-                <Image
-                    className={styles.userImage}
-                    src={user.img || "/noavatar.png"}
-                    alt=''
-                    width='50'
-                    height='50'
-                />
                 <div className={styles.userDetail}>
-                    <span className={styles.username}>{user.username}</span>
+                    <span className={styles.username}>
+                        Hello,{" "}
+                        {user.username.charAt(0).toUpperCase() +
+                            user.username.slice(1)}
+                    </span>
                     <span className={styles.userTitle}>Administrator</span>
                 </div>
             </div>

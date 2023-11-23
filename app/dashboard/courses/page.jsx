@@ -23,10 +23,10 @@ const CoursesPage = async ({ searchParams }) => {
                 <thead>
                     <tr>
                         <td>Name</td>
-                        <td>Description</td>
                         <td>Price</td>
                         <td>Students Enrolled</td>
                         <td>Category</td>
+                        <td>Created On</td>
                         <td>Action</td>
                     </tr>
                 </thead>
@@ -45,11 +45,11 @@ const CoursesPage = async ({ searchParams }) => {
                                     {course.name}
                                 </div>
                             </td>
-                            <td>{course.description}</td>
                             <td>${course.price}</td>
-                            {/* <td>{course.createdAt?.toString().slice(4, 16)}</td> */}
+
                             <td>{course.customers.length}</td>
                             <td>{course.category.category}</td>
+                            <td>{course.createdAt?.toString().slice(4, 16)}</td>
                             <td>
                                 <div className={styles.buttons}>
                                     <Link
@@ -65,7 +65,7 @@ const CoursesPage = async ({ searchParams }) => {
                                         <input
                                             type='hidden'
                                             name='id'
-                                            value={course.id}
+                                            value={course._id}
                                         />
                                         <button
                                             className={`${styles.button} ${styles.delete}`}

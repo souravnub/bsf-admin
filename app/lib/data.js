@@ -72,7 +72,7 @@ export const fetchCourses = async (q, page) => {
         connectToDB();
         const count = await Course.find({ name: { $regex: regex } }).count();
         const courses = await Course.find({ name: { $regex: regex } })
-            .populate("category.category")
+            .populate("category")
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1))
             .exec();

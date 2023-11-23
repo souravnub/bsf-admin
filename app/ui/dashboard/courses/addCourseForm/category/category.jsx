@@ -22,13 +22,14 @@ const Category = ({ categories }) => {
     return (
         <>
             <select name='category' id='cat' onChange={handleSelectChange}>
-                <option value='null'>Choose a Category</option>
                 {categories.map((category) => (
-                    <option value={category.category} key={category.id}>
+                    <option value={category._id} key={category._id}>
                         {category.category}
                     </option>
                 ))}
-                <option value='newCategory'>Create New</option>
+                <option value='newCategory' key='createNew'>
+                    Create New
+                </option>
             </select>
 
             {newCategory && (
