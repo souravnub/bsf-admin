@@ -1,4 +1,7 @@
 form .addPrereqBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 2px solid #b7bac1b8;
     background-color: transparent;
     padding: 15px;
@@ -12,7 +15,7 @@ form .addPrereqBtn {
     font-size: 12px;
 }
 
-form .addFeatureBtn:hover {
+form .addPrereqBtn:hover {
     background-color: #b7bac16e;
 }
 

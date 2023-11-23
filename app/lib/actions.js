@@ -7,6 +7,14 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 
+function getImageUrl(fileName) {
+    const baseUrl =
+        "https://res.cloudinary.com/dmssr3ii7/image/upload/v1700699608/my-uploads";
+    const imageUrl = `${baseUrl}/${fileName}.jpg`;
+
+    return imageUrl;
+}
+
 export const addAdmin = async (formData) => {
     const { username, password } = Object.fromEntries(formData);
 
@@ -60,11 +68,19 @@ export const updateAdmin = async (formData) => {
 
 export const addCourse = async (formData) => {
     /*
-        Get object id of that category
-        get stringified version of image
+        in the frontend, add image with the cloud url to be fetched when needed.
+        store that url in the db.
     */
+    console.log(formData);
     const { name, category, image, price, description, features, prequisites } =
         Object.fromEntries(formData);
+
+    // get the url from a function that takes the filename as the argument image.name
+    // set that url in the db
+
+    const imageUrl = getImageUrl(image.name);
+
+    console.log(imageUrl);
 
     try {
         connectToDB();
@@ -72,7 +88,7 @@ export const addCourse = async (formData) => {
         const newCourse = new Course({
             name,
             category,
-            image,
+            image: imageUrl,
             description,
             features,
             prequisites,

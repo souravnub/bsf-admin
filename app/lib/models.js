@@ -42,72 +42,72 @@ const customerSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-    const courseCategorySchema = new mongoose.Schema({
-        category: {
+const courseCategorySchema = new mongoose.Schema({
+    category: {
+        type: String,
+        required: true,
+    },
+});
+
+const courseSchema = new mongoose.Schema(
+    {
+        customers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Customers",
+            },
+        ],
+
+        name: {
             type: String,
             required: true,
         },
-    });
 
-    const courseSchema = new mongoose.Schema(
-        {
-            customers: [
-                {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "Customers",
-                },
-            ],
-
-            name: {
-                type: String,
-                required: true,
-            },
-
-            category: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "CourseCategory",
-            },
-
-            image: {
-                type: String,
-                required: true,
-            },
-
-            description: {
-                type: String,
-                required: true,
-            },
-
-            features: [
-                {
-                    type: String,
-                    required: true,
-                },
-            ],
-
-            prequisites: [
-                {
-                    type: String,
-                },
-            ],
-
-            price: {
-                type: Number,
-                required: true,
-            },
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "CourseCategory",
         },
-        { timestamps: true }
-    );
 
-    export const Admin =
-        mongoose.models.Admin || mongoose.model("Admin", adminSchema);
+        image: {
+            type: String,
+            required: true,
+        },
 
-    export const Customer =
-        mongoose.models.Customer || mongoose.model("Customer", customerSchema);
+        description: {
+            type: String,
+            required: true,
+        },
 
-    export const Course =
-        mongoose.models.Course || mongoose.model("Course", courseSchema);
+        features: [
+            {
+                type: String,
+                required: true,
+            },
+        ],
 
-    export const CourseCategory =
-        mongoose.models.CourseCategory ||
-        mongoose.model("CourseCategory", courseCategorySchema);
+        prequisites: [
+            {
+                type: String,
+            },
+        ],
+
+        price: {
+            type: Number,
+            required: true,
+        },
+    },
+    { timestamps: true }
+);
+
+export const Admin =
+    mongoose.models.Admin || mongoose.model("Admin", adminSchema);
+
+export const Customer =
+    mongoose.models.Customer || mongoose.model("Customer", customerSchema);
+
+export const Course =
+    mongoose.models.Course || mongoose.model("Course", courseSchema);
+
+export const CourseCategory =
+    mongoose.models.CourseCategory ||
+    mongoose.model("CourseCategory", courseCategorySchema);

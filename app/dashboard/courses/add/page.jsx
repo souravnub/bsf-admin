@@ -12,8 +12,8 @@ import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/imageUpload/im
 
     ✅ Being able to add a new category on selecting "Create new category"
     ✅ Upload images element
-    -> Fix courses add function and courses category population
-    -> Make new courses through the form
+    ✅ Fix courses add function and courses category population
+    ✅ Make new courses through the form
     -> Display total users, total courses and total revenue on the dashboard home page
     -> Display the graph based on the revenue and time
     -> Edit and view course details
