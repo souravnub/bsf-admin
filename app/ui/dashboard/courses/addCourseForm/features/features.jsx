@@ -32,8 +32,9 @@ const Features = () => {
                 <div key={index} className={styles.featureItem}>
                     <input
                         type='text'
+                        name={`feature ${index + 1}`}
                         placeholder={`Feature ${index + 1}`}
-                        value={feature}
+                        value={featuresInput}
                         onChange={(e) => handleFeatureChange(e, index)}
                         required
                     />

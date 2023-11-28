@@ -34,8 +34,14 @@ const customerSchema = new mongoose.Schema(
         },
         courses: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Course",
+                course: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Course",
+                },
+                purchaseDate: {
+                    type: Date,
+                    required: true,
+                },
             },
         ],
     },
@@ -54,7 +60,7 @@ const courseSchema = new mongoose.Schema(
         customers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Customers",
+                ref: "Customer",
             },
         ],
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Admin, Course } from "./models";
+import { Admin, Course, CourseCategory } from "./models";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
@@ -72,35 +72,63 @@ export const addCourse = async (formData) => {
         store that url in the db.
     */
     console.log(formData);
+
     const { name, category, image, price, description, features, prequisites } =
         Object.fromEntries(formData);
 
-    // get the url from a function that takes the filename as the argument image.name
-    // set that url in the db
+    const courseExist = await CourseCategory.find({ category: category });
 
-    const imageUrl = getImageUrl(image.name);
-
-    console.log(imageUrl);
-
-    try {
+    if (courseExist.length == 0) {
         connectToDB();
-
-        const newCourse = new Course({
-            name,
+        const newCategory = new CourseCategory({
             category,
-            image: imageUrl,
-            description,
-            features,
-            prequisites,
-            price,
         });
+        await newCategory.save();
 
-        await newCourse.save();
-    } catch (err) {
-        console.log(err);
-        throw new Error("Failed to create course!");
+        const imageUrl = getImageUrl(image.name);
+
+        try {
+            connectToDB();
+
+            const newCourse = new Course({
+                name,
+                category: newCategory._id,
+                image: imageUrl,
+                description,
+                features,
+                prequisites,
+                price,
+            });
+
+            await newCourse.save();
+        } catch (err) {
+            console.log(err);
+            throw new Error("Failed to create course!");
+        }
+    } else {
+        const imageUrl = getImageUrl(image.name);
+        try {
+            connectToDB();
+
+            const newCourse = new Course({
+                name,
+                category,
+                image: imageUrl,
+                description,
+                features,
+                prequisites,
+                price,
+            });
+
+            await newCourse.save();
+        } catch (err) {
+            console.log(err);
+            throw new Error("Failed to create course!");
+        }
     }
 
+    // get the url from a function that takes the filename as the argument image.name
+    // set that url in the db
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };

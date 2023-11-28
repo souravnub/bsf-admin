@@ -6,23 +6,6 @@ import Features from "@/app/ui/dashboard/courses/addCourseForm/features/features
 import Prerequisites from "@/app/ui/dashboard/courses/addCourseForm/prerequisites/prerequisites";
 import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/imageUpload/imageUpload";
 
-/*
-
-    TODO-
-
-    ✅ Being able to add a new category on selecting "Create new category"
-    ✅ Upload images element
-    ✅ Fix courses add function and courses category population
-    ✅ Make new courses through the form
-    -> Display total users, total courses and total revenue on the dashboard home page
-    -> Display the graph based on the revenue and time
-    -> Edit and view course details
-    -> View customers
-    -> Send email to all customers at once
-    -> Send email to all customers of a particular course all at once.
-    -> Remove unnecessary stuff from the ui.
-*/
-
 const AddProductPage = async () => {
     const categories = await fetchCategories();
     const categoriesJSON = JSON.parse(JSON.stringify(categories));

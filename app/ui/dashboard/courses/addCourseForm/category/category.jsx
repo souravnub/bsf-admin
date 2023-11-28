@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 
-const Category = ({ categories }) => {
+const Category = ({ categories, selected }) => {
     const [newCategory, setNewCategory] = useState(false);
-    const [newCategoryName, setNewCategoryName] = useState("");
+    const [newCategoryName, setNewCategoryName] = useState(
+        "Enter a new category name"
+    );
 
     const handleSelectChange = (e) => {
-        if (e.target.value === "newCategory") {
+        if (e.target.value === "Enter a new category name") {
             setNewCategory(true);
         } else {
             setNewCategory(false);
@@ -23,11 +25,15 @@ const Category = ({ categories }) => {
         <>
             <select name='category' id='cat' onChange={handleSelectChange}>
                 {categories.map((category) => (
-                    <option value={category._id} key={category._id}>
+                    <option
+                        value={category._id}
+                        key={category._id}
+                        selected={category === selected ? "selected" : ""}
+                    >
                         {category.category}
                     </option>
                 ))}
-                <option value='newCategory' key='createNew'>
+                <option value={newCategoryName} key='createNew'>
                     Create New
                 </option>
             </select>
@@ -38,7 +44,7 @@ const Category = ({ categories }) => {
                         type='text'
                         placeholder='New Category Name'
                         value={newCategoryName}
-                        onChange={handleNewCategoryNameChange}
+                        onChange={(e) => handleNewCategoryNameChange(e)}
                     />
                 </>
             )}
