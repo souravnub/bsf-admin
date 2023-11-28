@@ -73,7 +73,18 @@ export const addCourse = async (formData) => {
     */
     console.log(formData);
 
-    const { name, category, image, price, description, features, prequisites } =
+    const features = [];
+    const prequisites = [];
+
+    for (let [key, value] of formData.entries()) {
+        if (key === "feature") {
+            features.push(value);
+        } else if (key === "prerequisite") {
+            prequisites.push(value);
+        }
+    }
+
+    const { name, category, image, price, description } =
         Object.fromEntries(formData);
 
     const courseExist = await CourseCategory.find({ category: category });

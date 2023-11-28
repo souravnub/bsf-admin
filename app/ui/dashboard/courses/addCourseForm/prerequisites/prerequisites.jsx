@@ -29,8 +29,7 @@ const Prerequisites = () => {
                 <div key={index} className={styles.prerequisiteItem}>
                     <input
                         type='text'
-                        placeholder={`Prerequisite ${index + 1}`}
-                        value={prerequisite}
+                        placeholder='prerequisite'
                         onChange={(e) => handlePrerequisiteChange(e, index)}
                     />
                     <div

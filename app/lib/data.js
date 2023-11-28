@@ -77,8 +77,6 @@ export const fetchCourses = async (q, page) => {
             .skip(ITEM_PER_PAGE * (page - 1))
             .exec();
 
-        console.log(courses);
-
         return { count, courses };
     } catch (err) {
         console.log(err);
