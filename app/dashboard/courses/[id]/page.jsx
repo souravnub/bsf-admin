@@ -44,7 +44,7 @@ const SingleProductPage = async ({ params }) => {
                     <label>Category</label>
                     <Category
                         categories={categoriesJSON}
-                        selected={course.category.category}
+                        selected={course.category._id}
                     />
                     <label>Description</label>
                     <textarea

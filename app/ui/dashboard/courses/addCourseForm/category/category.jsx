@@ -23,13 +23,14 @@ const Category = ({ categories, selected }) => {
 
     return (
         <>
-            <select name='category' id='cat' onChange={handleSelectChange}>
+            <select
+                name='category'
+                id='cat'
+                onChange={handleSelectChange}
+                value={selected}
+            >
                 {categories.map((category) => (
-                    <option
-                        value={category._id}
-                        key={category._id}
-                        selected={category === selected ? "selected" : ""}
-                    >
+                    <option value={category._id} key={category._id}>
                         {category.category}
                     </option>
                 ))}
