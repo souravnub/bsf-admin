@@ -27,7 +27,7 @@ const Category = ({ categories, selected }) => {
                 name='category'
                 id='cat'
                 onChange={handleSelectChange}
-                value={selected}
+                defaultValue={selected}
             >
                 {categories.map((category) => (
                     <option value={category._id} key={category._id}>
