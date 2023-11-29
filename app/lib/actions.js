@@ -46,16 +46,13 @@ export const updateAdmin = async (formData) => {
     try {
         connectToDB();
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const updateFields = {
             username,
-            password,
+            password: hashedPassword,
         };
-
-        Object.keys(updateFields).forEach(
-            (key) =>
-                (updateFields[key] === "" || undefined) &&
-                delete updateFields[key]
-        );
 
         await Admin.findByIdAndUpdate(id, updateFields);
     } catch (err) {

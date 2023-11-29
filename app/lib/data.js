@@ -9,10 +9,10 @@ export const fetchAdmins = async (q, page) => {
     try {
         connectToDB();
         const count = await Admin.find({ username: { $regex: regex } }).count();
-        const users = await Admin.find({ username: { $regex: regex } })
+        const admins = await Admin.find({ username: { $regex: regex } })
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1));
-        return { count, users };
+        return { count, admins };
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch admins!");
@@ -20,11 +20,10 @@ export const fetchAdmins = async (q, page) => {
 };
 
 export const fetchAdmin = async (id) => {
-    console.log(id);
     try {
         connectToDB();
-        const user = await Admin.findById(id);
-        return user;
+        const admin = await Admin.findById(id);
+        return admin;
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch admin!");
