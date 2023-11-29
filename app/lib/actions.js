@@ -67,12 +67,6 @@ export const updateAdmin = async (formData) => {
 };
 
 export const addCourse = async (formData) => {
-    /*
-        in the frontend, add image with the cloud url to be fetched when needed.
-        store that url in the db.
-    */
-    console.log(formData);
-
     const features = [];
     const prequisites = [];
 
@@ -137,9 +131,6 @@ export const addCourse = async (formData) => {
             throw new Error("Failed to create course!");
         }
     }
-
-    // get the url from a function that takes the filename as the argument image.name
-    // set that url in the db
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };

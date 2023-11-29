@@ -41,8 +41,8 @@ const AddProductPage = async () => {
                     />
                 </div>
 
-                <Features />
-                <Prerequisites />
+                <Features features={[""]} />
+                <Prerequisites prerequisites={[]} />
                 <button type='submit'>Submit</button>
             </form>
         </div>
