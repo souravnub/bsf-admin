@@ -14,6 +14,12 @@ export async function GET(request) {
 
         return NextResponse.json({ course });
     } catch (err) {
-        throw new Error("Error while fetching course");
+        return NextResponse.json(
+            {
+                errorMessage: "Error while fetching course",
+                error: err.message,
+            },
+            { status: 500 }
+        );
     }
 }

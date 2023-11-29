@@ -3,52 +3,65 @@ import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 
-
-// @params: brand_new: bool || popular: bool, category: categoryId, count: number 
+// @params: brand_new: bool || popular: bool, category: categoryId, count: number
 export async function GET(request) {
-    await connectToDB();
+    try {
+        await connectToDB();
 
-    const {
-        nextUrl: { search },
-    } = request;
-    const urlSearchParams = new URLSearchParams(search);
+        const {
+            nextUrl: { search },
+        } = request;
+        const urlSearchParams = new URLSearchParams(search);
 
-    // can only sort by one option at a time: either brand_new or popular
-    const { popular, category, count, brand_new } = Object.fromEntries(
-        urlSearchParams.entries()
-    );
-    const options = [];
+        // can only sort by one option at a time: either brand_new or popular
+        const { popular, category, count, brand_new } = Object.fromEntries(
+            urlSearchParams.entries()
+        );
+        const options = [];
 
-    if (category) {
-        options.push({"$match" : {category: new mongoose.Types.ObjectId(category)}});
+        if (category) {
+            options.push({
+                $match: { category: new mongoose.Types.ObjectId(category) },
+            });
+        }
+        if (popular && !brand_new) {
+            options.push({ $sort: { customerCount: -1 } });
+        }
+        if (brand_new && !popular) {
+            options.push({ $sort: { updatedAt: -1 } });
+        }
+        if (count) {
+            options.push({ $limit: parseInt(count) });
+        }
+
+        const courses = await Course.aggregate([
+            {
+                $project: {
+                    customers: 1,
+                    name: 1,
+                    category: 1,
+                    image: 1,
+                    price: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    customerCount: {
+                        $size: "$customers",
+                    },
+                },
+            },
+            ...options,
+        ]);
+
+        return NextResponse.json({ count: courses.length, courses });
+    } catch (err) {
+        return NextResponse.json(
+            {
+                errorMessage: "Error while fetching courses",
+                error: err.message,
+            },
+            { status: 500 }
+        );
     }
-    if(popular && !brand_new) {
-        options.push({"$sort": {"customerCount" : -1}})
-    }
-    if(brand_new && !popular) {
-        options.push({"$sort": {"updatedAt": -1}})
-    }
-    if(count ) {
-        options.push({"$limit": parseInt(count)})
-    }
-    
-
-        const courses = await Course.aggregate([{
-            "$project": {
-            "customers": 1, 
-            "name" :1, 
-            "category": 1, 
-            "image" :1, 
-            "price": 1, 
-            "createdAt": 1,
-            "updatedAt": 1,
-            "customerCount" : {
-                "$size" : '$customers'
-            }
-        }}, ...options ])
-    
-
-    return NextResponse.json({ count: courses.length, courses });
 }
 
 /*
