@@ -5,8 +5,8 @@ form .addPrereqBtn {
     border: 2px solid #b7bac1b8;
     background-color: transparent;
     padding: 15px;
-    width: 12%;
-    margin-bottom: 20px;
+    width: 140px;
+    margin-bottom: 50px;
     transition: 0.2s;
 
     color: var(--text);

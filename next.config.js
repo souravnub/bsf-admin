@@ -4,11 +4,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: "static.projectmanagement.com",
-            },
-            {
-                protocol: "https",
-                hostname: "images.unsplash.com",
+                hostname: "res.cloudinary.com",
             },
         ],
     },

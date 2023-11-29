@@ -4,10 +4,10 @@ import styles from "./imageUpload.module.css";
 import Image from "next/image";
 import React, { useState } from "react";
 
-const ImageUpload = () => {
+const ImageUpload = ({ url }) => {
     const [imagePreview, setImagePreview] = useState(null);
     const [imageFile, setImageFile] = useState("");
-    const [message, setMessage] = useState("Uploading...");
+    const [message, setMessage] = useState("Waiting...");
 
     const handleOnChange = (e) => {
         const file = e.target.files[0]; // Get the first selected file
@@ -88,6 +88,22 @@ const ImageUpload = () => {
                     </p>
                     <Image
                         src={imagePreview}
+                        width={312}
+                        height={312}
+                        alt='Image Preview'
+                        style={{
+                            maxWidth: "312px",
+                            marginBottom: "30px",
+                        }}
+                    />
+                </div>
+            )}
+
+            {url && (
+                <div>
+                    <p>Current image</p>
+                    <Image
+                        src={url}
                         width={312}
                         height={312}
                         alt='Image Preview'

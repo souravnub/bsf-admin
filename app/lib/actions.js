@@ -1,11 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Admin, Course } from "./models";
+import { Admin, Course, CourseCategory } from "./models";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 import { signIn } from "../auth";
+import { cloudinary } from "../cloudinaryConfig";
 
 function getImageUrl(fileName) {
     const baseUrl =
@@ -67,74 +68,197 @@ export const updateAdmin = async (formData) => {
 };
 
 export const addCourse = async (formData) => {
-    /*
-        in the frontend, add image with the cloud url to be fetched when needed.
-        store that url in the db.
-    */
-    console.log(formData);
-    const { name, category, image, price, description, features, prequisites } =
-        Object.fromEntries(formData);
+    const features = [];
+    const prequisites = [];
 
-    // get the url from a function that takes the filename as the argument image.name
-    // set that url in the db
-
-    const imageUrl = getImageUrl(image.name);
-
-    console.log(imageUrl);
-
-    try {
-        connectToDB();
-
-        const newCourse = new Course({
-            name,
-            category,
-            image: imageUrl,
-            description,
-            features,
-            prequisites,
-            price,
-        });
-
-        await newCourse.save();
-    } catch (err) {
-        console.log(err);
-        throw new Error("Failed to create course!");
+    for (let [key, value] of formData.entries()) {
+        if (key === "feature") {
+            features.push(value);
+        } else if (key === "prerequisite") {
+            prequisites.push(value);
+        }
     }
 
+    const { name, category, image, price, description } =
+        Object.fromEntries(formData);
+
+    const categoryExists = await CourseCategory.find({ category: category });
+
+    if (categoryExists.length == 0) {
+        connectToDB();
+        const newCategory = new CourseCategory({
+            category,
+        });
+        await newCategory.save();
+
+        const imageUrl = getImageUrl(image.name);
+
+        try {
+            connectToDB();
+
+            const newCourse = new Course({
+                name,
+                category: newCategory._id,
+                image: imageUrl,
+                description,
+                features,
+                prequisites,
+                price,
+            });
+
+            await newCourse.save();
+        } catch (err) {
+            console.log(err);
+            throw new Error("Failed to create course!");
+        }
+    } else {
+        const imageUrl = getImageUrl(image.name);
+        try {
+            connectToDB();
+
+            const newCourse = new Course({
+                name,
+                category,
+                image: imageUrl,
+                description,
+                features,
+                prequisites,
+                price,
+            });
+
+            await newCourse.save();
+        } catch (err) {
+            console.log(err);
+            throw new Error("Failed to create course!");
+        }
+    }
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };
 
-export const updateProduct = async (formData) => {
-    const { id, name, image, description, features, prequisites, price } =
-        Object.fromEntries(formData);
+async function deleteImageFromCloudinary(id) {
+    const oldCourse = await Course.findById(id);
+    const parts = oldCourse.image.split("/");
+    const filenameWithExtension = parts[parts.length - 1];
+    const filenameParts = filenameWithExtension.split(".");
+    const imageName = filenameParts.slice(0, -1).join(".");
 
-    try {
-        connectToDB();
+    cloudinary.v2.api.delete_resources([`my-uploads/${imageName}`], {
+        type: "upload",
+        resource_type: "image",
+    });
+}
 
-        const updateFields = new Course({
-            name,
-            image,
-            description,
-            features,
-            prequisites,
-            price,
-        });
+export const updateCourse = async (formData) => {
+    const features = [];
+    const prequisites = [];
 
-        Object.keys(updateFields).forEach(
-            (key) =>
-                (updateFields[key] === "" || undefined) &&
-                delete updateFields[key]
-        );
-
-        await Course.findByIdAndUpdate(id, updateFields);
-    } catch (err) {
-        console.log(err);
-        throw new Error("Failed to update course!");
+    for (let [key, value] of formData.entries()) {
+        if (key === "feature") {
+            features.push(value);
+        } else if (key === "prerequisite") {
+            prequisites.push(value);
+        }
     }
 
-    revalidatePath("/dashboard/products");
-    redirect("/dashboard/products");
+    const { id, name, category, image, price, description } =
+        Object.fromEntries(formData);
+
+    deleteImageFromCloudinary(id);
+
+    const categoryExists = await CourseCategory.find({ category: category });
+
+    if (categoryExists.length == 0) {
+        connectToDB();
+        const newCategory = new CourseCategory({
+            category,
+        });
+        await newCategory.save();
+
+        if (image !== undefined) {
+            const imageUrl = getImageUrl(image.name);
+
+            try {
+                connectToDB();
+
+                const updateFields = {
+                    name,
+                    category: newCategory._id,
+                    image: imageUrl,
+                    description,
+                    features,
+                    prequisites,
+                    price,
+                };
+
+                await Course.findByIdAndUpdate(id, updateFields);
+            } catch (err) {
+                console.log(err);
+                throw new Error("Failed to create course!");
+            }
+        } else {
+            try {
+                connectToDB();
+
+                const updateFields = {
+                    name,
+                    category: newCategory._id,
+                    description,
+                    features,
+                    prequisites,
+                    price,
+                };
+
+                await Course.findByIdAndUpdate(id, updateFields);
+            } catch (err) {
+                console.log(err);
+                throw new Error("Failed to create course!");
+            }
+        }
+    } else {
+        if (image !== undefined) {
+            const imageUrl = getImageUrl(image.name);
+
+            try {
+                connectToDB();
+
+                const updateFields = {
+                    name,
+                    category,
+                    image: imageUrl,
+                    description,
+                    features,
+                    prequisites,
+                    price,
+                };
+
+                await Course.findByIdAndUpdate(id, updateFields);
+            } catch (err) {
+                console.log(err);
+                throw new Error("Failed to create course!");
+            }
+        } else {
+            try {
+                connectToDB();
+
+                const updateFields = {
+                    name,
+                    category,
+                    description,
+                    features,
+                    prequisites,
+                    price,
+                };
+
+                await Course.findByIdAndUpdate(id, updateFields);
+            } catch (err) {
+                console.log(err);
+                throw new Error("Failed to create course!");
+            }
+        }
+    }
+    revalidatePath("/dashboard/courses");
+    redirect("/dashboard/courses");
 };
 
 export const deleteAdmin = async (formData) => {

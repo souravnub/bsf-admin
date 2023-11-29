@@ -3,8 +3,8 @@
 import { useState } from "react";
 import styles from "./features.module.css";
 
-const Features = () => {
-    const [featuresInput, setFeaturesInput] = useState([""]);
+const Features = ({ features }) => {
+    const [featuresInput, setFeaturesInput] = useState(features);
 
     const handleFeatureChange = (e, index) => {
         const updatedFeatures = [...featuresInput];
@@ -13,7 +13,7 @@ const Features = () => {
     };
 
     const addFeature = () => {
-        setFeaturesInput([...featuresInput, ""]);
+        setFeaturesInput([...featuresInput, " "]);
     };
 
     const removeFeature = (index) => {
@@ -25,33 +25,63 @@ const Features = () => {
         setFeaturesInput(updatedFeatures);
     };
 
-    return (
-        <div>
-            <label htmlFor='features'>Features*</label>
-            {featuresInput.map((feature, index) => (
-                <div key={index} className={styles.featureItem}>
-                    <input
-                        type='text'
-                        placeholder={`Feature ${index + 1}`}
-                        value={feature}
-                        onChange={(e) => handleFeatureChange(e, index)}
-                        required
-                    />
-                    {index !== 0 && (
-                        <div
-                            className={styles.removeFeatureBtn}
-                            onClick={() => removeFeature(index)}
-                        >
-                            &#10006;
-                        </div>
-                    )}
+    if (features.length > 0) {
+        return (
+            <div>
+                <label htmlFor='features'>Features*</label>
+                {featuresInput.map((feature, index) => (
+                    <div key={index} className={styles.featureItem}>
+                        <input
+                            type='text'
+                            name='feature'
+                            value={feature}
+                            onChange={(e) => handleFeatureChange(e, index)}
+                            required
+                        />
+                        {index !== 0 && (
+                            <div
+                                className={styles.removeFeatureBtn}
+                                onClick={() => removeFeature(index)}
+                            >
+                                &#10006;
+                            </div>
+                        )}
+                    </div>
+                ))}
+                <div onClick={addFeature} className={styles.addFeatureBtn}>
+                    Add Feature
                 </div>
-            ))}
-            <div onClick={addFeature} className={styles.addFeatureBtn}>
-                Add Feature
             </div>
-        </div>
-    );
+        );
+    } else {
+        return (
+            <div>
+                <label htmlFor='features'>Features*</label>
+                {featuresInput.map((feature, index) => (
+                    <div key={index} className={styles.featureItem}>
+                        <input
+                            type='text'
+                            name='feature'
+                            placeholder={`Feature ${index + 1}`}
+                            onChange={(e) => handleFeatureChange(e, index)}
+                            required
+                        />
+                        {index !== 0 && (
+                            <div
+                                className={styles.removeFeatureBtn}
+                                onClick={() => removeFeature(index)}
+                            >
+                                &#10006;
+                            </div>
+                        )}
+                    </div>
+                ))}
+                <div onClick={addFeature} className={styles.addFeatureBtn}>
+                    Add Feature
+                </div>
+            </div>
+        );
+    }
 };
 
 export default Features;

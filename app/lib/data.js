@@ -77,8 +77,6 @@ export const fetchCourses = async (q, page) => {
             .skip(ITEM_PER_PAGE * (page - 1))
             .exec();
 
-        console.log(courses);
-
         return { count, courses };
     } catch (err) {
         console.log(err);
@@ -89,7 +87,7 @@ export const fetchCourses = async (q, page) => {
 export const fetchCourse = async (id) => {
     try {
         connectToDB();
-        const course = await Course.findById(id);
+        const course = await Course.findById(id).populate("category").exec();
         return course;
     } catch (err) {
         console.log(err);
@@ -109,25 +107,48 @@ export const fetchCategories = async () => {
     }
 };
 
-// DUMMY DATA
+export const dashboardData = async () => {
+    try {
+        connectToDB();
 
-export const cards = [
-    {
-        id: 1,
-        title: "Total Users",
-        number: 10.928,
-        change: 12,
-    },
-    {
-        id: 2,
-        title: "Stock",
-        number: 8.236,
-        change: -2,
-    },
-    {
-        id: 3,
-        title: "Revenue",
-        number: 6.642,
-        change: 18,
-    },
-];
+        const studentsCount = await Customer.countDocuments();
+        const courses = await Course.find().populate("customers", "email");
+
+        let totalRevenue = 0;
+        let totalCoursesSold = 0;
+
+        courses.forEach((course) => {
+            const courseCustomers = course.customers.map(
+                (customer) => customer.email
+            );
+            const uniqueCustomers = new Set(courseCustomers);
+            const courseRevenue = course.price * uniqueCustomers.size;
+
+            totalRevenue += courseRevenue;
+            totalCoursesSold += uniqueCustomers.size;
+        });
+
+        const data = [
+            {
+                id: 1,
+                title: "Total Students",
+                number: studentsCount,
+            },
+            {
+                id: 2,
+                title: "Revenue",
+                number: "$" + totalRevenue,
+            },
+            {
+                id: 3,
+                title: "Total Courses Sold",
+                number: totalCoursesSold,
+            },
+        ];
+
+        return data;
+    } catch (error) {
+        console.error("Error in dashboard data:", error);
+        throw error;
+    }
+};
