@@ -151,3 +151,44 @@ export const dashboardData = async () => {
         throw error;
     }
 };
+
+export const getLatestTransactions = async () => {
+    try {
+        const latestTransactions = await Customer.aggregate([
+            {
+                $unwind: "$courses",
+            },
+            {
+                $unwind: {
+                    path: "$courses",
+                    includeArrayIndex: "index",
+                },
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    email: { $first: "$email" },
+                    name: { $first: "$name" },
+                    latestCourse: { $last: "$courses.course" },
+                    latestPurchaseDate: { $last: "$courses.purchaseDate" },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    email: 1,
+                    name: 1,
+                    latestCourse: 1,
+                    latestPurchaseDate: 1,
+                },
+            },
+            { $limit: 5 },
+        ]);
+
+        console.log("hi", latestTransactions);
+        return latestTransactions;
+    } catch (error) {
+        console.error("Error retrieving latest transactions:", error);
+        return [];
+    }
+};

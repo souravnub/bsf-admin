@@ -9,6 +9,11 @@ const adminSchema = new mongoose.Schema(
             min: 3,
             max: 20,
         },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
         password: {
             type: String,
             required: true,
@@ -33,16 +38,20 @@ const customerSchema = new mongoose.Schema(
             required: true,
         },
         courses: [
-            {
-                course: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "Course",
+            [
+                {
+                    course: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: "Course",
+                    },
                 },
-                purchaseDate: {
-                    type: Date,
-                    required: true,
+                {
+                    purchaseDate: {
+                        type: Date,
+                        required: true,
+                    },
                 },
-            },
+            ],
         ],
     },
     { timestamps: true }

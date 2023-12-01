@@ -40,6 +40,7 @@ const AdminsPage = async ({ searchParams }) => {
                 <thead>
                     <tr>
                         <td>Username</td>
+                        <td>Email</td>
                         <td>Action</td>
                     </tr>
                 </thead>
@@ -47,6 +48,7 @@ const AdminsPage = async ({ searchParams }) => {
                     {admins.map((admin) => (
                         <tr key={admin._id}>
                             <td>{admin.username}</td>
+                            <td>{admin.email}</td>
                             <td>
                                 <div className={styles.buttons}>
                                     <Link

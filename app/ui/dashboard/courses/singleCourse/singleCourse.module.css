@@ -63,3 +63,15 @@
     cursor: pointer;
     margin-top: 20px;
 }
+
+.forgot {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #cccccc;
+    transition: 0.2s;
+    width: 150px;
+}
+
+.forgot:hover {
+    color: #fff;
+}

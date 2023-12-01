@@ -1,11 +1,11 @@
 import { updateCourse } from "@/app/lib/actions";
 import { fetchAdmin } from "@/app/lib/data";
 import styles from "@/app/ui/dashboard/courses/singleCourse/singleCourse.module.css";
+import Link from "next/link";
 
 const SingleAdminPage = async ({ params }) => {
     const { id } = params;
     const admin = await fetchAdmin(id);
-    // TODO: Do the feature for changing password.
     return (
         <div className={styles.container}>
             <div className={styles.formContainer}>
@@ -24,12 +24,20 @@ const SingleAdminPage = async ({ params }) => {
                         name='username'
                         defaultValue={admin.username}
                     />
-                    <label>Password</label>
+                    <label htmlFor='email'>Email</label>
                     <input
-                        type='text'
-                        name='password'
-                        defaultValue={admin.password}
+                        type='email'
+                        value={admin.email}
+                        id='email'
+                        name='email'
+                        readOnly
                     />
+                    <Link
+                        href='/dashboard/admins/changePassword'
+                        className={styles.forgot}
+                    >
+                        Forgot Password?
+                    </Link>
                     <button>Update</button>
                 </form>
             </div>
