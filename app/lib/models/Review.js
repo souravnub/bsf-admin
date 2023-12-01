@@ -1,3 +1,5 @@
+import { Course } from "./Course";
+
 const { default: mongoose, Schema } = require("mongoose");
 
 const reviewSchema = new mongoose.Schema(
@@ -23,6 +25,14 @@ const reviewSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
+// pushing the review id into the course's reviews array once review is added by customer
+reviewSchema.post("save", async function () {
+    await Course.findOneAndUpdate(
+        { _id: this.courseId },
+        { $push: { reviews: this._id } }
+    );
+});
 
 export const Review =
     mongoose.models.Review || mongoose.model("Review", reviewSchema);
