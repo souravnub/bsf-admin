@@ -1,4 +1,4 @@
-import { Course } from "@/app/lib/models";
+import { Course } from "@/app/lib/models/Course";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
