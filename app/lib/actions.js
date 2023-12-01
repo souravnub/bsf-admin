@@ -1,7 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Admin, Course, CourseCategory } from "./models";
+import { Admin } from "./models/Admin";
+import { Course } from "./models/Course";
+import { CourseCategory } from "./models/CourseCategory";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";

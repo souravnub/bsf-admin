@@ -1,4 +1,7 @@
-import { Admin, Course, CourseCategory, Customer } from "./models";
+import { Admin } from "./models/Admin";
+import { Course } from "./models/Course";
+import { CourseCategory } from "./models/CourseCategory";
+import { Customer } from "./models/Customer";
 import { connectToDB } from "./utils";
 
 export const fetchAdmins = async (q, page) => {

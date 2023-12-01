@@ -1,4 +1,4 @@
-import { Contact } from "@/app/lib/models";
+import { Contact } from "@/app/lib/models/Contact";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
 
