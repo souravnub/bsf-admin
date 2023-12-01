@@ -1,7 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Admin, Course, CourseCategory } from "./models";
+import { Admin } from "./models/Admin";
+import { Course } from "./models/Course";
+import { CourseCategory } from "./models/CourseCategory";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
@@ -46,16 +48,13 @@ export const updateAdmin = async (formData) => {
     try {
         connectToDB();
 
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
         const updateFields = {
             username,
-            password,
+            password: hashedPassword,
         };
-
-        Object.keys(updateFields).forEach(
-            (key) =>
-                (updateFields[key] === "" || undefined) &&
-                delete updateFields[key]
-        );
 
         await Admin.findByIdAndUpdate(id, updateFields);
     } catch (err) {
@@ -299,4 +298,8 @@ export const authenticate = async (prevState, formData) => {
     } catch (err) {
         return "Wrong Credentials!";
     }
+};
+
+export const sendVerificationCode = async (email) => {
+    // Send a verification code to the email
 };
