@@ -1,9 +1,7 @@
 "use client";
-import { addUrlToGallery } from "@/app/lib/actions";
 import React, { useEffect, useState, useTransition } from "react";
-import { TiDelete } from "react-icons/ti";
 
-export const AddUrlForm = ({ _id }) => {
+export const AddForm = ({ allUrls, extraProps = {}, action }) => {
     const [pending, startTransition] = useTransition(false);
     const [value, setValue] = useState("");
     useEffect(() => {
@@ -13,16 +11,27 @@ export const AddUrlForm = ({ _id }) => {
         <form
             action={() => {
                 startTransition(async () => {
-                    await addUrlToGallery.bind(null, _id, value)();
+                    if (allUrls && allUrls.includes(value)) {
+                        window.alert(
+                            "url already exists in one of the categories. Please enter a unique one."
+                        );
+                        return;
+                    }
+
+                    await action.bind(null, { ...extraProps, value })();
                 });
             }}>
-            <input value={value} onChange={(e) => setValue(e.target.value)} />
+            <input
+                required
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+            />
             <button disabled={pending}>add</button>
         </form>
     );
 };
 
-export const DeleteButton = ({ onClick }) => {
+export const Button = ({ onClick, children }) => {
     const [pending, startTransition] = useTransition(false);
 
     return (
@@ -34,7 +43,7 @@ export const DeleteButton = ({ onClick }) => {
                     await onClick();
                 });
             }}>
-            <TiDelete />
+            {children}
         </button>
     );
 };
