@@ -291,18 +291,28 @@ export const deleteCourse = async (formData) => {
 
 export const fetchVideoGalleryTabs = async () => {
     try {
+        await connectToDB();
         const tabs = await Video.find();
         return tabs;
     } catch (err) {
+        console.log(err);
         throw new Error("Error while fetching details");
     }
 };
-export const addUrlToGallery = async (_id, formData) => {
+
+export const addUrlToGallery = async (_id, newUrl) => {
     try {
-        const { newUrl } = Object.fromEntries(formData);
         await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
     } catch (err) {
         throw new Error("error while adding url to the video gallery");
+    }
+    revalidatePath("/dashboard/content");
+};
+export const deleteUrlFromGallery = async (_id, url) => {
+    try {
+        await Video.findByIdAndUpdate(_id, { $pull: { url } });
+    } catch (err) {
+        throw new Error("error while deleting url from the video gallery");
     }
     revalidatePath("/dashboard/content");
 };

@@ -1,31 +1,38 @@
-import { addUrlToGallery, fetchVideoGalleryTabs } from "@/app/lib/actions";
+import {
+    addUrlToGallery,
+    deleteUrlFromGallery,
+    fetchVideoGalleryTabs,
+} from "@/app/lib/actions";
 import React from "react";
-import { TiDelete } from "react-icons/ti";
+import { AddUrlForm, DeleteButton } from "./ClientComponents";
 
 const ContentPage = async () => {
     const tabs = await fetchVideoGalleryTabs();
 
     return (
         <div>
-            {tabs.map(({ _id, category, url }) => (
-                <>
-                    <h2>{category}</h2>
-                    <ol>
-                        {url.map((url) => (
-                            <li>
-                                <span>{url}</span>
-                                <button>
-                                    <TiDelete />
-                                </button>
-                            </li>
-                        ))}
-                    </ol>
-                    <form action={addUrlToGallery.bind(null, _id)}>
-                        <input name="newUrl" />
-                        <button>add</button>
-                    </form>
-                </>
-            ))}
+            {tabs &&
+                tabs.length > 0 &&
+                tabs.map(({ _id, category, url }) => (
+                    <div key={_id}>
+                        <h2>{category}</h2>
+                        <ol>
+                            {url.map((url) => (
+                                <li key={url}>
+                                    <span>{url}</span>
+                                    <DeleteButton
+                                        onClick={deleteUrlFromGallery.bind(
+                                            null,
+                                            _id,
+                                            url
+                                        )}
+                                    />
+                                </li>
+                            ))}
+                        </ol>
+                        <AddUrlForm _id={_id} />
+                    </div>
+                ))}
         </div>
     );
 };
