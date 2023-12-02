@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
+import { Video } from "./models/Video";
 
 function getImageUrl(fileName) {
     const baseUrl =
@@ -286,6 +287,24 @@ export const deleteCourse = async (formData) => {
     }
 
     revalidatePath("/dashboard/products");
+};
+
+export const fetchVideoGalleryTabs = async () => {
+    try {
+        const tabs = await Video.find();
+        return tabs;
+    } catch (err) {
+        throw new Error("Error while fetching details");
+    }
+};
+export const addUrlToGallery = async (_id, formData) => {
+    try {
+        const { newUrl } = Object.fromEntries(formData);
+        await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
+    } catch (err) {
+        throw new Error("error while adding url to the video gallery");
+    }
+    revalidatePath("/dashboard/content");
 };
 
 export const authenticate = async (prevState, formData) => {
