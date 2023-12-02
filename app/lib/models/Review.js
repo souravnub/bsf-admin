@@ -1,6 +1,6 @@
-import { Course } from "./Course";
+import { mongoose, Schema } from "mongoose";
 
-const { default: mongoose, Schema } = require("mongoose");
+import { Course } from "./Course";
 
 const reviewSchema = new mongoose.Schema(
     {

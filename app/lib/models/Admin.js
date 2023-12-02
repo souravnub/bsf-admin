@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
 const adminSchema = new mongoose.Schema(
     {
@@ -8,6 +8,11 @@ const adminSchema = new mongoose.Schema(
             unique: true,
             min: 3,
             max: 20,
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
         },
         password: {
             type: String,
