@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
+import { Video } from "./models/Video";
 
 function getImageUrl(fileName) {
     const baseUrl =
@@ -286,6 +287,59 @@ export const deleteCourse = async (formData) => {
     }
 
     revalidatePath("/dashboard/products");
+};
+
+export const fetchVideoGalleryTabs = async () => {
+    try {
+        await connectToDB();
+        const tabs = await Video.find();
+        return tabs;
+    } catch (err) {
+        console.log(err);
+        throw new Error("Error while fetching details");
+    }
+};
+
+export const addUrlToGallery = async ({ _id, value: newUrl }) => {
+    try {
+        await connectToDB();
+        await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
+    } catch (err) {
+        console.log(err);
+        throw new Error("error while adding url to the video gallery");
+    }
+    revalidatePath("/dashboard/content");
+};
+
+export const deleteVideoGalleryCategory = async (_id) => {
+    try {
+        await connectToDB();
+        await Video.findByIdAndDelete(_id);
+    } catch (err) {
+        throw new Error("error while deleting video gallery category");
+    }
+    revalidatePath("/dashboard/content");
+};
+
+export const addVideoGalleryCategory = async ({ value: name }) => {
+    try {
+        await connectToDB();
+        const newCategory = new Video({ category: name, url: [] });
+        await newCategory.save();
+    } catch (err) {
+        throw new Error("error while adding new video gallery category");
+    }
+    revalidatePath("/dashboard/content");
+};
+
+export const deleteUrlFromGallery = async (_id, url) => {
+    try {
+        await connectToDB();
+        await Video.findByIdAndUpdate(_id, { $pull: { url } });
+    } catch (err) {
+        throw new Error("error while deleting url from the video gallery");
+    }
+    revalidatePath("/dashboard/content");
 };
 
 export const authenticate = async (prevState, formData) => {
