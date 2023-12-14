@@ -20,7 +20,7 @@ function getImageUrl(fileName) {
 }
 
 export const addAdmin = async (formData) => {
-    const { username, password } = Object.fromEntries(formData);
+    const { username, password, email, isAdmin } = Object.fromEntries(formData);
 
     try {
         connectToDB();
@@ -31,6 +31,8 @@ export const addAdmin = async (formData) => {
         const newUser = new Admin({
             username,
             password: hashedPassword,
+            email,
+            isAdmin: isAdmin == "true" ? true : false,
         });
 
         await newUser.save();
@@ -39,8 +41,8 @@ export const addAdmin = async (formData) => {
         throw new Error("Failed to create admin!");
     }
 
-    revalidatePath("/dashboard/users");
-    redirect("/dashboard/users");
+    revalidatePath("/dashboard/admins");
+    redirect("/dashboard/admins");
 };
 
 export const updateAdmin = async (formData) => {

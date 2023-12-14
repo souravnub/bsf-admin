@@ -22,22 +22,21 @@ const Prerequisites = ({ prequisites }) => {
         setPrerequisitesInput(updatedPrerequisites);
     };
 
-    if (prequisites.length > 0) {
+    if (prequisites?.length > 0) {
         return (
             <div>
-                <label htmlFor='prerequisites'>Prerequisites (optional)</label>
-                {prerequisitesInput.map((prerequisite, index) => (
+                <label htmlFor="prerequisites">Prerequisites (optional)</label>
+                {prerequisitesInput?.map((prerequisite, index) => (
                     <div key={index} className={styles.prerequisiteItem}>
                         <input
-                            type='text'
-                            name='prerequisite'
+                            type="text"
+                            name="prerequisite"
                             value={prerequisite}
                             onChange={(e) => handlePrerequisiteChange(e, index)}
                         />
                         <div
                             className={styles.removePrereqBtn}
-                            onClick={() => removePrerequisite(index)}
-                        >
+                            onClick={() => removePrerequisite(index)}>
                             &#10006;
                         </div>
                     </div>
@@ -50,18 +49,17 @@ const Prerequisites = ({ prequisites }) => {
     } else {
         return (
             <div>
-                <label htmlFor='prerequisites'>Prerequisites (optional)</label>
-                {prerequisitesInput.map((prerequisite, index) => (
+                <label htmlFor="prerequisites">Prerequisites (optional)</label>
+                {prerequisitesInput?.map((prerequisite, index) => (
                     <div key={index} className={styles.prerequisiteItem}>
                         <input
-                            type='text'
-                            name='prerequisite'
+                            type="text"
+                            name="prerequisite"
                             onChange={(e) => handlePrerequisiteChange(e, index)}
                         />
                         <div
                             className={styles.removePrereqBtn}
-                            onClick={() => removePrerequisite(index)}
-                        >
+                            onClick={() => removePrerequisite(index)}>
                             &#10006;
                         </div>
                     </div>

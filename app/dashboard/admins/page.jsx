@@ -31,8 +31,8 @@ const AdminsPage = async ({ searchParams }) => {
     return (
         <div className={styles.container}>
             <div className={styles.top}>
-                <Search placeholder='Search' />
-                <Link href='/dashboard/courses/add'>
+                <Search placeholder="Search" />
+                <Link href="/dashboard/admins/add">
                     <button className={styles.addButton}>Add New</button>
                 </Link>
             </div>
@@ -52,23 +52,20 @@ const AdminsPage = async ({ searchParams }) => {
                             <td>
                                 <div className={styles.buttons}>
                                     <Link
-                                        href={`/dashboard/admins/${admin._id}`}
-                                    >
+                                        href={`/dashboard/admins/${admin._id}`}>
                                         <button
-                                            className={`${styles.button} ${styles.view}`}
-                                        >
+                                            className={`${styles.button} ${styles.view}`}>
                                             View
                                         </button>
                                     </Link>
                                     <form action={deleteAdmin}>
                                         <input
-                                            type='hidden'
-                                            name='id'
+                                            type="hidden"
+                                            name="id"
                                             value={admin._id}
                                         />
                                         <button
-                                            className={`${styles.button} ${styles.delete}`}
-                                        >
+                                            className={`${styles.button} ${styles.delete}`}>
                                             Delete
                                         </button>
                                     </form>
