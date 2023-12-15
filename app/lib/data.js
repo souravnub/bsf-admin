@@ -1,4 +1,6 @@
+import moment from "moment";
 import { Admin } from "./models/Admin";
+import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
@@ -46,7 +48,7 @@ export const fetchCustomers = async (q, page) => {
         const users = await Customer.find({ username: { $regex: regex } })
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1));
-        return { count, users };
+        return { count, customers: users };
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch customers!");
@@ -106,6 +108,27 @@ export const fetchCategories = async () => {
     } catch (error) {
         console.log(error);
         throw new Error("Failed to fetch course categories!");
+    }
+};
+
+export const fetchMessages = async () => {
+    try {
+        await connectToDB();
+        const messages = await Contact.find();
+        const messageWithFormatedDate = messages.map((message) => {
+            const formatedDate = moment(message.createdAt).format(
+                "MMM D, dddd"
+            );
+            return {
+                ...message._doc,
+
+                createdAt: formatedDate,
+            };
+        });
+        return messageWithFormatedDate;
+    } catch (err) {
+        console.log(err);
+        throw new Error("Falied to fetch messages");
     }
 };
 
@@ -188,7 +211,6 @@ export const getLatestTransactions = async () => {
             { $limit: 5 },
         ]);
 
-        console.log("hi", latestTransactions);
         return latestTransactions;
     } catch (error) {
         console.error("Error retrieving latest transactions:", error);
