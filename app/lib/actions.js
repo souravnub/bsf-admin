@@ -70,70 +70,56 @@ export const updateAdmin = async (formData) => {
 };
 
 export const addCourse = async (formData) => {
-    const features = [];
+    const tools = [];
+    const otherLearnings = [];
     const prequisites = [];
 
     for (let [key, value] of formData.entries()) {
-        if (key === "feature") {
-            features.push(value);
+        if (key === "tools") {
+            tools.push(value);
         } else if (key === "prerequisite") {
             prequisites.push(value);
+        } else if (key == "other") {
+            otherLearnings.push(value);
         }
     }
 
     const { name, category, image, price, description } =
         Object.fromEntries(formData);
 
-    const categoryExists = await CourseCategory.find({ category: category });
+    const categoryExists = await CourseCategory.findOne({ category: category });
 
-    if (categoryExists.length == 0) {
+    let newCategoryId;
+    if (categoryExists === null) {
         connectToDB();
         const newCategory = new CourseCategory({
             category,
         });
-        await newCategory.save();
 
-        const imageUrl = getImageUrl(image.name);
-
-        try {
-            connectToDB();
-
-            const newCourse = new Course({
-                name,
-                category: newCategory._id,
-                image: imageUrl,
-                description,
-                features,
-                prequisites,
-                price,
-            });
-
-            await newCourse.save();
-        } catch (err) {
-            console.log(err);
-            throw new Error("Failed to create course!");
-        }
-    } else {
-        const imageUrl = getImageUrl(image.name);
-        try {
-            connectToDB();
-
-            const newCourse = new Course({
-                name,
-                category,
-                image: imageUrl,
-                description,
-                features,
-                prequisites,
-                price,
-            });
-
-            await newCourse.save();
-        } catch (err) {
-            console.log(err);
-            throw new Error("Failed to create course!");
-        }
+        const savedCategory = await newCategory.save();
+        newCategoryId = savedCategory._id;
     }
+
+    try {
+        await connectToDB();
+        const imageUrl = getImageUrl(image.name);
+        const newCourse = new Course({
+            name,
+            // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
+            category: newCategoryId ? newCategoryId : category,
+            image: imageUrl,
+            description,
+            learnings: { other: otherLearnings, tools },
+            prequisites,
+            price,
+        });
+
+        await newCourse.save();
+    } catch (err) {
+        console.log(err);
+        throw new Error("some error occured while adding the course");
+    }
+
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };
@@ -152,14 +138,17 @@ async function deleteImageFromCloudinary(id) {
 }
 
 export const updateCourse = async (formData) => {
-    const features = [];
+    const tools = [];
+    const otherLearnings = [];
     const prequisites = [];
 
     for (let [key, value] of formData.entries()) {
-        if (key === "feature") {
-            features.push(value);
+        if (key === "tools") {
+            tools.push(value);
         } else if (key === "prerequisite") {
             prequisites.push(value);
+        } else if (key == "other") {
+            otherLearnings.push(value);
         }
     }
 
@@ -168,97 +157,52 @@ export const updateCourse = async (formData) => {
 
     deleteImageFromCloudinary(id);
 
-    const categoryExists = await CourseCategory.find({ category: category });
+    const categoryExists = await CourseCategory.findOne({ category: category });
 
-    if (categoryExists.length == 0) {
+    let newCategoryId;
+    let newImageUrl;
+
+    if (categoryExists === null) {
         connectToDB();
         const newCategory = new CourseCategory({
             category,
         });
-        await newCategory.save();
 
-        if (image !== undefined) {
-            const imageUrl = getImageUrl(image.name);
-
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category: newCategory._id,
-                    image: imageUrl,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        } else {
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category: newCategory._id,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        }
-    } else {
-        if (image !== undefined) {
-            const imageUrl = getImageUrl(image.name);
-
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category,
-                    image: imageUrl,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        } else {
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        }
+        const savedCategory = await newCategory.save();
+        newCategoryId = savedCategory._id;
     }
+    // if the image is provided in the form entries
+    if (image !== undefined) {
+        newImageUrl = getImageUrl(image.name);
+    }
+
+    try {
+        await connectToDB();
+        const updateFields = {
+            name,
+            description,
+            prequisites,
+            price,
+            learnings: {
+                tools,
+                other: otherLearnings,
+            },
+        };
+        // newCateogryId exists
+        if (newCategoryId) {
+            updateFields.category = newCategoryId;
+        }
+        // newImageUrl exists
+        if (newImageUrl) {
+            updateFields.image = newImageUrl;
+        }
+
+        await Course.findByIdAndUpdate(id, updateFields);
+    } catch (err) {
+        console.log(err);
+        throw new Error(err);
+    }
+
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };
