@@ -42,7 +42,7 @@ const courseSchema = new mongoose.Schema(
 
         learnings: {
             tools: [{ type: String }],
-            other: [{ type: Stirng }],
+            other: [{ type: String }],
         },
 
         schedule: {
