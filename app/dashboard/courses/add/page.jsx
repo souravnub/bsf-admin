@@ -6,7 +6,7 @@ import Features from "@/app/ui/dashboard/courses/addCourseForm/features/features
 import Prerequisites from "@/app/ui/dashboard/courses/addCourseForm/prerequisites/prerequisites";
 import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/imageUpload/imageUpload";
 
-const AddProductPage = async () => {
+const AddCoursePage = async () => {
     const categories = await fetchCategories();
     const categoriesJSON = JSON.parse(JSON.stringify(categories));
 
@@ -42,11 +42,11 @@ const AddProductPage = async () => {
                 </div>
 
                 <Features features={[""]} />
-                <Prerequisites prerequisites={[]} />
+                <Prerequisites prerequisites={[""]} />
                 <button type='submit'>Submit</button>
             </form>
         </div>
     );
 };
 
-export default AddProductPage;
+export default AddCoursePage;

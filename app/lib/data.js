@@ -41,12 +41,13 @@ export const fetchCustomers = async (q, page) => {
     try {
         connectToDB();
         const count = await Customer.find({
-            username: { $regex: regex },
+            email: { $regex: regex },
         }).count();
-        const users = await Customer.find({ username: { $regex: regex } })
+        const customers = await Customer.find({ email: { $regex: regex } })
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1));
-        return { count, users };
+
+        return { count, customers };
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch customers!");
@@ -54,7 +55,6 @@ export const fetchCustomers = async (q, page) => {
 };
 
 export const fetchCustomer = async (id) => {
-    console.log(id);
     try {
         connectToDB();
         const user = await Customer.findById(id);
@@ -188,7 +188,6 @@ export const getLatestTransactions = async () => {
             { $limit: 5 },
         ]);
 
-        console.log("hi", latestTransactions);
         return latestTransactions;
     } catch (error) {
         console.error("Error retrieving latest transactions:", error);

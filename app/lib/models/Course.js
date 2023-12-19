@@ -54,6 +54,12 @@ const courseSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+
+        jobOpportunities: [
+            {
+                type: String,
+            },
+        ],
     },
     { timestamps: true }
 );

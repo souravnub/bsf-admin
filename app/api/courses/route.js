@@ -1,63 +1,45 @@
 import { Course } from "@/app/lib/models/Course";
+import { CourseCategory } from "@/app/lib/models/CourseCategory";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
 
 // @params: brand_new: bool || popular: bool, category: categoryId, count: number
-export async function GET(request) {
+export async function GET() {
     try {
-        await connectToDB();
+        connectToDB();
+        // Fetch all categories
+        const categories = await CourseCategory.find({});
 
-        const {
-            nextUrl: { search },
-        } = request;
-        const urlSearchParams = new URLSearchParams(search);
+        // Prepare the data in the desired format
+        const formattedData = [];
 
-        // can only sort by one option at a time: either brand_new or popular
-        const { popular, category, count, brand_new } = Object.fromEntries(
-            urlSearchParams.entries()
-        );
-        const options = [];
+        for (const category of categories) {
+            const courses = await Course.find({ category: category._id });
 
-        if (category) {
-            options.push({
-                $match: { category: new mongoose.Types.ObjectId(category) },
+            const formattedCourses = courses.map((course) => ({
+                id: course._id.toString(),
+                name: course.name,
+                img: {
+                    url: course.image,
+                },
+                features: course.features,
+                price: course.price,
+                category: category.category,
+                // Add other properties as needed and map them from your model
+            }));
+
+            formattedData.push({
+                category: category.category,
+                courses: formattedCourses,
             });
         }
-        if (popular && !brand_new) {
-            options.push({ $sort: { customerCount: -1 } });
-        }
-        if (brand_new && !popular) {
-            options.push({ $sort: { updatedAt: -1 } });
-        }
-        if (count) {
-            options.push({ $limit: parseInt(count) });
-        }
 
-        const courses = await Course.aggregate([
-            {
-                $project: {
-                    customers: 1,
-                    name: 1,
-                    category: 1,
-                    image: 1,
-                    price: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    customerCount: {
-                        $size: "$customers",
-                    },
-                },
-            },
-            ...options,
-        ]);
-
-        return NextResponse.json({ count: courses.length, courses });
-    } catch (err) {
+        return NextResponse.json(formattedData);
+    } catch (error) {
         return NextResponse.json(
             {
                 errorMessage: "Error while fetching courses",
-                error: err.message,
+                error: error.message,
             },
             { status: 500 }
         );

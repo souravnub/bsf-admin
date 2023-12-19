@@ -24,37 +24,22 @@ const customersPage = async ({ searchParams }) => {
                     <tr>
                         <td>Name</td>
                         <td>Email</td>
-                        <td>Created At</td>
-                        <td>Role</td>
-                        <td>Status</td>
                         <td>Action</td>
                     </tr>
                 </thead>
                 <tbody>
                     {customers.map((customer) => (
-                        <tr key={customer.id}>
+                        <tr key={customer._id}>
                             <td>
                                 <div className={styles.customer}>
-                                    <Image
-                                        src={customer.img || "/noavatar.png"}
-                                        alt=''
-                                        width={40}
-                                        height={40}
-                                        className={styles.userImage}
-                                    />
-                                    {customer.username}
+                                    {customer.name}
                                 </div>
                             </td>
                             <td>{customer.email}</td>
                             <td>
-                                {customer.createdAt?.toString().slice(4, 16)}
-                            </td>
-                            <td>{customer.isAdmin ? "Admin" : "Client"}</td>
-                            <td>{customer.isActive ? "active" : "passive"}</td>
-                            <td>
                                 <div className={styles.buttons}>
                                     <Link
-                                        href={`/dashboard/customers/${user.id}`}
+                                        href={`/dashboard/customers/${customer._id}`}
                                     >
                                         <button
                                             className={`${styles.button} ${styles.view}`}
@@ -66,7 +51,7 @@ const customersPage = async ({ searchParams }) => {
                                         <input
                                             type='hidden'
                                             name='id'
-                                            value={customer.id}
+                                            value={customer._id}
                                         />
                                         <button
                                             className={`${styles.button} ${styles.delete}`}
