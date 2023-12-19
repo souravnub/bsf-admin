@@ -7,10 +7,8 @@ import { NextResponse } from "next/server";
 export async function GET() {
     try {
         connectToDB();
-        // Fetch all categories
         const categories = await CourseCategory.find({});
 
-        // Prepare the data in the desired format
         const formattedData = [];
 
         for (const category of categories) {
@@ -25,7 +23,6 @@ export async function GET() {
                 features: course.features,
                 price: course.price,
                 category: category.category,
-                // Add other properties as needed and map them from your model
             }));
 
             formattedData.push({
