@@ -10,7 +10,6 @@ import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
-import mongoose from "mongoose";
 
 function getImageUrl(fileName) {
     const baseUrl =
@@ -70,13 +69,46 @@ export const updateAdmin = async (formData) => {
     redirect("/dashboard/users");
 };
 
+const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+];
+
 export const addCourse = async (formData) => {
     const tools = [];
     const otherLearnings = [];
     const prequisites = [];
     const jobOpportunities = [];
+    const classDays = {
+        monday: {},
+        tuesday: {},
+        wednesday: {},
+        thursday: {},
+        friday: {},
+        saturday: {},
+        sunday: {},
+    };
 
     for (let [key, value] of formData.entries()) {
+        console.log("key: " + key + " , " + "value: " + value);
+
+        days.forEach((day) => {
+            if (key === day && value && classDays[day].from === undefined) {
+                classDays[day].from = value;
+            } else if (
+                key === day &&
+                value &&
+                classDays[day].from !== undefined
+            ) {
+                classDays[day].to = value;
+            }
+        });
+
         if (key === "tools") {
             tools.push(value);
         } else if (key === "prerequisite") {
@@ -96,6 +128,8 @@ export const addCourse = async (formData) => {
         description,
         priceIncludesTax,
         isInDemand,
+        startDate,
+        endDate,
     } = Object.fromEntries(formData);
 
     const categoryFound = await CourseCategory.findOne({ category: category });
@@ -121,6 +155,11 @@ export const addCourse = async (formData) => {
             image: imageUrl,
             description,
             learnings: { other: otherLearnings, tools },
+            schedule: {
+                startDate,
+                endDate,
+                classDays,
+            },
             prequisites,
             jobOpportunities,
             price,
