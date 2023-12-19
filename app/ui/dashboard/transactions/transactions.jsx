@@ -1,6 +1,8 @@
 import styles from "./transactions.module.css";
+import { getLatestTransactions } from "@/app/lib/data";
 
-const Transactions = () => {
+const Transactions = async () => {
+    const transactions = await getLatestTransactions();
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>Latest Transactions</h2>
@@ -14,46 +16,6 @@ const Transactions = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>
-                            <div className={styles.user}>John Doe</div>
-                        </td>
-                        <td>
-                            <span
-                                className={`${styles.status} ${styles.pending}`}
-                            >
-                                Pending
-                            </span>
-                        </td>
-                        <td>14.02.2024</td>
-                        <td>$3.200</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div className={styles.user}>John Doe</div>
-                        </td>
-                        <td>
-                            <span className={`${styles.status} ${styles.done}`}>
-                                Done
-                            </span>
-                        </td>
-                        <td>14.02.2024</td>
-                        <td>$3.200</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div className={styles.user}>John Doe</div>
-                        </td>
-                        <td>
-                            <span
-                                className={`${styles.status} ${styles.cancelled}`}
-                            >
-                                Cancelled
-                            </span>
-                        </td>
-                        <td>14.02.2024</td>
-                        <td>$3.200</td>
-                    </tr>
                     <tr>
                         <td>
                             <div className={styles.user}>John Doe</div>

@@ -13,6 +13,7 @@ import {
     MdLogout,
     MdAdminPanelSettings,
     MdLibraryBooks,
+    MdChat,
 } from "react-icons/md";
 import { auth, signOut } from "@/app/auth";
 
@@ -31,6 +32,11 @@ const menuItems = [
                 icon: <MdSupervisedUserCircle />,
             },
             {
+                title: "Messages",
+                path: "/dashboard/messages",
+                icon: <MdChat />,
+            },
+            {
                 title: "Admins",
                 path: "/dashboard/admins",
                 icon: <MdAdminPanelSettings />,
@@ -46,8 +52,8 @@ const menuItems = [
         title: "Website",
         list: [
             {
-                title: "Content Change",
-                path: "/dashboard/revenue",
+                title: "Manage Content",
+                path: "/dashboard/content",
                 icon: <MdWork />,
             },
             {
@@ -92,8 +98,7 @@ const Sidebar = async () => {
                 action={async () => {
                     "use server";
                     await signOut();
-                }}
-            >
+                }}>
                 <button className={styles.logout}>
                     <MdLogout />
                     Logout

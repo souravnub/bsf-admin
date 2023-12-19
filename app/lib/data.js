@@ -1,4 +1,9 @@
-import { Admin, Course, CourseCategory, Customer } from "./models";
+import moment from "moment";
+import { Admin } from "./models/Admin";
+import { Contact } from "./models/Contact";
+import { Course } from "./models/Course";
+import { CourseCategory } from "./models/CourseCategory";
+import { Customer } from "./models/Customer";
 import { connectToDB } from "./utils";
 
 export const fetchAdmins = async (q, page) => {
@@ -9,10 +14,10 @@ export const fetchAdmins = async (q, page) => {
     try {
         connectToDB();
         const count = await Admin.find({ username: { $regex: regex } }).count();
-        const users = await Admin.find({ username: { $regex: regex } })
+        const admins = await Admin.find({ username: { $regex: regex } })
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1));
-        return { count, users };
+        return { count, admins };
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch admins!");
@@ -20,11 +25,10 @@ export const fetchAdmins = async (q, page) => {
 };
 
 export const fetchAdmin = async (id) => {
-    console.log(id);
     try {
         connectToDB();
-        const user = await Admin.findById(id);
-        return user;
+        const admin = await Admin.findById(id);
+        return admin;
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch admin!");
@@ -44,7 +48,7 @@ export const fetchCustomers = async (q, page) => {
         const users = await Customer.find({ username: { $regex: regex } })
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1));
-        return { count, users };
+        return { count, customers: users };
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch customers!");
@@ -107,6 +111,27 @@ export const fetchCategories = async () => {
     }
 };
 
+export const fetchMessages = async () => {
+    try {
+        await connectToDB();
+        const messages = await Contact.find();
+        const messageWithFormatedDate = messages.map((message) => {
+            const formatedDate = moment(message.createdAt).format(
+                "MMM D, dddd"
+            );
+            return {
+                ...message._doc,
+
+                createdAt: formatedDate,
+            };
+        });
+        return messageWithFormatedDate;
+    } catch (err) {
+        console.log(err);
+        throw new Error("Falied to fetch messages");
+    }
+};
+
 export const dashboardData = async () => {
     try {
         connectToDB();
@@ -150,5 +175,45 @@ export const dashboardData = async () => {
     } catch (error) {
         console.error("Error in dashboard data:", error);
         throw error;
+    }
+};
+
+export const getLatestTransactions = async () => {
+    try {
+        const latestTransactions = await Customer.aggregate([
+            {
+                $unwind: "$courses",
+            },
+            {
+                $unwind: {
+                    path: "$courses",
+                    includeArrayIndex: "index",
+                },
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    email: { $first: "$email" },
+                    name: { $first: "$name" },
+                    latestCourse: { $last: "$courses.course" },
+                    latestPurchaseDate: { $last: "$courses.purchaseDate" },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    email: 1,
+                    name: 1,
+                    latestCourse: 1,
+                    latestPurchaseDate: 1,
+                },
+            },
+            { $limit: 5 },
+        ]);
+
+        return latestTransactions;
+    } catch (error) {
+        console.error("Error retrieving latest transactions:", error);
+        return [];
     }
 };

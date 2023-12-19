@@ -1,7 +1,21 @@
+import { Course } from "@/app/lib/models";
+import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 
-export async function GET() {
-    return NextResponse.json({ message: "data" });
+// @params: brand_new: bool || popular: bool, category: categoryId, count: number
+export async function GET(request) {
+    try {
+        await connectToDB();
+    } catch (err) {
+        return NextResponse.json(
+            {
+                errorMessage: "Error while fetching customers",
+                error: err.message,
+            },
+            { status: 500 }
+        );
+    }
 }
 
 /*

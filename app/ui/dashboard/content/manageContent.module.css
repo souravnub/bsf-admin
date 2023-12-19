@@ -1,0 +1,72 @@
+.container {
+    background-color: var(--bgSoft);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.form label {
+    display: block;
+    padding-block-end: 0.5rem;
+}
+.form input {
+    padding: 0.6em;
+    background-color: var(--bg);
+    color: var(--text);
+    border: 1.5px solid #2e374a;
+    border-radius: 5px;
+}
+.button,
+.form button {
+    padding: 0.6em 0.8em;
+    border-radius: 5px;
+    text-transform: capitalize;
+    border: none;
+    cursor: pointer;
+    background-color: #495e91;
+    color: var(--text);
+    margin-inline-start: 0.5em;
+}
+.removeButton {
+    background-color: rgb(255, 82, 82);
+}
+.removeButton:hover {
+    background-color: rgb(203, 66, 66);
+}
+.form button:active {
+    background-color: var(--bg);
+}
+
+.tabContainer {
+    padding: 1.5em;
+}
+.tabContainer ol {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-block: 1rem;
+}
+.tabContainer ol li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: var(--bg);
+    padding: 0.5em;
+    position: relative;
+}
+.deleteButton {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    color: rgb(255, 82, 82);
+    font-size: 1.5rem;
+}
+.deleteButton:hover {
+    color: rgb(203, 66, 66);
+}
+
+.tabContainer > div:nth-child(1) {
+    display: flex;
+    justify-content: space-between;
+}

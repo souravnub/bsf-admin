@@ -1,4 +1,8 @@
-form .addFeatureBtn {
+.listContainer {
+    display: flex;
+    flex-direction: column;
+}
+.addFeatureBtn {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,17 +20,19 @@ form .addFeatureBtn {
     font-size: 12px;
 }
 
-form .addFeatureBtn:hover {
+.addFeatureBtn:hover {
     background-color: #b7bac16e;
 }
 
-form .featureItem {
+.featureItem {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-form .removeFeatureBtn {
+.removeFeatureBtn {
     cursor: pointer;
+    background-color: transparent;
+    border: none;
     color: #e84118;
 }
