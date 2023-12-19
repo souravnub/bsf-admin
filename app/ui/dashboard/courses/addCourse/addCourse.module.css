@@ -54,3 +54,17 @@
     color: var(--textSoft);
     text-transform: uppercase;
 }
+
+.taxContainer,
+.demandInputContainer {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.taxContainer input,
+.demandInputContainer input {
+    width: fit-content;
+    margin-left: 10px;
+    margin-block: 0;
+}

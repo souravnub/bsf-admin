@@ -4,7 +4,7 @@ import styles from "./imageUpload.module.css";
 import Image from "next/image";
 import React, { useState } from "react";
 
-const ImageUpload = ({ url }) => {
+const ImageUpload = ({ url, requiredInput }) => {
     const [imagePreview, setImagePreview] = useState(null);
     const [imageFile, setImageFile] = useState("");
     const [message, setMessage] = useState("Waiting...");
@@ -67,15 +67,15 @@ const ImageUpload = ({ url }) => {
 
     return (
         <div>
-            <label htmlFor='image'>Upload Image (312px x 312px)*</label>
+            <label htmlFor="image">Upload Image (312px x 312px)*</label>
 
             <input
-                type='file'
-                name='image'
-                id='image'
-                accept='.png, .jpg, .jpeg'
+                type="file"
+                name="image"
+                id="image"
+                accept=".png, .jpg, .jpeg"
                 onChange={handleOnChange}
-                required
+                required={requiredInput ? true : false}
             />
             <div className={styles.uploadBtn} onClick={handleOnSubmit}>
                 <p>Upload Image</p>
@@ -90,7 +90,7 @@ const ImageUpload = ({ url }) => {
                         src={imagePreview}
                         width={312}
                         height={312}
-                        alt='Image Preview'
+                        alt="Image Preview"
                         style={{
                             maxWidth: "312px",
                             marginBottom: "30px",
@@ -106,7 +106,7 @@ const ImageUpload = ({ url }) => {
                         src={url}
                         width={312}
                         height={312}
-                        alt='Image Preview'
+                        alt="Image Preview"
                         style={{
                             maxWidth: "312px",
                             marginBottom: "30px",

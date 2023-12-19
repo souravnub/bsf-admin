@@ -18,16 +18,30 @@ const AddProductPage = async () => {
                     <input type="text" name="name" id="name" required />
                 </div>
 
+                <div className={styles.demandInputContainer}>
+                    <label htmlFor="demand">Is in demand?</label>
+                    <input type="checkbox" name="isInDemand" value="true" />
+                </div>
+
                 <div>
                     <label htmlFor="name">Category*</label>
                     <Category categories={categoriesJSON} />
                 </div>
 
-                <ImageUpload />
+                <ImageUpload requiredInput={true} />
 
                 <div>
                     <label htmlFor="price">Price*</label>
                     <input type="number" name="price" id="price" required />
+
+                    <div className={styles.taxContainer}>
+                        <label htmlFor="tax">Price includes tax</label>
+                        <input
+                            type="checkbox"
+                            name="priceIncludesTax"
+                            value="true"
+                        />
+                    </div>
                 </div>
 
                 <div>
@@ -41,6 +55,10 @@ const AddProductPage = async () => {
                     />
                 </div>
 
+                <EditableList
+                    title="Job Opportunities"
+                    name="jobOpportunities"
+                />
                 <EditableList title="Tools learned" name="tools" />
                 <EditableList title="Other learnings" name="other" />
                 <Prerequisites prerequisites={[]} />

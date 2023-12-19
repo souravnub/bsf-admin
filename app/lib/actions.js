@@ -73,6 +73,7 @@ export const addCourse = async (formData) => {
     const tools = [];
     const otherLearnings = [];
     const prequisites = [];
+    const jobOpportunities = [];
 
     for (let [key, value] of formData.entries()) {
         if (key === "tools") {
@@ -81,11 +82,20 @@ export const addCourse = async (formData) => {
             prequisites.push(value);
         } else if (key == "other") {
             otherLearnings.push(value);
+        } else if (key == "jobOpportunities") {
+            jobOpportunities.push(value);
         }
     }
 
-    const { name, category, image, price, description } =
-        Object.fromEntries(formData);
+    const {
+        name,
+        category,
+        image,
+        price,
+        description,
+        priceIncludesTax,
+        isInDemand,
+    } = Object.fromEntries(formData);
 
     const categoryExists = await CourseCategory.findOne({ category: category });
 
@@ -111,7 +121,10 @@ export const addCourse = async (formData) => {
             description,
             learnings: { other: otherLearnings, tools },
             prequisites,
+            jobOpportunities,
             price,
+            priceIncludesTax: priceIncludesTax == "true" ? true : false,
+            isInDemand: isInDemand == "true" ? true : false,
         });
 
         await newCourse.save();
@@ -141,6 +154,7 @@ export const updateCourse = async (formData) => {
     const tools = [];
     const otherLearnings = [];
     const prequisites = [];
+    const jobOpportunities = [];
 
     for (let [key, value] of formData.entries()) {
         if (key === "tools") {
@@ -149,11 +163,21 @@ export const updateCourse = async (formData) => {
             prequisites.push(value);
         } else if (key == "other") {
             otherLearnings.push(value);
+        } else if (key == "jobOpportunities") {
+            jobOpportunities.push(value);
         }
     }
 
-    const { id, name, category, image, price, description } =
-        Object.fromEntries(formData);
+    const {
+        id,
+        name,
+        category,
+        image,
+        price,
+        description,
+        priceIncludesTax,
+        isInDemand,
+    } = Object.fromEntries(formData);
 
     deleteImageFromCloudinary(id);
 
@@ -187,6 +211,9 @@ export const updateCourse = async (formData) => {
                 tools,
                 other: otherLearnings,
             },
+            jobOpportunities,
+            priceIncludesTax: priceIncludesTax == "true" ? true : false,
+            isInDemand: isInDemand == "true" ? true : false,
         };
         // newCateogryId exists
         if (newCategoryId) {
