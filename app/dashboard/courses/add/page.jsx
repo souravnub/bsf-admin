@@ -14,63 +14,56 @@ const AddCoursePage = async () => {
         <div className={styles.container}>
             <form action={addCourse} className={styles.form}>
                 <div>
-                    <label htmlFor="name">Course Name*</label>
-                    <input type="text" name="name" id="name" required />
+                    <label htmlFor='name'>Course Name*</label>
+                    <input type='text' name='name' id='name' required />
                 </div>
 
                 <div className={styles.demandInputContainer}>
-                    <label htmlFor="demand">Is in demand?</label>
-                    <input type="checkbox" name="isInDemand" value="true" />
+                    <label htmlFor='demand'>Is in demand?</label>
+                    <input type='checkbox' name='isInDemand' value='true' />
                 </div>
 
                 <div>
-                    <label htmlFor="name">Category*</label>
+                    <label htmlFor='name'>Category*</label>
                     <Category categories={categoriesJSON} />
                 </div>
 
                 <ImageUpload requiredInput={true} />
 
                 <div>
-                    <label htmlFor="price">Price*</label>
-                    <input type="number" name="price" id="price" required />
+                    <label htmlFor='price'>Price*</label>
+                    <input type='number' name='price' id='price' required />
 
                     <div className={styles.taxContainer}>
-                        <label htmlFor="tax">Price includes tax</label>
+                        <label htmlFor='tax'>Price includes tax</label>
                         <input
-                            type="checkbox"
-                            name="priceIncludesTax"
-                            value="true"
+                            type='checkbox'
+                            name='priceIncludesTax'
+                            value='true'
                         />
                     </div>
                 </div>
 
                 <div>
-                    <label htmlFor="desc">Course Description*</label>
+                    <label htmlFor='desc'>Course Description*</label>
                     <textarea
                         cols={20}
                         rows={20}
-                        name="description"
-                        id="desc"
+                        name='description'
+                        id='desc'
                         required
                     />
                 </div>
-
-<<<<<<< HEAD
-                <Features features={[""]} />
-                <Prerequisites prerequisites={[""]} />
-                <button type='submit'>Submit</button>
-=======
                 <EditableList
-                    title="Job Opportunities"
-                    name="jobOpportunities"
+                    title='Job Opportunities'
+                    name='jobOpportunities'
                 />
-                <EditableList title="Tools learned" name="tools" />
-                <EditableList title="Other learnings" name="other" />
+                <EditableList title='Tools learned' name='tools' />
+                <EditableList title='Other learnings' name='other' />
                 <Prerequisites prerequisites={[]} />
-                <button type="submit" className={styles.button}>
+                <button type='submit' className={styles.button}>
                     Submit
                 </button>
->>>>>>> origin/development
             </form>
         </div>
     );

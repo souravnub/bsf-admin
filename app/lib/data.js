@@ -1,10 +1,10 @@
-import moment from "moment";
 import { Admin } from "./models/Admin";
 import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
 import { connectToDB } from "./utils";
+import moment from "moment";
 
 export const fetchAdmins = async (q, page) => {
     const regex = new RegExp(q, "i");
@@ -45,15 +45,10 @@ export const fetchCustomers = async (q, page) => {
         const count = await Customer.find({
             email: { $regex: regex },
         }).count();
-        const customers = await Customer.find({ email: { $regex: regex } })
+        const users = await Customer.find({ email: { $regex: regex } })
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1));
-<<<<<<< HEAD
-
-        return { count, customers };
-=======
         return { count, customers: users };
->>>>>>> origin/development
     } catch (err) {
         console.log(err);
         throw new Error("Failed to fetch customers!");
@@ -107,7 +102,7 @@ export const fetchCategories = async () => {
     try {
         connectToDB();
 
-        const categories = await CourseCategory.find();
+        const categories = await CourseCategory.find({});
         return categories;
     } catch (error) {
         console.log(error);

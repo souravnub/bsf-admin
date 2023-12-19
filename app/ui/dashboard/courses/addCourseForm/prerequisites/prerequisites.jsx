@@ -24,25 +24,22 @@ const Prerequisites = ({ prerequisites }) => {
         setPrerequisitesInput(updatedPrerequisites);
     };
 
-<<<<<<< HEAD
-    if (prequisites && prequisites.length > 0) {
-=======
     if (prerequisites?.length > 0) {
->>>>>>> origin/development
         return (
             <div>
-                <label htmlFor="prerequisites">Prerequisites (optional)</label>
+                <label htmlFor='prerequisites'>Prerequisites (optional)</label>
                 {prerequisitesInput?.map((prerequisite, index) => (
                     <div key={index} className={styles.prerequisiteItem}>
                         <input
-                            type="text"
-                            name="prerequisite"
+                            type='text'
+                            name='prerequisite'
                             value={prerequisite}
                             onChange={(e) => handlePrerequisiteChange(e, index)}
                         />
                         <div
                             className={styles.removePrereqBtn}
-                            onClick={() => removePrerequisite(index)}>
+                            onClick={() => removePrerequisite(index)}
+                        >
                             &#10006;
                         </div>
                     </div>
@@ -55,36 +52,22 @@ const Prerequisites = ({ prerequisites }) => {
     } else {
         return (
             <div>
-<<<<<<< HEAD
                 <label htmlFor='prerequisites'>Prerequisites (optional)</label>
-                <div className={styles.prerequisiteItem}>
-                    <input
-                        type='text'
-                        name='prerequisite'
-                        onChange={(e) => handlePrerequisiteChange(e, 0)}
-                    />
-                    <div
-                        className={styles.removePrereqBtn}
-                        onClick={() => removePrerequisite(0)}
-                    >
-                        &#10006;
-=======
-                <label htmlFor="prerequisites">Prerequisites (optional)</label>
                 {prerequisitesInput?.map((prerequisite, index) => (
                     <div key={index} className={styles.prerequisiteItem}>
                         <input
-                            type="text"
-                            name="prerequisite"
+                            type='text'
+                            name='prerequisite'
                             onChange={(e) => handlePrerequisiteChange(e, index)}
                         />
                         <div
                             className={styles.removePrereqBtn}
-                            onClick={() => removePrerequisite(index)}>
+                            onClick={() => removePrerequisite(index)}
+                        >
                             &#10006;
                         </div>
->>>>>>> origin/development
                     </div>
-                </div>
+                ))}
                 <div onClick={addPrerequisite} className={styles.addPrereqBtn}>
                     Add Prerequisite
                 </div>

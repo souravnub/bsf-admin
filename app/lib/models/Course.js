@@ -21,19 +21,8 @@ const courseSchema = new mongoose.Schema(
             required: true,
         },
 
-        price: {
-            type: Number,
-            required: true,
-        },
-
         priceIncludesTax: { type: Boolean, default: false },
         isInDemand: { type: Boolean, default: false },
-
-        prequisites: [
-            {
-                type: String,
-            },
-        ],
 
         description: {
             type: String,
@@ -58,8 +47,6 @@ const courseSchema = new mongoose.Schema(
         //     },
         // },
 
-        jobOpportunities: [{ type: String }],
-
         category: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "CourseCategory",
@@ -71,7 +58,6 @@ const courseSchema = new mongoose.Schema(
                 ref: "Review",
             },
         ],
-<<<<<<< HEAD
         prequisites: [
             {
                 type: String,
@@ -88,8 +74,6 @@ const courseSchema = new mongoose.Schema(
                 type: String,
             },
         ],
-=======
->>>>>>> origin/development
     },
     { timestamps: true }
 );

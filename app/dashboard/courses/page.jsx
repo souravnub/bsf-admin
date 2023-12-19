@@ -31,7 +31,7 @@ const CoursesPage = async ({ searchParams }) => {
                 </thead>
                 <tbody>
                     {courses.map((course) => (
-                        <tr key={course.id}>
+                        <tr key={course._id}>
                             <td>
                                 <div className={styles.product}>
                                     {/* <Image
