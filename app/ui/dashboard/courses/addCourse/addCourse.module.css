@@ -31,7 +31,7 @@
     width: 100%;
 }
 
-.form button {
+.form .button {
     width: 100%;
     padding: 30px;
     background-color: teal;
@@ -41,7 +41,7 @@
     cursor: pointer;
 }
 
-.form div {
+.form > div {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -53,4 +53,18 @@
     font-weight: bold;
     color: var(--textSoft);
     text-transform: uppercase;
+}
+
+.taxContainer,
+.demandInputContainer {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.taxContainer input,
+.demandInputContainer input {
+    width: fit-content;
+    margin-left: 10px;
+    margin-block: 0;
 }

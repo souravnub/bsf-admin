@@ -11,32 +11,59 @@ const courseSchema = new mongoose.Schema(
             },
         ],
 
+        image: {
+            type: String,
+            required: true,
+        },
+
         name: {
             type: String,
             required: true,
         },
 
-        category: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "CourseCategory",
-        },
-
-        image: {
-            type: String,
+        price: {
+            type: Number,
             required: true,
         },
+
+        priceIncludesTax: { type: Boolean, default: false },
+        isInDemand: { type: Boolean, default: false },
+
+        prequisites: [
+            {
+                type: String,
+            },
+        ],
 
         description: {
             type: String,
             required: true,
         },
 
-        features: [
-            {
-                type: String,
-                required: true,
-            },
-        ],
+        learnings: {
+            tools: [{ type: String }],
+            other: [{ type: String }],
+        },
+
+        // schedule: {
+        //     startDate: { type: Date, default: Date.now },
+        //     endDate: { type: Date, required: true },
+        //     // classDays: {monday: {from: '11pm', to: '2pm'}, saturday: {from: "10pm", to: "2pm"}}
+        //     classDays: {
+        //         type: Map,
+        //         of: {
+        //             from: { type: String, required: true },
+        //             to: { type: String, required: true },
+        //         },
+        //     },
+        // },
+
+        jobOpportunities: [{ type: String }],
+
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "CourseCategory",
+        },
 
         reviews: [
             {
@@ -44,6 +71,7 @@ const courseSchema = new mongoose.Schema(
                 ref: "Review",
             },
         ],
+<<<<<<< HEAD
         prequisites: [
             {
                 type: String,
@@ -60,6 +88,8 @@ const courseSchema = new mongoose.Schema(
                 type: String,
             },
         ],
+=======
+>>>>>>> origin/development
     },
     { timestamps: true }
 );
