@@ -10,6 +10,7 @@ import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
+import mongoose from "mongoose";
 
 function getImageUrl(fileName) {
     const baseUrl =
@@ -97,10 +98,10 @@ export const addCourse = async (formData) => {
         isInDemand,
     } = Object.fromEntries(formData);
 
-    const categoryExists = await CourseCategory.findOne({ category: category });
+    const categoryFound = await CourseCategory.findOne({ category: category });
 
     let newCategoryId;
-    if (categoryExists === null) {
+    if (categoryFound === null) {
         connectToDB();
         const newCategory = new CourseCategory({
             category,
@@ -116,7 +117,7 @@ export const addCourse = async (formData) => {
         const newCourse = new Course({
             name,
             // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
-            category: newCategoryId ? newCategoryId : category,
+            category: newCategoryId ? newCategoryId : categoryFound._id,
             image: imageUrl,
             description,
             learnings: { other: otherLearnings, tools },
@@ -181,12 +182,12 @@ export const updateCourse = async (formData) => {
 
     deleteImageFromCloudinary(id);
 
-    const categoryExists = await CourseCategory.findOne({ category: category });
+    const categoryFound = await CourseCategory.findOne({ category: category });
 
     let newCategoryId;
     let newImageUrl;
 
-    if (categoryExists === null) {
+    if (categoryFound === null) {
         connectToDB();
         const newCategory = new CourseCategory({
             category,
@@ -207,6 +208,7 @@ export const updateCourse = async (formData) => {
             description,
             prequisites,
             price,
+            category: newCategoryId ? newCategoryId : categoryFound._id,
             learnings: {
                 tools,
                 other: otherLearnings,
