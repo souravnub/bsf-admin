@@ -34,18 +34,18 @@ const courseSchema = new mongoose.Schema(
             other: [{ type: String }],
         },
 
-        // schedule: {
-        //     startDate: { type: Date, default: Date.now },
-        //     endDate: { type: Date, required: true },
-        //     // classDays: {monday: {from: '11pm', to: '2pm'}, saturday: {from: "10pm", to: "2pm"}}
-        //     classDays: {
-        //         type: Map,
-        //         of: {
-        //             from: { type: String, required: true },
-        //             to: { type: String, required: true },
-        //         },
-        //     },
-        // },
+        schedule: {
+            startDate: { type: Date, default: Date.now },
+            endDate: { type: Date, required: true },
+            // classDays: {monday: {from: '11pm', to: '2pm'}, saturday: {from: "10pm", to: "2pm"}}
+            classDays: {
+                type: Map,
+                of: {
+                    from: { type: String },
+                    to: { type: String },
+                },
+            },
+        },
 
         category: {
             type: mongoose.Schema.Types.ObjectId,
