@@ -35,8 +35,8 @@ const courseSchema = new mongoose.Schema(
         },
 
         schedule: {
-            startDate: { type: Date, default: Date.now },
-            endDate: { type: Date, required: true },
+            startDate: { type: String, required: true },
+            endDate: { type: String, required: true },
             // classDays: {monday: {from: '11pm', to: '2pm'}, saturday: {from: "10pm", to: "2pm"}}
             classDays: {
                 type: Map,

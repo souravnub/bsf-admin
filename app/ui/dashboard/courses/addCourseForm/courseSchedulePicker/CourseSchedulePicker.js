@@ -1,25 +1,10 @@
 "use client";
 
+import moment from "moment";
 import React, { useState } from "react";
 
-const CourseSchedulePicker = ({ info: aInfo }) => {
+const CourseSchedulePicker = ({ info }) => {
     const [isClassDaysShown, setIsClassDaysShown] = useState(false);
-
-    const [info, setInfo] = useState(
-        aInfo || {
-            start: "",
-            end: "",
-            classDays: {
-                monday: {},
-                tuesday: {},
-                wednesday: {},
-                thursday: {},
-                friday: {},
-                saturday: {},
-                sunday: {},
-            },
-        }
-    );
 
     return (
         <div>
@@ -27,7 +12,7 @@ const CourseSchedulePicker = ({ info: aInfo }) => {
             <input
                 type="date"
                 name="startDate"
-                defaultValue={info.start}
+                defaultValue={info ? info.startDate : ""}
                 id="start"
             />
 
@@ -36,7 +21,7 @@ const CourseSchedulePicker = ({ info: aInfo }) => {
                 type="date"
                 name="endDate"
                 id="end"
-                defaultValue={info.end}
+                defaultValue={info ? info.endDate : ""}
             />
 
             <button type="button" onClick={() => setIsClassDaysShown(true)}>
