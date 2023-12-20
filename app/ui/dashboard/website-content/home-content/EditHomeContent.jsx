@@ -5,7 +5,7 @@ import styles from "@/app/ui/dashboard/website-content/website-content.css.modul
 import CharacterCountInput from "./CharacterCountInput"; // Import the custom input component
 import { useEffect, useState } from "react";
 
-function EditHomeContent({ heroText, smallHeading, bigHeading, id }) {
+function EditHomeContent({ heroText, smallHeading, bigHeading }) {
     const [heroTxt, setHeroTxt] = useState(heroText);
     const [smallHding, setSmallHding] = useState(smallHeading);
     const [bigHding, setBigHding] = useState(bigHeading);
@@ -16,7 +16,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, id }) {
 
     return (
         <>
-            <div className={styles.container} key={id}>
+            <div className={styles.container}>
                 <h3>Change content of the home page</h3>
 
                 <form

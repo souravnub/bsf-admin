@@ -16,9 +16,7 @@ const ContentPage = async () => {
                 heroText={homeContent[0].heroText}
                 smallHeading={homeContent[0].section.smallHeading}
                 bigHeading={homeContent[0].section.bigHeading}
-                id={homeContent[0]._id}
             />
-            ;{/* Make component for editing content on the home page. */}
         </>
     );
 };
