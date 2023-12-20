@@ -5,14 +5,19 @@
     margin-top: 20px;
 }
 
+.container h3 {
+    margin-bottom: 0.95rem;
+}
+
 .form label {
     display: block;
     padding-block-end: 0.5rem;
+    font-size: 0.9rem;
 }
 .form input {
-    padding: 0.6em;
+    padding: 0.9em;
     background-color: var(--bg);
-    color: var(--text);
+    color: var(--inputText);
     border: 1.5px solid #2e374a;
     border-radius: 5px;
 }
@@ -73,4 +78,18 @@
 
 .sectionHeading {
     padding: 15px 0 15px 0;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.editHomeContentBtn {
+    margin-top: 1rem;
+}
+
+.characterCount {
+    font-size: 0.5rem;
 }

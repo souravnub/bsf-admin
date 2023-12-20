@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
+import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
@@ -370,4 +371,28 @@ export const authenticate = async (prevState, formData) => {
 
 export const sendVerificationCode = async (email) => {
     // Send a verification code to the email
+};
+
+export const updateHomeContent = async (formData) => {
+    connectToDB();
+
+    try {
+        const { heroText, smallHeading, bigHeading } =
+            Object.fromEntries(formData);
+        const homeContent = await WebsiteContent.findByIdAndUpdate(
+            "6582621f6224f786a42635e1",
+            {
+                heroText,
+                section: { smallHeading, bigHeading },
+            }
+        );
+
+        if (!homeContent) {
+            throw new Error("Content not found");
+        }
+
+        await homeContent.save();
+    } catch (error) {
+        throw new Error(`Error updating home content: ${error.message}`);
+    }
 };

@@ -3,6 +3,7 @@ import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
+import { WebsiteContent } from "./models/WebsiteContent";
 import { connectToDB } from "./utils";
 import moment from "moment";
 
@@ -214,5 +215,17 @@ export const getLatestTransactions = async () => {
     } catch (error) {
         console.error("Error retrieving latest transactions:", error);
         return [];
+    }
+};
+
+export const fetchHomeContent = async () => {
+    connectToDB();
+
+    try {
+        const homeContent = await WebsiteContent.find({});
+
+        return { homeContent };
+    } catch (error) {
+        throw new Error(`Error fetching home content: ${error.message}`);
     }
 };

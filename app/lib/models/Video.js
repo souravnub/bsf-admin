@@ -1,6 +1,6 @@
 import { mongoose } from "mongoose";
 
-const videoSchema = new mongoose.Schema({
+const modalVideoSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
@@ -15,4 +15,4 @@ const videoSchema = new mongoose.Schema({
 });
 
 export const Video =
-    mongoose.models.Video || mongoose.model("Video", videoSchema);
+    mongoose.models.Video || mongoose.model("Video", modalVideoSchema);
