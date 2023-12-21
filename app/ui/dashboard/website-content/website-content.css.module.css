@@ -32,6 +32,10 @@
     color: var(--text);
     margin-inline-start: 0.5em;
 }
+.button:disabled,
+.form button:disabled {
+    opacity: 0.5;
+}
 .removeButton {
     background-color: rgb(255, 82, 82);
 }
