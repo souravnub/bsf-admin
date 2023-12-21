@@ -377,13 +377,52 @@ export const updateHomeContent = async (formData) => {
     connectToDB();
 
     try {
-        const { heroText, smallHeading, bigHeading } =
-            Object.fromEntries(formData);
+        const {
+            heroText,
+            smallHeading,
+            bigHeading,
+            image1,
+            description1,
+            video1,
+            image2,
+            description2,
+            video2,
+            image3,
+            description3,
+            video3,
+        } = Object.fromEntries(formData);
+
+        const img1 = getImageUrl(image1.name);
+        const img2 = getImageUrl(image2.name);
+        const img3 = getImageUrl(image3.name);
+
+        const vid1 = getImageUrl(video1.name);
+        const vid2 = getImageUrl(video2.name);
+        const vid3 = getImageUrl(video3.name);
+
+        const cardsData = [
+            {
+                bannerImage: img1,
+                description: description1,
+                video: vid1,
+            },
+            {
+                bannerImage: img2,
+                description: description2,
+                video: vid2,
+            },
+            {
+                bannerImage: img3,
+                description: description3,
+                video: vid3,
+            },
+        ];
+
         const homeContent = await WebsiteContent.findByIdAndUpdate(
             "6582621f6224f786a42635e1",
             {
                 heroText,
-                section: { smallHeading, bigHeading },
+                section: { smallHeading, bigHeading, cards: cardsData },
             }
         );
 

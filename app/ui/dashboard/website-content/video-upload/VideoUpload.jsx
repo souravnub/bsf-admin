@@ -1,28 +1,27 @@
 "use client";
 
-import styles from "./imageUpload.module.css";
-import Image from "next/image";
+import styles from "./videoUpload.module.css";
 import React, { useState } from "react";
 
-const ImageUpload = ({ url, requiredInput, index }) => {
-    const [imagePreview, setImagePreview] = useState(null);
-    const [imageFile, setImageFile] = useState("");
+const VideoUpload = ({ url, requiredInput, index }) => {
+    const [videoPreview, setVideoPreview] = useState(null);
+    const [videoFile, setVideoFile] = useState("");
     const [message, setMessage] = useState("Waiting...");
 
     const handleOnChange = (e) => {
         const file = e.target.files[0]; // Get the first selected file
         if (file) {
             // Check if the selected file type is allowed
-            const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+            const allowedTypes = ["video/mp4", "video/webm", "video/ogg"];
             if (!allowedTypes.includes(file.type)) {
-                alert("Please select a valid image file (PNG, JPG, JPEG).");
+                alert("Please select a valid video file (MP4, WebM, OGG).");
                 e.target.value = null; // Clear the file input
                 return;
             }
 
             // Check if the user has selected multiple files
             if (e.target.files.length > 1) {
-                alert("Please upload only one image.");
+                alert("Please upload only one video.");
                 e.target.value = null; // Clear the file input
                 return;
             }
@@ -30,23 +29,23 @@ const ImageUpload = ({ url, requiredInput, index }) => {
             // Read the file and display preview
             const reader = new FileReader();
             reader.onload = () => {
-                setImagePreview(reader.result);
+                setVideoPreview(reader.result);
             };
             reader.readAsDataURL(file);
 
-            setImageFile(file);
+            setVideoFile(file);
         }
     };
 
     const handleOnSubmit = async () => {
         const formData = new FormData();
-        formData.append("file", imageFile);
+        formData.append("file", videoFile);
         formData.append("upload_preset", "my-uploads");
-        formData.append("public_id", imageFile.name);
+        formData.append("public_id", videoFile.name);
 
         try {
             const response = await fetch(
-                "https://api.cloudinary.com/v1_1/dmssr3ii7/image/upload",
+                "https://api.cloudinary.com/v1_1/dmssr3ii7/video/upload",
                 {
                     method: "POST",
                     body: formData,
@@ -56,66 +55,70 @@ const ImageUpload = ({ url, requiredInput, index }) => {
             if (response.ok) {
                 const data = await response.json();
                 setMessage("Uploaded successfully!");
-                console.log("Image uploaded successfully:", data);
+                console.log("Video uploaded successfully:", data);
             } else {
-                console.error("Image upload failed:", response.statusText);
+                console.error("Video upload failed:", response.statusText);
             }
         } catch (error) {
-            console.error("Error uploading image:", error);
+            console.error("Error uploading video:", error);
         }
     };
 
     return (
-        <div>
-            <label htmlFor='image'>Upload Image (312px x 312px)*</label>
+        <div style={{ marginTop: "1.5rem" }}>
+            <label htmlFor='video'>Upload Video*</label>
 
             <input
                 type='file'
-                name={index > 0 ? `image${index}` : "image"}
-                id='image'
-                accept='.png, .jpg, .jpeg'
+                name={`video${index}`}
+                id='video'
+                accept='.mp4, .webm, .ogg'
                 onChange={handleOnChange}
                 required={requiredInput ? true : false}
             />
             <div className={styles.uploadBtn} onClick={handleOnSubmit}>
-                <p>Upload Image</p>
+                <p>Upload Video</p>
             </div>
 
-            {imagePreview && (
+            {videoPreview && (
                 <div>
                     <p>
                         Preview: <span>{message}</span>
                     </p>
-                    <Image
-                        src={imagePreview}
+                    <video
+                        controls
                         width={312}
                         height={312}
-                        alt='Image Preview'
                         style={{
                             maxWidth: "312px",
                             marginBottom: "30px",
                         }}
-                    />
+                    >
+                        <source src={videoPreview} type={videoFile.type} />
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             )}
 
             {url && (
                 <div>
-                    <p>Current image</p>
-                    <Image
-                        src={url}
+                    <p>Current video</p>
+                    <video
+                        controls
                         width={312}
                         height={312}
-                        alt='Image Preview'
                         style={{
                             maxWidth: "312px",
                             marginBottom: "30px",
                         }}
-                    />
+                    >
+                        <source src={url} type='video/mp4' />
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             )}
         </div>
     );
 };
 
-export default ImageUpload;
+export default VideoUpload;

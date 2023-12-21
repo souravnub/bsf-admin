@@ -16,6 +16,7 @@ const ContentPage = async () => {
                 heroText={homeContent[0].heroText}
                 smallHeading={homeContent[0].section.smallHeading}
                 bigHeading={homeContent[0].section.bigHeading}
+                cards={homeContent[0].sections.cards}
             />
         </>
     );

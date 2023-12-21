@@ -33,7 +33,7 @@ function CharacterCountInput({ label, name, value, onChange, maxLength }) {
             <input
                 type='text'
                 name={name}
-                value={value}
+                defaultValue={value}
                 onChange={handleInputChange}
                 maxLength={maxLength}
             />

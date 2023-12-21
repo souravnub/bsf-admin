@@ -93,3 +93,9 @@
 .characterCount {
     font-size: 0.5rem;
 }
+
+.cardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
