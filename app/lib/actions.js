@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
+import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
 import { connectToDB, genHash } from "./utils";
 import { redirect } from "next/navigation";
@@ -11,10 +12,12 @@ import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
 
-function getImageUrl(fileName) {
+function getImageUrl(fileName, type) {
     const baseUrl =
         "https://res.cloudinary.com/dmssr3ii7/image/upload/v1700699608/my-uploads";
-    const imageUrl = `${baseUrl}/${fileName}.jpg`;
+    const imageUrl = `${baseUrl}/${fileName}.${
+        type === "image" ? ".jpg" : ".mp4"
+    }`;
 
     return imageUrl;
 }
@@ -145,7 +148,7 @@ export const addCourse = async (formData) => {
 
     try {
         await connectToDB();
-        const imageUrl = getImageUrl(image.name);
+        const imageUrl = getImageUrl(image.name, "image");
         const newCourse = new Course({
             name,
             // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
@@ -258,7 +261,7 @@ export const updateCourse = async (formData) => {
     }
     // if the image is provided in the form entries
     if (image !== undefined) {
-        newImageUrl = getImageUrl(image.name);
+        newImageUrl = getImageUrl(image.name, "image");
     }
 
     try {
@@ -411,4 +414,67 @@ export const authenticate = async (prevState, formData) => {
 
 export const sendVerificationCode = async (email) => {
     // Send a verification code to the email
+};
+
+export const updateHomeContent = async (formData) => {
+    connectToDB();
+
+    try {
+        const {
+            heroText,
+            smallHeading,
+            bigHeading,
+            image1,
+            description1,
+            video1,
+            image2,
+            description2,
+            video2,
+            image3,
+            description3,
+            video3,
+        } = Object.fromEntries(formData);
+
+        const img1 = getImageUrl(image1.name, "image");
+        const img2 = getImageUrl(image2.name, "image");
+        const img3 = getImageUrl(image3.name, "image");
+
+        const vid1 = getImageUrl(video1.name, "video");
+        const vid2 = getImageUrl(video2.name, "video");
+        const vid3 = getImageUrl(video3.name, "video");
+
+        const cardsData = [
+            {
+                bannerImage: img1,
+                description: description1,
+                video: vid1,
+            },
+            {
+                bannerImage: img2,
+                description: description2,
+                video: vid2,
+            },
+            {
+                bannerImage: img3,
+                description: description3,
+                video: vid3,
+            },
+        ];
+
+        const homeContent = await WebsiteContent.findByIdAndUpdate(
+            "6582621f6224f786a42635e1",
+            {
+                heroText,
+                section: { smallHeading, bigHeading, cards: cardsData },
+            }
+        );
+
+        if (!homeContent) {
+            throw new Error("Content not found");
+        }
+
+        await homeContent.save();
+    } catch (error) {
+        throw new Error(`Error updating home content: ${error.message}`);
+    }
 };
