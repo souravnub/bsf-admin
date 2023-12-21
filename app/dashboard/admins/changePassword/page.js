@@ -28,21 +28,21 @@ const ChangePassword = () => {
     return (
         <>
             <form className={`${styles.form} ${styles.mt}`}>
-                <label htmlFor="username">User name</label>
+                <label htmlFor='username'>User name</label>
                 <input
                     ref={usernameRef}
-                    type="text"
+                    type='text'
                     required
                     onChange={() => setIsOldPasswordValid(null)}
-                    id="username"
+                    id='username'
                     disabled={isOldPassValid}
                 />
 
-                <label htmlFor="oldPass">Old password</label>
+                <label htmlFor='oldPass'>Old password</label>
                 <input
                     ref={oldPassRef}
-                    type="password"
-                    id="oldPass"
+                    type='password'
+                    id='oldPass'
                     required
                     onChange={() => setIsOldPasswordValid(null)}
                     disabled={isOldPassValid}
@@ -50,7 +50,7 @@ const ChangePassword = () => {
 
                 <button
                     className={styles.button}
-                    type="button"
+                    type='button'
                     disabled={isOldPassValid}
                     onClick={async () => {
                         const isPassCorrect = await checkAdminPassword(
@@ -58,7 +58,8 @@ const ChangePassword = () => {
                             oldPassRef.current.value
                         );
                         setIsOldPasswordValid(isPassCorrect);
-                    }}>
+                    }}
+                >
                     check
                 </button>
 
@@ -72,35 +73,37 @@ const ChangePassword = () => {
             {isOldPassValid && (
                 <form
                     className={`${styles.form} ${styles.mt}`}
-                    action={updateAdmin}>
-                    <label htmlFor="newPass">new password</label>
+                    action={updateAdmin}
+                >
+                    <label htmlFor='newPass'>new password</label>
                     <input
-                        name="username"
-                        type="text"
+                        name='username'
+                        type='text'
                         hidden
                         value={usernameRef.current.value}
                     />
                     <input
-                        name="password"
+                        name='password'
                         ref={newPassRef}
-                        type="password"
-                        id="newPass"
+                        type='password'
+                        id='newPass'
                         required
                         onChange={checkPassMatch}
                     />
 
-                    <label htmlFor="confPass">confirm new password</label>
+                    <label htmlFor='confPass'>confirm new password</label>
                     <input
                         ref={confPassRef}
-                        type="password"
-                        id="confPass"
+                        type='password'
+                        id='confPass'
                         required
                         onChange={checkPassMatch}
                     />
 
                     <button
                         className={styles.button}
-                        disabled={!passwordsMatch}>
+                        disabled={!passwordsMatch}
+                    >
                         change password
                     </button>
                     <span className={styles.warning}>

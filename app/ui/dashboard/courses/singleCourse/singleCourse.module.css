@@ -4,16 +4,6 @@
     margin-top: 20px;
 }
 
-.infoContainer {
-    flex: 1;
-    background-color: var(--bgSoft);
-    padding: 20px;
-    border-radius: 10px;
-    font-weight: bold;
-    color: var(--textSoft);
-    height: max-content;
-}
-
 .imgContainer {
     width: 100%;
     height: 312px;
@@ -66,7 +56,8 @@
 
 .forgot {
     font-size: 14px;
-    margin-top: 10px;
+    margin: 10px 0;
+    text-decoration: underline;
     color: #cccccc;
     transition: 0.2s;
     width: 150px;
@@ -88,4 +79,19 @@
 }
 .mt {
     margin-top: 40px;
+}
+
+.actionButton {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #5d57c9;
+    color: var(--text);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.actionButton:hover {
+    background-color: #4641a1;
 }
