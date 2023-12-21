@@ -12,10 +12,12 @@ import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
 
-function getImageUrl(fileName) {
+function getImageUrl(fileName, type) {
     const baseUrl =
         "https://res.cloudinary.com/dmssr3ii7/image/upload/v1700699608/my-uploads";
-    const imageUrl = `${baseUrl}/${fileName}.jpg`;
+    const imageUrl = `${baseUrl}/${fileName}.${
+        type === "image" ? ".jpg" : ".mp4"
+    }`;
 
     return imageUrl;
 }
@@ -146,7 +148,7 @@ export const addCourse = async (formData) => {
 
     try {
         await connectToDB();
-        const imageUrl = getImageUrl(image.name);
+        const imageUrl = getImageUrl(image.name, "image");
         const newCourse = new Course({
             name,
             // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
@@ -259,7 +261,7 @@ export const updateCourse = async (formData) => {
     }
     // if the image is provided in the form entries
     if (image !== undefined) {
-        newImageUrl = getImageUrl(image.name);
+        newImageUrl = getImageUrl(image.name, "image");
     }
 
     try {
@@ -418,13 +420,13 @@ export const updateHomeContent = async (formData) => {
             video3,
         } = Object.fromEntries(formData);
 
-        const img1 = getImageUrl(image1.name);
-        const img2 = getImageUrl(image2.name);
-        const img3 = getImageUrl(image3.name);
+        const img1 = getImageUrl(image1.name, "image");
+        const img2 = getImageUrl(image2.name, "image");
+        const img3 = getImageUrl(image3.name, "image");
 
-        const vid1 = getImageUrl(video1.name);
-        const vid2 = getImageUrl(video2.name);
-        const vid3 = getImageUrl(video3.name);
+        const vid1 = getImageUrl(video1.name, "video");
+        const vid2 = getImageUrl(video2.name, "video");
+        const vid3 = getImageUrl(video3.name, "video");
 
         const cardsData = [
             {

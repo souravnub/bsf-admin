@@ -8,6 +8,7 @@ const ContentPage = async () => {
     const tabs = await fetchVideoGalleryTabs();
     const allUrls = tabs.map((tab) => tab.url).flat();
     const { homeContent } = await fetchHomeContent();
+    const cards = JSON.parse(JSON.stringify(homeContent[0].section.cards));
 
     return (
         <>
@@ -16,7 +17,7 @@ const ContentPage = async () => {
                 heroText={homeContent[0].heroText}
                 smallHeading={homeContent[0].section.smallHeading}
                 bigHeading={homeContent[0].section.bigHeading}
-                cards={homeContent[0].sections.cards}
+                cards={cards}
             />
         </>
     );

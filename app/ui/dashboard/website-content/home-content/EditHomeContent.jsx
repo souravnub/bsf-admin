@@ -6,8 +6,9 @@ import CharacterCountInput from "./CharacterCountInput";
 import { useState } from "react";
 import ImageUpload from "../../courses/addCourseForm/imageUpload/imageUpload";
 import VideoUpload from "../video-upload/VideoUpload";
+import Image from "next/image";
 
-function EditHomeContent({ heroText, smallHeading, bigHeading }) {
+function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
     const [heroTxt, setHeroTxt] = useState(heroText);
     const [smallHding, setSmallHding] = useState(smallHeading);
     const [bigHding, setBigHding] = useState(bigHeading);
@@ -49,21 +50,24 @@ function EditHomeContent({ heroText, smallHeading, bigHeading }) {
                 />
 
                 <div className={styles.cardContainer}>
-                    {[1, 2, 3].map((index) => (
+                    {cards.map((card, index) => (
                         <div
                             key={`card-${index}`}
                             style={{ marginTop: "1rem" }}
                         >
-                            <h3>Card {index}</h3>
-                            <ImageUpload index={index} />
+                            <h3>Card {index + 1}</h3>
+                            <ImageUpload
+                                index={index}
+                                source={card.bannerImage}
+                            />
                             <CharacterCountInput
                                 label={`Description*`}
                                 name={`description${index}`}
-                                value={bigHding}
+                                value={card.description}
                                 onChange={handleInputChange(setBigHding)}
                                 maxLength={130}
                             />
-                            <VideoUpload index={index} />
+                            <VideoUpload index={index} source={card.video} />
                         </div>
                     ))}
                 </div>

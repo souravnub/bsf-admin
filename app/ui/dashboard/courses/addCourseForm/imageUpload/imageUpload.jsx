@@ -4,8 +4,8 @@ import styles from "./imageUpload.module.css";
 import Image from "next/image";
 import React, { useState } from "react";
 
-const ImageUpload = ({ url, requiredInput, index }) => {
-    const [imagePreview, setImagePreview] = useState(null);
+const ImageUpload = ({ url, requiredInput, index, source }) => {
+    const [imagePreview, setImagePreview] = useState(source || null);
     const [imageFile, setImageFile] = useState("");
     const [message, setMessage] = useState("Waiting...");
 
@@ -83,9 +83,7 @@ const ImageUpload = ({ url, requiredInput, index }) => {
 
             {imagePreview && (
                 <div>
-                    <p>
-                        Preview: <span>{message}</span>
-                    </p>
+                    <p>{source ? "Current Image" : `Preview ${message}`}</p>
                     <Image
                         src={imagePreview}
                         width={312}
@@ -94,6 +92,8 @@ const ImageUpload = ({ url, requiredInput, index }) => {
                         style={{
                             maxWidth: "312px",
                             marginBottom: "30px",
+                            height: "312px",
+                            width: "auto",
                         }}
                     />
                 </div>

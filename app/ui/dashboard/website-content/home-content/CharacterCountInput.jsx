@@ -3,14 +3,14 @@
 import styles from "@/app/ui/dashboard/website-content/website-content.css.module.css";
 import { useState } from "react";
 
-function CharacterCountInput({ label, name, value, onChange, maxLength }) {
+const CharacterCountInput = ({ label, name, value, onChange, maxLength }) => {
     const [charCount, setCharCount] = useState(value.length);
 
     const handleInputChange = (e) => {
         const text = e.target.value;
         if (text.length <= maxLength) {
             setCharCount(text.length);
-            onChange(text);
+            onChange(text); // Pass the updated text value to the parent component
         }
     };
 
@@ -39,6 +39,6 @@ function CharacterCountInput({ label, name, value, onChange, maxLength }) {
             />
         </div>
     );
-}
+};
 
 export default CharacterCountInput;

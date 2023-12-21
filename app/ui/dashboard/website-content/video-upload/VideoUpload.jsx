@@ -3,8 +3,8 @@
 import styles from "./videoUpload.module.css";
 import React, { useState } from "react";
 
-const VideoUpload = ({ url, requiredInput, index }) => {
-    const [videoPreview, setVideoPreview] = useState(null);
+const VideoUpload = ({ url, requiredInput, index, source }) => {
+    const [videoPreview, setVideoPreview] = useState(source || null);
     const [videoFile, setVideoFile] = useState("");
     const [message, setMessage] = useState("Waiting...");
 
@@ -82,9 +82,7 @@ const VideoUpload = ({ url, requiredInput, index }) => {
 
             {videoPreview && (
                 <div>
-                    <p>
-                        Preview: <span>{message}</span>
-                    </p>
+                    <p>{source ? "Current Video" : `Preview ${message}`}</p>
                     <video
                         controls
                         width={312}
