@@ -6,6 +6,7 @@ import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/FileUpload/Fil
 import Prerequisites from "@/app/ui/dashboard/courses/addCourseForm/prerequisites/prerequisites";
 import styles from "@/app/ui/dashboard/courses/singleCourse/singleCourse.module.css";
 import addCoursePageStyles from "@/app/ui/dashboard/courses/addCourse/addCourse.module.css";
+import CourseSchedulePicker from "@/app/ui/dashboard/courses/addCourseForm/courseSchedulePicker/CourseSchedulePicker";
 
 const SingleProductPage = async ({ params }) => {
     const { id } = params;
@@ -83,6 +84,9 @@ const SingleProductPage = async ({ params }) => {
                     />
 
                     <Prerequisites prerequisites={course.prequisites} />
+
+                    <CourseSchedulePicker info={course.schedule} />
+
                     <label>Description</label>
                     <textarea
                         name='description'

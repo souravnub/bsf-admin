@@ -96,8 +96,6 @@ export const addCourse = async (formData) => {
     };
 
     for (let [key, value] of formData.entries()) {
-        console.log("key: " + key + " , " + "value: " + value);
-
         days.forEach((day) => {
             if (key === day && value && classDays[day].from === undefined) {
                 classDays[day].from = value;
@@ -196,8 +194,29 @@ export const updateCourse = async (formData) => {
     const otherLearnings = [];
     const prequisites = [];
     const jobOpportunities = [];
+    const classDays = {
+        monday: {},
+        tuesday: {},
+        wednesday: {},
+        thursday: {},
+        friday: {},
+        saturday: {},
+        sunday: {},
+    };
 
     for (let [key, value] of formData.entries()) {
+        days.forEach((day) => {
+            if (key === day && value && classDays[day].from === undefined) {
+                classDays[day].from = value;
+            } else if (
+                key === day &&
+                value &&
+                classDays[day].from !== undefined
+            ) {
+                classDays[day].to = value;
+            }
+        });
+
         if (key === "tools") {
             tools.push(value);
         } else if (key === "prerequisite") {
@@ -215,6 +234,8 @@ export const updateCourse = async (formData) => {
         category,
         image,
         price,
+        startDate,
+        endDate,
         description,
         priceIncludesTax,
         isInDemand,
@@ -252,6 +273,11 @@ export const updateCourse = async (formData) => {
             learnings: {
                 tools,
                 other: otherLearnings,
+            },
+            schedule: {
+                startDate,
+                endDate,
+                classDays,
             },
             jobOpportunities,
             priceIncludesTax: priceIncludesTax == "true" ? true : false,
