@@ -75,3 +75,17 @@
 .forgot:hover {
     color: #fff;
 }
+
+.form button:disabled {
+    opacity: 0.5;
+}
+.form input:disabled {
+    opacity: 0.5;
+}
+.warning {
+    color: red;
+    font-size: 0.8rem;
+}
+.mt {
+    margin-top: 40px;
+}
