@@ -346,7 +346,7 @@ export const fetchVideoGalleryTabs = async () => {
 export const addUrlToGallery = async ({ _id, value: newUrl }) => {
     try {
         await connectToDB();
-        await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
+        await Video.findByIdAndUpdate(_id, { $push: { videos: newUrl } });
     } catch (err) {
         console.log(err);
         throw new Error("error while adding url to the video gallery");
@@ -365,10 +365,10 @@ export const deleteVideoGalleryCategory = async (_id) => {
 };
 
 export const addVideoGalleryCategory = async ({ value: name }) => {
+    await connectToDB();
+    const newCategory = new Video({ name, videos: [] });
+    await newCategory.save();
     try {
-        await connectToDB();
-        const newCategory = new Video({ category: name, url: [] });
-        await newCategory.save();
     } catch (err) {
         throw new Error("error while adding new video gallery category");
     }
@@ -378,7 +378,7 @@ export const addVideoGalleryCategory = async ({ value: name }) => {
 export const deleteUrlFromGallery = async (_id, url) => {
     try {
         await connectToDB();
-        await Video.findByIdAndUpdate(_id, { $pull: { url } });
+        await Video.findByIdAndUpdate(_id, { $pull: { videos: url } });
     } catch (err) {
         throw new Error("error while deleting url from the video gallery");
     }

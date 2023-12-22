@@ -1,8 +1,8 @@
 "use client";
+import { fetchVideoGalleryTabs } from "@/app/lib/actions";
 import React, { useEffect, useState, useTransition } from "react";
 
 export const AddForm = ({
-    allUrls,
     extraProps = {},
     action,
     inputPlaceholder = "",
@@ -12,6 +12,16 @@ export const AddForm = ({
 }) => {
     const [pending, startTransition] = useTransition(false);
     const [value, setValue] = useState("");
+    const [allUrls, setAllUrls] = useState([]);
+
+    useEffect(() => {
+        async function fetchUrls() {
+            const tabs = await fetchVideoGalleryTabs();
+            setAllUrls(tabs.map((tab) => tab.url).flat());
+        }
+        fetchUrls();
+    }, []);
+
     useEffect(() => {
         setValue("");
     }, [pending]);
