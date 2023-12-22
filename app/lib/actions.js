@@ -397,10 +397,6 @@ export const authenticate = async (prevState, formData) => {
     }
 };
 
-export const sendVerificationCode = async (email) => {
-    // Send a verification code to the email
-};
-
 export const updateHomeContent = async (formData) => {
     connectToDB();
 
@@ -461,5 +457,21 @@ export const updateHomeContent = async (formData) => {
         await homeContent.save();
     } catch (error) {
         throw new Error(`Error updating home content: ${error.message}`);
+    }
+};
+
+export const sendCode = async (prevState, formData) => {
+    const { email } = Object.fromEntries(formData);
+
+    const adminExists = await Admin.findOne({ email });
+
+    if (adminExists) {
+        /*
+            1. Send the code
+            2. Verify the code
+            3. Redirect to PROTECTED route '/changePassword'
+        */
+    } else {
+        return "This email is not associated with an account.";
     }
 };

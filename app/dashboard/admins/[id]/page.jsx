@@ -6,31 +6,32 @@ import Link from "next/link";
 const SingleAdminPage = async ({ params }) => {
     const { id } = params;
     const admin = await fetchAdmin(id);
+
     return (
         <div className={styles.container}>
             <div className={styles.formContainer}>
                 <form action={updateAdmin} className={styles.form}>
                     <input
-                        type='hidden'
-                        name='id'
+                        type="hidden"
+                        name="id"
                         defaultValue={String(admin._id)}
                     />
                     <label>Username</label>
                     <input
-                        type='text'
-                        name='username'
+                        type="text"
+                        name="username"
                         defaultValue={admin.username}
                     />
-                    <label htmlFor='email'>Email</label>
+                    <label htmlFor="email">Email</label>
                     <input
-                        type='email'
+                        type="email"
                         value={admin.email}
-                        id='email'
-                        name='email'
+                        id="email"
+                        name="email"
                         readOnly
                     />
                     <Link
-                        href='/dashboard/admins/changePassword'
+                        href="/dashboard/admins/changePassword"
                         className={styles.forgot}
                     >
                         Change Password

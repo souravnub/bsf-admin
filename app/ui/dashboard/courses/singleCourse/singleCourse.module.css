@@ -54,19 +54,6 @@
     margin-top: 20px;
 }
 
-.forgot {
-    font-size: 14px;
-    margin: 10px 0;
-    text-decoration: underline;
-    color: #cccccc;
-    transition: 0.2s;
-    width: 150px;
-}
-
-.forgot:hover {
-    color: #fff;
-}
-
 .form button:disabled {
     opacity: 0.5;
 }

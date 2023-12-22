@@ -28,9 +28,8 @@ export const fetchAdmins = async (q, page) => {
 export const fetchAdmin = async (id) => {
     try {
         connectToDB();
-        const admin = await Admin.findBy(id);
+        const admin = await Admin.findById(id);
 
-        console.log(admin);
         return admin;
     } catch (err) {
         console.log(err);
