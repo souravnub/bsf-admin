@@ -3,6 +3,7 @@ import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
+import { Video } from "./models/Video";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { connectToDB } from "./utils";
 import moment from "moment";

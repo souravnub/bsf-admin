@@ -28,10 +28,10 @@ const WatchDemo = async () => {
             />
             {tabs &&
                 tabs.length > 0 &&
-                tabs.map(({ _id, category, url }) => (
+                tabs.map(({ _id, name, videos }) => (
                     <div key={_id} className={styles.tabContainer}>
                         <div>
-                            <h2>{category}</h2>
+                            <h2>{name}</h2>
                             <Button
                                 className={`${styles.button} ${styles.removeButton}`}
                                 onClick={deleteVideoGalleryCategory.bind(
@@ -41,9 +41,9 @@ const WatchDemo = async () => {
                                 Remove Category
                             </Button>
                         </div>
-                        {url.length > 0 && (
+                        {videos.length > 0 && (
                             <ol>
-                                {url?.map((url) => (
+                                {videos?.map((url) => (
                                     <li key={url}>
                                         <span>{url}</span>
                                         <Button

@@ -1,15 +1,14 @@
 import { mongoose } from "mongoose";
 
 const modalVideoSchema = new mongoose.Schema({
-    category: {
+    name: {
         type: String,
         required: true,
     },
-    url: [
+    videos: [
         {
             type: String,
             required: true,
-            unique: true,
         },
     ],
 });
