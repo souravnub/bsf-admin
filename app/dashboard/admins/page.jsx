@@ -5,24 +5,6 @@ import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { fetchAdmins } from "@/app/lib/data";
 import { deleteAdmin } from "@/app/lib/actions";
 
-/*
-
-    TODO-
-
-    ✅ Being able to add a new category on selecting "Create new category"
-    ✅ Upload images element
-    ✅ Fix courses add function and courses category population
-    ✅ Make new courses through the form
-    ✅ Remove unnecessary stuff from the ui.
-    ✅ Delete a course
-    ✅ Edit & view course details
-    ✅ Display total users, total courses and total revenue on the dashboard home page
-    -> View customers
-    -> Send email to all customers at once
-    -> Send email to all customers of a particular course all at once.
-    -> Display the graph based on the revenue and time
-*/
-
 const AdminsPage = async ({ searchParams }) => {
     const q = searchParams?.q || "";
     const page = searchParams?.page || 1;
@@ -31,8 +13,8 @@ const AdminsPage = async ({ searchParams }) => {
     return (
         <div className={styles.container}>
             <div className={styles.top}>
-                <Search placeholder="Search" />
-                <Link href="/dashboard/admins/add">
+                <Search placeholder='Search' />
+                <Link href='/dashboard/admins/add'>
                     <button className={styles.addButton}>Add New</button>
                 </Link>
             </div>
@@ -52,20 +34,23 @@ const AdminsPage = async ({ searchParams }) => {
                             <td>
                                 <div className={styles.buttons}>
                                     <Link
-                                        href={`/dashboard/admins/${admin._id}`}>
+                                        href={`/dashboard/admins/${admin._id}`}
+                                    >
                                         <button
-                                            className={`${styles.button} ${styles.view}`}>
+                                            className={`${styles.button} ${styles.view}`}
+                                        >
                                             View
                                         </button>
                                     </Link>
                                     <form action={deleteAdmin}>
                                         <input
-                                            type="hidden"
-                                            name="id"
+                                            type='hidden'
+                                            name='id'
                                             value={admin._id}
                                         />
                                         <button
-                                            className={`${styles.button} ${styles.delete}`}>
+                                            className={`${styles.button} ${styles.delete}`}
+                                        >
                                             Delete
                                         </button>
                                     </form>

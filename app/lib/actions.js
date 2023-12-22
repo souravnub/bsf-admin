@@ -5,7 +5,7 @@ import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
-import { connectToDB, genHash } from "./utils";
+import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
 import { signIn } from "../auth";
@@ -28,14 +28,17 @@ export const addAdmin = async (formData) => {
     try {
         connectToDB();
 
-        const newAdmin = new Admin({
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const newUser = new Admin({
             username,
-            password,
+            password: hashedPassword,
             email,
             isAdmin: isAdmin == "true" ? true : false,
         });
 
-        await newAdmin.save();
+        await newUser.save();
     } catch (err) {
         console.log(err);
         throw new Error("Failed to create admin!");
@@ -46,30 +49,27 @@ export const addAdmin = async (formData) => {
 };
 
 export const updateAdmin = async (formData) => {
-    let { username, password } = Object.fromEntries(formData);
-    await connectToDB();
+    const { id, username, password } = Object.fromEntries(formData);
 
-    const updateFields = {};
-
-    if (username) {
-        updateFields.username = username;
-    }
-
-    if (password) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        updateFields.password = hash;
-    }
-
-    await Admin.updateOne({ username }, { $set: updateFields });
     try {
+        connectToDB();
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const updateFields = {
+            username,
+            password: hashedPassword,
+        };
+
+        await Admin.findByIdAndUpdate(id, updateFields);
     } catch (err) {
         console.log(err);
         throw new Error("Failed to update user!");
     }
 
-    revalidatePath("/dashboard/admins");
-    redirect("/dashboard/admins");
+    revalidatePath("/dashboard/users");
+    redirect("/dashboard/users");
 };
 
 const days = [
@@ -302,21 +302,6 @@ export const updateCourse = async (formData) => {
 
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
-};
-
-export const checkAdminPassword = async (username, oldPassword) => {
-    await connectToDB();
-    const adminFound = await Admin.findOne({ username: username });
-    if (!adminFound) {
-        console.log("admin not found");
-        return false;
-    }
-
-    const isPassCorrect = await bcrypt.compare(
-        oldPassword.trim(),
-        adminFound.password
-    );
-    return isPassCorrect;
 };
 
 export const deleteAdmin = async (formData) => {
