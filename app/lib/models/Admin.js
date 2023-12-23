@@ -23,6 +23,11 @@ const adminSchema = new mongoose.Schema(
             type: Boolean,
             default: true,
         },
+        password_reset_token: {
+            required: false,
+            type: String,
+            trim: true,
+        },
     },
     { timestamps: true }
 );

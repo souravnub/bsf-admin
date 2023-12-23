@@ -7,10 +7,16 @@ import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
-import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
+import Env from "./config/env";
+
+import bcrypt from "bcrypt";
+import cryptoRandomString from "crypto-random-string";
+import Cryptr from "cryptr";
+
+import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
 
 function getImageUrl(fileName, type) {
     const baseUrl =
@@ -460,18 +466,69 @@ export const updateHomeContent = async (formData) => {
     }
 };
 
-export const sendCode = async (prevState, formData) => {
+export const sendLink = async (prevState, formData) => {
+    connectToDB();
     const { email } = Object.fromEntries(formData);
 
-    const adminExists = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ email });
 
-    if (adminExists) {
-        /*
-            1. Send the code
-            2. Verify the code
-            3. Redirect to PROTECTED route '/changePassword'
-        */
+    if (admin) {
+        // Generate and store token
+        const randomStr = cryptoRandomString({
+            length: 64,
+            type: "alphanumeric",
+        });
+
+        admin.password_reset_token = randomStr;
+        await admin.save();
+
+        // Encrypt user email
+        const crypt = new Cryptr(Env.SECRET_KEY);
+        const encrypted_email = crypt.encrypt(admin.email);
+
+        const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
+
+        try {
+            await triggerClientEmailSending(email, admin.username, url);
+
+            console.log();
+            console.log("Email sent successfully.");
+            console.log();
+            return "A reset link has been sent to your email. Please check your email.";
+        } catch (error) {
+            console.log();
+            console.log("OH NOOOOOO");
+            console.log();
+            console.log("tHe eRrOr iS", error);
+        }
     } else {
         return "This email is not associated with an account.";
+    }
+};
+
+export const resetPassword = async (formData) => {
+    const { email, signature, password, confirmPassword } =
+        Object.fromEnteries(formData);
+    if (password === confirmPassword) {
+        // * Decrypt string
+        const crypter = new Cryptr(Env.SECRET_KEY);
+        const emailDecrypted = crypter.decrypt(email);
+
+        const admin = await Admin.findOne({
+            email: emailDecrypted,
+            password_reset_token: signature,
+        });
+        if (admin == null || admin == undefined) {
+            return "Reset URL is incorrect.";
+        }
+
+        const salt = bcrypt.genSaltSync(10);
+        admin.password = bcrypt.hashSync(password, salt);
+        admin.password_reset_token = null;
+        await admin.save();
+
+        redirect("/login");
+    } else {
+        return "Passwords do not match.";
     }
 };

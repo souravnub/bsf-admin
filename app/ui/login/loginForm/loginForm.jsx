@@ -14,7 +14,7 @@ const LoginForm = () => {
             <input type="text" placeholder="Username" name="username" />
             <input type="password" placeholder="Password" name="password" />
             <button>Login</button>
-            <Link href="/verify" className={styles.forgot}>
+            <Link href="/forgot-password" className={styles.forgot}>
                 Forgot Password?
             </Link>
             {state && state}
