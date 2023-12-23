@@ -393,13 +393,14 @@ export const deleteUrlFromGallery = async (_id, url) => {
 
 export const authenticate = async (prevState, formData) => {
     const { username, password } = Object.fromEntries(formData);
+    console.log(username, password);
 
     connectToDB();
 
     try {
         await signIn("credentials", { username, password });
     } catch (err) {
-        return "Wrong Credentials!";
+        return "Username/Password is incorrect.";
     }
 };
 
@@ -489,11 +490,10 @@ export const sendLink = async (prevState, formData) => {
         const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
 
         try {
+            console.log("yo");
+            console.log(email, admin.username, url);
             await triggerClientEmailSending(email, admin.username, url);
 
-            console.log();
-            console.log("Email sent successfully.");
-            console.log();
             return "A reset link has been sent to your email. Please check your email.";
         } catch (error) {
             console.log();
@@ -506,9 +506,9 @@ export const sendLink = async (prevState, formData) => {
     }
 };
 
-export const resetPassword = async (formData) => {
+export const resetPassword = async (prevState, formData) => {
     const { email, signature, password, confirmPassword } =
-        Object.fromEnteries(formData);
+        Object.fromEntries(formData);
     if (password === confirmPassword) {
         // * Decrypt string
         const crypter = new Cryptr(Env.SECRET_KEY);
@@ -522,9 +522,12 @@ export const resetPassword = async (formData) => {
             return "Reset URL is incorrect.";
         }
 
-        const salt = bcrypt.genSaltSync(10);
-        admin.password = bcrypt.hashSync(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        admin.password = hashedPassword;
         admin.password_reset_token = null;
+
         await admin.save();
 
         redirect("/login");

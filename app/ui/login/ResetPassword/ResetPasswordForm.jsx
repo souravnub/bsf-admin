@@ -7,10 +7,7 @@ import { resetPassword } from "@/app/lib/actions";
 import { useSearchParams, useParams } from "next/navigation";
 
 const ResetPasswordForm = () => {
-    const [resetPasswordFormState, resetPasswordFormStateAction] = useFormState(
-        resetPassword,
-        undefined
-    );
+    const [state, formAction] = useFormState(resetPassword, undefined);
 
     const searchParams = useSearchParams();
     const params = useParams();
@@ -21,20 +18,9 @@ const ResetPasswordForm = () => {
         <>
             <div className={styles.forgotPasswordContainer}>
                 <h1>Reset Password </h1>
-                <form
-                    action={resetPasswordFormStateAction}
-                    className={styles.sendCodeForm}
-                >
-                    <input
-                        type="hidden"
-                        name="email"
-                        defaultValue={params.email}
-                    />
-                    <input
-                        type="hidden"
-                        name="signature"
-                        defaultValue={signature}
-                    />
+                <form action={formAction} className={styles.sendCodeForm}>
+                    <input type="hidden" name="email" value={params.email} />
+                    <input type="hidden" name="signature" value={signature} />
                     <div>
                         <label htmlFor="pwd1">Enter new password</label>
                         <input type="password" name="password" id="pwd1" />
@@ -51,9 +37,7 @@ const ResetPasswordForm = () => {
 
                     <div className={styles.sendCodeBtnContainer}>
                         <button>Reset</button>
-                        <p className={styles.formMessage}>
-                            {resetPasswordFormState && resetPasswordFormState}
-                        </p>
+                        <p className={styles.formMessage}>{state && state}</p>
                     </div>
                 </form>
             </div>

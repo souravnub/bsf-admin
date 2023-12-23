@@ -14,10 +14,10 @@ export default function ForgotPasswordEmail({ name, url }) {
                 ignore this email.
             </Text>
             <Button
-                px={20}
-                py={20}
+                pX={20}
+                pY={20}
                 href={url}
-                style={{ background: "#000", color: "#fff" }}
+                style={{ background: "#000", color: "#FFFFFF" }}
             >
                 Reset Password
             </Button>
@@ -25,7 +25,7 @@ export default function ForgotPasswordEmail({ name, url }) {
             <Hr />
 
             <Heading as="h3">Regards</Heading>
-            <Text>BSF Systemss</Text>
+            <Text>BSF Systems</Text>
         </Html>
     );
 }
