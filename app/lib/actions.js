@@ -54,26 +54,44 @@ export const addAdmin = async (formData) => {
 };
 
 export const updateAdmin = async (formData) => {
-    const { id, username, password } = Object.fromEntries(formData);
+    let { username, password } = Object.fromEntries(formData);
+    await connectToDB();
 
+    const updateFields = {};
+
+    if (username) {
+        updateFields.username = username;
+    }
+
+    if (password) {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
+        updateFields.password = hash;
+    }
+
+    await Admin.updateOne({ username }, { $set: updateFields });
     try {
-        connectToDB();
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const updateFields = {
-            username,
-            password: hashedPassword,
-        };
-
-        await Admin.findByIdAndUpdate(id, updateFields);
     } catch (err) {
         console.log(err);
         throw new Error("Failed to update user!");
     }
 
-    revalidatePath("/dashboard/users");
-    redirect("/dashboard/users");
+    revalidatePath("/dashboard/admins");
+    redirect("/dashboard/admins");
+};
+export const checkAdminPassword = async (username, oldPassword) => {
+    await connectToDB();
+    const adminFound = await Admin.findOne({ username: username });
+    if (!adminFound) {
+        console.log("admin not found");
+        return false;
+    }
+
+    const isPassCorrect = await bcrypt.compare(
+        oldPassword.trim(),
+        adminFound.password
+    );
+    return isPassCorrect;
 };
 
 const days = [
@@ -511,23 +529,17 @@ export const resetPassword = async (prevState, formData) => {
         const crypter = new Cryptr(Env.SECRET_KEY);
         const emailDecrypted = crypter.decrypt(email);
 
-        const admin = await Admin.findOne({
-            email: emailDecrypted,
-            password_reset_token: signature,
-        });
+        const admin = await Admin.findOneAndUpdate(
+            {
+                email: emailDecrypted,
+                password_reset_token: signature,
+            },
+            { password_reset_token: null, password }
+        );
+
         if (admin == null || admin == undefined) {
             return "Reset URL is incorrect.";
         }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        admin.password = hashedPassword;
-        admin.password_reset_token = null;
-
-        await admin.save();
-
-        console.log("HASHED PASSWORD-", hashedPassword);
-        console.log("SAVED PASSWORD-", admin.password);
 
         redirect("/login");
     } else {
