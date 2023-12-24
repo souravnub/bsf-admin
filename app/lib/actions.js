@@ -511,23 +511,17 @@ export const resetPassword = async (prevState, formData) => {
         const crypter = new Cryptr(Env.SECRET_KEY);
         const emailDecrypted = crypter.decrypt(email);
 
-        const admin = await Admin.findOne({
-            email: emailDecrypted,
-            password_reset_token: signature,
-        });
+        const admin = await Admin.findOneAndUpdate(
+            {
+                email: emailDecrypted,
+                password_reset_token: signature,
+            },
+            { password_reset_token: null, password }
+        );
+
         if (admin == null || admin == undefined) {
             return "Reset URL is incorrect.";
         }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        admin.password = hashedPassword;
-        admin.password_reset_token = null;
-
-        await admin.save();
-
-        console.log("HASHED PASSWORD-", hashedPassword);
-        console.log("SAVED PASSWORD-", admin.password);
 
         redirect("/login");
     } else {
