@@ -1,9 +1,8 @@
 import { deleteUser } from "@/app/lib/actions";
-import { fetchCustomers, fetchAdmins } from "@/app/lib/data";
+import { fetchCustomers } from "@/app/lib/data";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Search from "@/app/ui/dashboard/search/search";
 import styles from "@/app/ui/dashboard/customers/customers.module.css";
-import Image from "next/image";
 import Link from "next/link";
 
 const customersPage = async ({ searchParams }) => {
@@ -14,10 +13,7 @@ const customersPage = async ({ searchParams }) => {
     return (
         <div className={styles.container}>
             <div className={styles.top}>
-                <Search placeholder='Search for a customer...' />
-                <Link href='/dashboard/customers/add'>
-                    <button className={styles.addButton}>Add New</button>
-                </Link>
+                <Search placeholder="Search for a customer..." />
             </div>
             <table className={styles.table}>
                 <thead>
@@ -49,8 +45,8 @@ const customersPage = async ({ searchParams }) => {
                                     </Link>
                                     <form action={deleteUser}>
                                         <input
-                                            type='hidden'
-                                            name='id'
+                                            type="hidden"
+                                            name="id"
                                             value={customer._id}
                                         />
                                         <button
