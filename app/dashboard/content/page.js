@@ -1,58 +1,25 @@
-import {
-    addUrlToGallery,
-    addVideoGalleryCategory,
-    deleteUrlFromGallery,
-    deleteVideoGalleryCategory,
-    fetchVideoGalleryTabs,
-} from "@/app/lib/actions";
-import React from "react";
-import { TiDelete } from "react-icons/ti";
-import { AddForm, Button } from "./ClientComponents";
+import { fetchVideoGalleryTabs } from "@/app/lib/actions";
+import { fetchHomeContent } from "@/app/lib/data";
+import EditHomeContent from "@/app/ui/dashboard/website-content/home-content/EditHomeContent";
+
+import WatchDemo from "@/app/ui/dashboard/website-content/watch-demo/WatchDemo";
 
 const ContentPage = async () => {
     const tabs = await fetchVideoGalleryTabs();
     const allUrls = tabs.map((tab) => tab.url).flat();
+    const { homeContent } = await fetchHomeContent();
+    const cards = JSON.parse(JSON.stringify(homeContent[0].section.cards));
 
     return (
-        <div>
-            <AddForm action={addVideoGalleryCategory} />
-            {tabs &&
-                tabs.length > 0 &&
-                tabs.map(({ _id, category, url }) => (
-                    <div key={_id}>
-                        <div>
-                            <h2>{category}</h2>
-                            <Button
-                                onClick={deleteVideoGalleryCategory.bind(
-                                    null,
-                                    _id
-                                )}>
-                                Remove Category
-                            </Button>
-                        </div>
-                        <ol>
-                            {url.map((url) => (
-                                <li key={url}>
-                                    <span>{url}</span>
-                                    <Button
-                                        onClick={deleteUrlFromGallery.bind(
-                                            null,
-                                            _id,
-                                            url
-                                        )}>
-                                        <TiDelete />
-                                    </Button>
-                                </li>
-                            ))}
-                        </ol>
-                        <AddForm
-                            allUrls={allUrls}
-                            extraProps={{ _id }}
-                            action={addUrlToGallery}
-                        />
-                    </div>
-                ))}
-        </div>
+        <>
+            <WatchDemo tabs={tabs} allUrls={allUrls} />
+            <EditHomeContent
+                heroText={homeContent[0].heroText}
+                smallHeading={homeContent[0].section.smallHeading}
+                bigHeading={homeContent[0].section.bigHeading}
+                cards={cards}
+            />
+        </>
     );
 };
 

@@ -6,7 +6,7 @@ export async function GET() {
     try {
         connectToDB();
 
-        const videos = await Video.find();
+        const videos = await Video.find({});
 
         return NextResponse.json(videos);
     } catch (error) {

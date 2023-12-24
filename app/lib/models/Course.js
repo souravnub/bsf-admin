@@ -11,32 +11,46 @@ const courseSchema = new mongoose.Schema(
             },
         ],
 
+        image: {
+            type: String,
+            required: true,
+        },
+
         name: {
             type: String,
             required: true,
         },
 
-        category: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "CourseCategory",
-        },
-
-        image: {
-            type: String,
-            required: true,
-        },
+        priceIncludesTax: { type: Boolean, default: false },
+        isInDemand: { type: Boolean, default: false },
 
         description: {
             type: String,
             required: true,
         },
 
-        features: [
-            {
-                type: String,
-                required: true,
+        learnings: {
+            tools: [{ type: String }],
+            other: [{ type: String }],
+        },
+
+        schedule: {
+            startDate: { type: String, required: true },
+            endDate: { type: String, required: true },
+            // classDays: {monday: {from: '11pm', to: '2pm'}, saturday: {from: "10pm", to: "2pm"}}
+            classDays: {
+                type: Map,
+                of: {
+                    from: { type: String },
+                    to: { type: String },
+                },
             },
-        ],
+        },
+
+        category: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "CourseCategory",
+        },
 
         reviews: [
             {
@@ -54,6 +68,12 @@ const courseSchema = new mongoose.Schema(
             type: Number,
             required: true,
         },
+
+        jobOpportunities: [
+            {
+                type: String,
+            },
+        ],
     },
     { timestamps: true }
 );

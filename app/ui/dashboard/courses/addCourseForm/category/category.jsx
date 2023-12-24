@@ -24,17 +24,16 @@ const Category = ({ categories, selected }) => {
     return (
         <>
             <select
-                name='category'
-                id='cat'
+                name="category"
+                id="cat"
                 onChange={handleSelectChange}
-                defaultValue={selected}
-            >
+                defaultValue={selected}>
                 {categories.map((category) => (
-                    <option value={category._id} key={category._id}>
+                    <option value={category.category} key={category._id}>
                         {category.category}
                     </option>
                 ))}
-                <option value={newCategoryName} key='createNew'>
+                <option value={newCategoryName} key="createNew">
                     Create New
                 </option>
             </select>
@@ -42,8 +41,8 @@ const Category = ({ categories, selected }) => {
             {newCategory && (
                 <>
                     <input
-                        type='text'
-                        placeholder='New Category Name'
+                        type="text"
+                        placeholder="New Category Name"
                         value={newCategoryName}
                         onChange={(e) => handleNewCategoryNameChange(e)}
                     />

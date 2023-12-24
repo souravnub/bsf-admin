@@ -13,6 +13,7 @@ import {
     MdLogout,
     MdAdminPanelSettings,
     MdLibraryBooks,
+    MdChat,
 } from "react-icons/md";
 import { auth, signOut } from "@/app/auth";
 
@@ -29,6 +30,11 @@ const menuItems = [
                 title: "Customers",
                 path: "/dashboard/customers",
                 icon: <MdSupervisedUserCircle />,
+            },
+            {
+                title: "Messages",
+                path: "/dashboard/messages",
+                icon: <MdChat />,
             },
             {
                 title: "Admins",

@@ -3,34 +3,44 @@
 import { revalidatePath } from "next/cache";
 import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
+import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
 import { connectToDB } from "./utils";
 import { redirect } from "next/navigation";
-import bcrypt from "bcrypt";
 import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
+import Env from "./config/env";
 
-function getImageUrl(fileName) {
+import bcrypt from "bcrypt";
+import cryptoRandomString from "crypto-random-string";
+import Cryptr from "cryptr";
+
+import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
+
+function getImageUrl(fileName, type) {
     const baseUrl =
         "https://res.cloudinary.com/dmssr3ii7/image/upload/v1700699608/my-uploads";
-    const imageUrl = `${baseUrl}/${fileName}.jpg`;
+    const imageUrl = `${baseUrl}/${fileName}.${
+        type === "image" ? ".jpg" : ".mp4"
+    }`;
 
     return imageUrl;
 }
 
 export const addAdmin = async (formData) => {
-    const { username, password } = Object.fromEntries(formData);
+    const { username, password, email, isAdmin } = Object.fromEntries(formData);
 
     try {
         connectToDB();
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new Admin({
             username,
             password: hashedPassword,
+            email,
+            isAdmin: isAdmin == "true" ? true : false,
         });
 
         await newUser.save();
@@ -39,8 +49,8 @@ export const addAdmin = async (formData) => {
         throw new Error("Failed to create admin!");
     }
 
-    revalidatePath("/dashboard/users");
-    redirect("/dashboard/users");
+    revalidatePath("/dashboard/admins");
+    redirect("/dashboard/admins");
 };
 
 export const updateAdmin = async (formData) => {
@@ -49,8 +59,7 @@ export const updateAdmin = async (formData) => {
     try {
         connectToDB();
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const updateFields = {
             username,
@@ -67,71 +76,108 @@ export const updateAdmin = async (formData) => {
     redirect("/dashboard/users");
 };
 
+const days = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+];
+
 export const addCourse = async (formData) => {
-    const features = [];
+    const tools = [];
+    const otherLearnings = [];
     const prequisites = [];
+    const jobOpportunities = [];
+    const classDays = {
+        monday: {},
+        tuesday: {},
+        wednesday: {},
+        thursday: {},
+        friday: {},
+        saturday: {},
+        sunday: {},
+    };
 
     for (let [key, value] of formData.entries()) {
-        if (key === "feature") {
-            features.push(value);
+        days.forEach((day) => {
+            if (key === day && value && classDays[day].from === undefined) {
+                classDays[day].from = value;
+            } else if (
+                key === day &&
+                value &&
+                classDays[day].from !== undefined
+            ) {
+                classDays[day].to = value;
+            }
+        });
+
+        if (key === "tools") {
+            tools.push(value);
         } else if (key === "prerequisite") {
             prequisites.push(value);
+        } else if (key == "other") {
+            otherLearnings.push(value);
+        } else if (key == "jobOpportunities") {
+            jobOpportunities.push(value);
         }
     }
 
-    const { name, category, image, price, description } =
-        Object.fromEntries(formData);
+    const {
+        name,
+        category,
+        image,
+        price,
+        description,
+        priceIncludesTax,
+        isInDemand,
+        startDate,
+        endDate,
+    } = Object.fromEntries(formData);
 
-    const categoryExists = await CourseCategory.find({ category: category });
+    const categoryFound = await CourseCategory.findOne({ category: category });
 
-    if (categoryExists.length == 0) {
+    let newCategoryId;
+    if (categoryFound === null) {
         connectToDB();
         const newCategory = new CourseCategory({
             category,
         });
-        await newCategory.save();
 
-        const imageUrl = getImageUrl(image.name);
-
-        try {
-            connectToDB();
-
-            const newCourse = new Course({
-                name,
-                category: newCategory._id,
-                image: imageUrl,
-                description,
-                features,
-                prequisites,
-                price,
-            });
-
-            await newCourse.save();
-        } catch (err) {
-            console.log(err);
-            throw new Error("Failed to create course!");
-        }
-    } else {
-        const imageUrl = getImageUrl(image.name);
-        try {
-            connectToDB();
-
-            const newCourse = new Course({
-                name,
-                category,
-                image: imageUrl,
-                description,
-                features,
-                prequisites,
-                price,
-            });
-
-            await newCourse.save();
-        } catch (err) {
-            console.log(err);
-            throw new Error("Failed to create course!");
-        }
+        const savedCategory = await newCategory.save();
+        newCategoryId = savedCategory._id;
     }
+
+    try {
+        await connectToDB();
+        const imageUrl = getImageUrl(image.name, "image");
+        const newCourse = new Course({
+            name,
+            // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
+            category: newCategoryId ? newCategoryId : categoryFound._id,
+            image: imageUrl,
+            description,
+            learnings: { other: otherLearnings, tools },
+            schedule: {
+                startDate,
+                endDate,
+                classDays,
+            },
+            prequisites,
+            jobOpportunities,
+            price,
+            priceIncludesTax: priceIncludesTax == "true" ? true : false,
+            isInDemand: isInDemand == "true" ? true : false,
+        });
+
+        await newCourse.save();
+    } catch (err) {
+        console.log(err);
+        throw new Error("some error occured while adding the course");
+    }
+
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };
@@ -150,113 +196,114 @@ async function deleteImageFromCloudinary(id) {
 }
 
 export const updateCourse = async (formData) => {
-    const features = [];
+    const tools = [];
+    const otherLearnings = [];
     const prequisites = [];
+    const jobOpportunities = [];
+    const classDays = {
+        monday: {},
+        tuesday: {},
+        wednesday: {},
+        thursday: {},
+        friday: {},
+        saturday: {},
+        sunday: {},
+    };
 
     for (let [key, value] of formData.entries()) {
-        if (key === "feature") {
-            features.push(value);
+        days.forEach((day) => {
+            if (key === day && value && classDays[day].from === undefined) {
+                classDays[day].from = value;
+            } else if (
+                key === day &&
+                value &&
+                classDays[day].from !== undefined
+            ) {
+                classDays[day].to = value;
+            }
+        });
+
+        if (key === "tools") {
+            tools.push(value);
         } else if (key === "prerequisite") {
             prequisites.push(value);
+        } else if (key == "other") {
+            otherLearnings.push(value);
+        } else if (key == "jobOpportunities") {
+            jobOpportunities.push(value);
         }
     }
 
-    const { id, name, category, image, price, description } =
-        Object.fromEntries(formData);
+    const {
+        id,
+        name,
+        category,
+        image,
+        price,
+        startDate,
+        endDate,
+        description,
+        priceIncludesTax,
+        isInDemand,
+    } = Object.fromEntries(formData);
 
     deleteImageFromCloudinary(id);
 
-    const categoryExists = await CourseCategory.find({ category: category });
+    const categoryFound = await CourseCategory.findOne({ category: category });
 
-    if (categoryExists.length == 0) {
+    let newCategoryId;
+    let newImageUrl;
+
+    if (categoryFound === null) {
         connectToDB();
         const newCategory = new CourseCategory({
             category,
         });
-        await newCategory.save();
 
-        if (image !== undefined) {
-            const imageUrl = getImageUrl(image.name);
-
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category: newCategory._id,
-                    image: imageUrl,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        } else {
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category: newCategory._id,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        }
-    } else {
-        if (image !== undefined) {
-            const imageUrl = getImageUrl(image.name);
-
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category,
-                    image: imageUrl,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        } else {
-            try {
-                connectToDB();
-
-                const updateFields = {
-                    name,
-                    category,
-                    description,
-                    features,
-                    prequisites,
-                    price,
-                };
-
-                await Course.findByIdAndUpdate(id, updateFields);
-            } catch (err) {
-                console.log(err);
-                throw new Error("Failed to create course!");
-            }
-        }
+        const savedCategory = await newCategory.save();
+        newCategoryId = savedCategory._id;
     }
+    // if the image is provided in the form entries
+    if (image !== undefined) {
+        newImageUrl = getImageUrl(image.name, "image");
+    }
+
+    try {
+        await connectToDB();
+        const updateFields = {
+            name,
+            description,
+            prequisites,
+            price,
+            category: newCategoryId ? newCategoryId : categoryFound._id,
+            learnings: {
+                tools,
+                other: otherLearnings,
+            },
+            schedule: {
+                startDate,
+                endDate,
+                classDays,
+            },
+            jobOpportunities,
+            priceIncludesTax: priceIncludesTax == "true" ? true : false,
+            isInDemand: isInDemand == "true" ? true : false,
+        };
+        // newCateogryId exists
+        if (newCategoryId) {
+            updateFields.category = newCategoryId;
+        }
+        // newImageUrl exists
+        if (newImageUrl) {
+            updateFields.image = newImageUrl;
+        }
+
+        await Course.findByIdAndUpdate(id, updateFields);
+    } catch (err) {
+        console.log(err);
+        throw new Error(err);
+    }
+
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };
@@ -350,10 +397,140 @@ export const authenticate = async (prevState, formData) => {
     try {
         await signIn("credentials", { username, password });
     } catch (err) {
-        return "Wrong Credentials!";
+        return "Username/Password is incorrect.";
     }
 };
 
-export const sendVerificationCode = async (email) => {
-    // Send a verification code to the email
+export const updateHomeContent = async (formData) => {
+    connectToDB();
+
+    try {
+        const {
+            heroText,
+            smallHeading,
+            bigHeading,
+            image1,
+            description1,
+            video1,
+            image2,
+            description2,
+            video2,
+            image3,
+            description3,
+            video3,
+        } = Object.fromEntries(formData);
+
+        const img1 = getImageUrl(image1.name, "image");
+        const img2 = getImageUrl(image2.name, "image");
+        const img3 = getImageUrl(image3.name, "image");
+
+        const vid1 = getImageUrl(video1.name, "video");
+        const vid2 = getImageUrl(video2.name, "video");
+        const vid3 = getImageUrl(video3.name, "video");
+
+        const cardsData = [
+            {
+                bannerImage: img1,
+                description: description1,
+                video: vid1,
+            },
+            {
+                bannerImage: img2,
+                description: description2,
+                video: vid2,
+            },
+            {
+                bannerImage: img3,
+                description: description3,
+                video: vid3,
+            },
+        ];
+
+        const homeContent = await WebsiteContent.findByIdAndUpdate(
+            "6582621f6224f786a42635e1",
+            {
+                heroText,
+                section: { smallHeading, bigHeading, cards: cardsData },
+            }
+        );
+
+        if (!homeContent) {
+            throw new Error("Content not found");
+        }
+
+        await homeContent.save();
+    } catch (error) {
+        throw new Error(`Error updating home content: ${error.message}`);
+    }
+};
+
+export const sendLink = async (prevState, formData) => {
+    connectToDB();
+    const { email } = Object.fromEntries(formData);
+
+    const admin = await Admin.findOne({ email });
+
+    if (admin) {
+        // Generate and store token
+        const randomStr = cryptoRandomString({
+            length: 64,
+            type: "alphanumeric",
+        });
+
+        admin.password_reset_token = randomStr;
+        await admin.save();
+
+        // Encrypt user email
+        const crypt = new Cryptr(Env.SECRET_KEY);
+        const encrypted_email = crypt.encrypt(admin.email);
+
+        const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
+
+        try {
+            console.log("yo");
+            console.log(email, admin.username, url);
+            await triggerClientEmailSending(email, admin.username, url);
+
+            return "A reset link has been sent to your email. Please check your email.";
+        } catch (error) {
+            console.log();
+            console.log("OH NOOOOOO");
+            console.log();
+            console.log("tHe eRrOr iS", error);
+        }
+    } else {
+        return "This email is not associated with an account.";
+    }
+};
+
+export const resetPassword = async (prevState, formData) => {
+    const { email, signature, password, confirmPassword } =
+        Object.fromEntries(formData);
+    if (password === confirmPassword) {
+        // * Decrypt string
+        const crypter = new Cryptr(Env.SECRET_KEY);
+        const emailDecrypted = crypter.decrypt(email);
+
+        const admin = await Admin.findOne({
+            email: emailDecrypted,
+            password_reset_token: signature,
+        });
+        if (admin == null || admin == undefined) {
+            return "Reset URL is incorrect.";
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        admin.password = hashedPassword;
+        admin.password_reset_token = null;
+
+        await admin.save();
+
+        console.log("HASHED PASSWORD-", hashedPassword);
+        console.log("SAVED PASSWORD-", admin.password);
+
+        redirect("/login");
+    } else {
+        return "Passwords do not match.";
+    }
 };
