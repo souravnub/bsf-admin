@@ -34,8 +34,7 @@ export const addAdmin = async (formData) => {
     try {
         connectToDB();
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new Admin({
             username,
@@ -60,8 +59,7 @@ export const updateAdmin = async (formData) => {
     try {
         connectToDB();
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const updateFields = {
             username,
@@ -393,7 +391,6 @@ export const deleteUrlFromGallery = async (_id, url) => {
 
 export const authenticate = async (prevState, formData) => {
     const { username, password } = Object.fromEntries(formData);
-    console.log(username, password);
 
     connectToDB();
 
@@ -522,13 +519,15 @@ export const resetPassword = async (prevState, formData) => {
             return "Reset URL is incorrect.";
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         admin.password = hashedPassword;
         admin.password_reset_token = null;
 
         await admin.save();
+
+        console.log("HASHED PASSWORD-", hashedPassword);
+        console.log("SAVED PASSWORD-", admin.password);
 
         redirect("/login");
     } else {
