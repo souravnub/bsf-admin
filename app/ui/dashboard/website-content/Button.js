@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useTransition } from "react";
 
 export const Button = ({ onClick, children, ...props }) => {
     const [pending, startTransition] = useTransition(false);
@@ -13,7 +13,8 @@ export const Button = ({ onClick, children, ...props }) => {
                 startTransition(async () => {
                     await onClick();
                 });
-            }}>
+            }}
+        >
             {children}
         </button>
     );

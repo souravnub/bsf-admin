@@ -53,7 +53,6 @@ const VideoUpload = ({ url, requiredInput, index, source }) => {
             );
 
             if (response.ok) {
-                const data = await response.json();
                 setMessage("Uploaded successfully!");
             } else {
                 console.error("Video upload failed:", response.statusText);
