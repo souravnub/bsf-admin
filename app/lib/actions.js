@@ -505,17 +505,10 @@ export const sendLink = async (prevState, formData) => {
         const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
 
         try {
-            console.log("yo");
-            console.log(email, admin.username, url);
             await triggerClientEmailSending(email, admin.username, url);
 
             return "A reset link has been sent to your email. Please check your email.";
         } catch (error) {
-            console.log();
-            console.log("OH NOOOOOO");
-            console.log();
-            console.log("tHe eRrOr iS", error);
-
             return "Whoops. Something went wrong.";
         }
     } else {
