@@ -4,22 +4,23 @@ import { authConfig } from "./authconfig";
 import { connectToDB } from "./lib/utils";
 import { Admin } from "./lib/models/Admin";
 import bcrypt from "bcrypt";
-
 const login = async (credentials) => {
     try {
         connectToDB();
         const user = await Admin.findOne({ username: credentials.username });
 
-        if (!user || !user.isAdmin)
+        if (!user || !user.isAdmin) {
             throw new Error("Username/Password is incorrect.");
+        }
 
         const isPasswordCorrect = await bcrypt.compare(
             credentials.password,
             user.password
         );
 
-        if (!isPasswordCorrect)
+        if (!isPasswordCorrect) {
             throw new Error("Username/Password is incorrect.");
+        }
 
         return user;
     } catch (err) {

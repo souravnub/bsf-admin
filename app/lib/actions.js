@@ -527,17 +527,14 @@ export const resetPassword = async (prevState, formData) => {
     if (password === confirmPassword) {
         const updateFields = {};
         // * Decrypt string
-        const crypter = new Cryptr(Env.SECRET_KEY);
-        const emailDecrypted = crypter.decrypt(email);
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
         updateFields.email = email;
         updateFields.password = hash;
-        updateFields.password_reset_token = null;
 
         await Admin.updateOne(
-            { email: emailDecrypted, password_reset_token: signature },
+            { email, password_reset_token: signature },
             { $set: updateFields }
         );
 
