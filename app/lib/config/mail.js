@@ -1,9 +1,6 @@
 import nodemailer from "nodemailer";
 import Env from "./env";
 
-console.log("FJLKDSFJS:", Env.SMPT_USER);
-console.log("FJLKDSFJS:", Env.SMTP_PASSWORD);
-
 const smtpConfig = {
     host: Env.SMTP_HOST,
     port: 587,

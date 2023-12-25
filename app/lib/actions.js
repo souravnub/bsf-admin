@@ -412,11 +412,7 @@ export const authenticate = async (prevState, formData) => {
 
     connectToDB();
 
-    try {
-        await signIn("credentials", { username, password });
-    } catch (err) {
-        return "Username/Password is incorrect.";
-    }
+    await signIn("credentials", { username, password });
 };
 
 export const updateHomeContent = async (formData) => {
