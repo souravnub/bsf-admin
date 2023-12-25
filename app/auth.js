@@ -10,7 +10,6 @@ const login = async (credentials) => {
         const user = await Admin.findOne({ username: credentials.username });
 
         if (!user || !user.isAdmin) {
-            console.log("hi from user is not there");
             throw new Error("Username/Password is incorrect.");
         }
 
@@ -20,13 +19,11 @@ const login = async (credentials) => {
         );
 
         if (!isPasswordCorrect) {
-            console.log("hi from password is incorrect");
             throw new Error("Username/Password is incorrect.");
         }
 
         return user;
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to login!");
     }
 };

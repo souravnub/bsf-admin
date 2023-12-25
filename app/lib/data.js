@@ -3,7 +3,6 @@ import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
-import { Video } from "./models/Video";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { connectToDB } from "./utils";
 import moment from "moment";
@@ -21,7 +20,6 @@ export const fetchAdmins = async (q, page) => {
             .skip(ITEM_PER_PAGE * (page - 1));
         return { count, admins };
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to fetch admins!");
     }
 };
@@ -33,7 +31,6 @@ export const fetchAdmin = async (id) => {
 
         return admin;
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to fetch admin!");
     }
 };
@@ -53,7 +50,6 @@ export const fetchCustomers = async (q, page) => {
             .skip(ITEM_PER_PAGE * (page - 1));
         return { count, customers: users };
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to fetch customers!");
     }
 };
@@ -64,7 +60,6 @@ export const fetchCustomer = async (id) => {
         const user = await Customer.findById(id);
         return user;
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to fetch customer!");
     }
 };
@@ -85,7 +80,6 @@ export const fetchCourses = async (q, page) => {
 
         return { count, courses };
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to fetch courses!");
     }
 };
@@ -96,7 +90,6 @@ export const fetchCourse = async (id) => {
         const course = await Course.findById(id).populate("category").exec();
         return course;
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to fetch course!");
     }
 };
@@ -108,7 +101,6 @@ export const fetchCategories = async () => {
         const categories = await CourseCategory.find({});
         return categories;
     } catch (error) {
-        console.log(error);
         throw new Error("Failed to fetch course categories!");
     }
 };
@@ -129,7 +121,6 @@ export const fetchMessages = async () => {
         });
         return messageWithFormatedDate;
     } catch (err) {
-        console.log(err);
         throw new Error("Falied to fetch messages");
     }
 };

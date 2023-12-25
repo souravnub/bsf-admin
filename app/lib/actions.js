@@ -45,7 +45,6 @@ export const addAdmin = async (formData) => {
 
         await newUser.save();
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to create admin!");
     }
 
@@ -72,7 +71,6 @@ export const updateAdmin = async (formData) => {
 
         await Admin.updateOne({ username }, { $set: updateFields });
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to update user!");
     }
 
@@ -83,7 +81,6 @@ export const checkAdminPassword = async (username, oldPassword) => {
     await connectToDB();
     const adminFound = await Admin.findOne({ username: username });
     if (!adminFound) {
-        console.log("admin not found");
         return false;
     }
 
@@ -192,7 +189,6 @@ export const addCourse = async (formData) => {
 
         await newCourse.save();
     } catch (err) {
-        console.log(err);
         throw new Error("some error occured while adding the course");
     }
 
@@ -318,7 +314,6 @@ export const updateCourse = async (formData) => {
 
         await Course.findByIdAndUpdate(id, updateFields);
     } catch (err) {
-        console.log(err);
         throw new Error(err);
     }
 
@@ -333,7 +328,6 @@ export const deleteAdmin = async (formData) => {
         connectToDB();
         await Admin.findByIdAndDelete(id);
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to delete admin!");
     }
 
@@ -347,7 +341,6 @@ export const deleteCourse = async (formData) => {
         connectToDB();
         await Course.findByIdAndDelete(id);
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to delete course!");
     }
 
@@ -360,7 +353,6 @@ export const fetchVideoGalleryTabs = async () => {
         const tabs = await Video.find();
         return tabs;
     } catch (err) {
-        console.log(err);
         throw new Error("Error while fetching details");
     }
 };
@@ -370,7 +362,6 @@ export const addUrlToGallery = async ({ _id, value: newUrl }) => {
         await connectToDB();
         await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
     } catch (err) {
-        console.log(err);
         throw new Error("error while adding url to the video gallery");
     }
     revalidatePath("/dashboard/content");

@@ -56,7 +56,6 @@ const ImageUpload = ({ url, requiredInput, index, source }) => {
             if (response.ok) {
                 const data = await response.json();
                 setMessage("Uploaded successfully!");
-                console.log("Image uploaded successfully:", data);
             } else {
                 console.error("Image upload failed:", response.statusText);
             }
@@ -67,13 +66,13 @@ const ImageUpload = ({ url, requiredInput, index, source }) => {
 
     return (
         <div>
-            <label htmlFor='image'>Upload Image (312px x 312px)*</label>
+            <label htmlFor="image">Upload Image (312px x 312px)*</label>
 
             <input
-                type='file'
+                type="file"
                 name={index > 0 ? `image${index}` : "image"}
-                id='image'
-                accept='.png, .jpg, .jpeg'
+                id="image"
+                accept=".png, .jpg, .jpeg"
                 onChange={handleOnChange}
                 required={requiredInput ? true : false}
             />
@@ -88,7 +87,7 @@ const ImageUpload = ({ url, requiredInput, index, source }) => {
                         src={imagePreview}
                         width={312}
                         height={312}
-                        alt='Image Preview'
+                        alt="Image Preview"
                         style={{
                             maxWidth: "312px",
                             marginBottom: "30px",
@@ -106,7 +105,7 @@ const ImageUpload = ({ url, requiredInput, index, source }) => {
                         src={url}
                         width={312}
                         height={312}
-                        alt='Image Preview'
+                        alt="Image Preview"
                         style={{
                             maxWidth: "312px",
                             marginBottom: "30px",
