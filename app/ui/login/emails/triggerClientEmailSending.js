@@ -6,5 +6,5 @@ export const triggerClientEmailSending = async (userEmail, username, url) => {
     const html = render(ForgotPasswordEmail({ name: username, url }));
 
     // Send email to the user
-    await sendEmail(userEmail, "Reset Password", html);
+    await sendEmail(userEmail, "Reset Password | BSF Systems", html);
 };

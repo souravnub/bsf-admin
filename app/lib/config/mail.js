@@ -1,14 +1,16 @@
 import nodemailer from "nodemailer";
 import Env from "./env";
 
+console.log("FJLKDSFJS:", Env.SMPT_USER);
+console.log("FJLKDSFJS:", Env.SMTP_PASSWORD);
+
 const smtpConfig = {
     host: Env.SMTP_HOST,
-    port: Number(Env.SMTP_PORT),
-    secure: Env.SMTP_SECURE === "true", // use SSL
+    port: 587,
+    secure: false,
     auth: {
-        user: Env.SMPT_USER,
+        user: Env.SMTP_USER,
         pass: Env.SMTP_PASSWORD,
-        method: "PLAIN",
     },
 };
 
@@ -23,3 +25,5 @@ export const sendEmail = async (to, subject, html) => {
     });
     return info?.messageId;
 };
+
+// Ask banks to either disable 2FA or create another app for this.
