@@ -516,7 +516,7 @@ export const sendLink = async (prevState, formData) => {
             console.log();
             console.log("tHe eRrOr iS", error);
 
-            return "Whoops! Something went wrong.";
+            return "Whoops. Something went wrong.";
         }
     } else {
         return "This email is not associated with an account.";
@@ -528,16 +528,19 @@ export const resetPassword = async (prevState, formData) => {
         Object.fromEntries(formData);
     if (password === confirmPassword) {
         const updateFields = {};
+
         // * Decrypt string
+        const crypter = new Cryptr(Env.SECRET_KEY);
+        const emailDecrypted = crypter.decrypt(email);
+
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
-        updateFields.email = email;
-        updateFields.password_reset_token = null;
         updateFields.password = hash;
+        updateFields.password_reset_token = null;
 
         await Admin.updateOne(
-            { email, password_reset_token: signature },
+            { email: emailDecrypted, password_reset_token: signature },
             { $set: updateFields }
         );
 
