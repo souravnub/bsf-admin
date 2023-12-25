@@ -55,22 +55,22 @@ export const addAdmin = async (formData) => {
 
 export const updateAdmin = async (formData) => {
     let { username, password } = Object.fromEntries(formData);
-    await connectToDB();
-
-    const updateFields = {};
-
-    if (username) {
-        updateFields.username = username;
-    }
-
-    if (password) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        updateFields.password = hash;
-    }
-
-    await Admin.updateOne({ username }, { $set: updateFields });
     try {
+        connectToDB();
+
+        const updateFields = {};
+
+        if (username) {
+            updateFields.username = username;
+        }
+
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(password, salt);
+            updateFields.password = hash;
+        }
+
+        await Admin.updateOne({ username }, { $set: updateFields });
     } catch (err) {
         console.log(err);
         throw new Error("Failed to update user!");
@@ -525,21 +525,21 @@ export const resetPassword = async (prevState, formData) => {
     const { email, signature, password, confirmPassword } =
         Object.fromEntries(formData);
     if (password === confirmPassword) {
+        const updateFields = {};
         // * Decrypt string
         const crypter = new Cryptr(Env.SECRET_KEY);
         const emailDecrypted = crypter.decrypt(email);
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
 
-        const admin = await Admin.findOneAndUpdate(
-            {
-                email: emailDecrypted,
-                password_reset_token: signature,
-            },
-            { password_reset_token: null, password }
+        updateFields.email = email;
+        updateFields.password = hash;
+        updateFields.password_reset_token = null;
+
+        await Admin.updateOne(
+            { email: emailDecrypted, password_reset_token: signature },
+            { $set: updateFields }
         );
-
-        if (admin == null || admin == undefined) {
-            return "Reset URL is incorrect.";
-        }
 
         redirect("/login");
     } else {
