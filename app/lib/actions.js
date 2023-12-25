@@ -45,7 +45,6 @@ export const addAdmin = async (formData) => {
 
         await newUser.save();
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to create admin!");
     }
 
@@ -55,24 +54,23 @@ export const addAdmin = async (formData) => {
 
 export const updateAdmin = async (formData) => {
     let { username, password } = Object.fromEntries(formData);
-    await connectToDB();
-
-    const updateFields = {};
-
-    if (username) {
-        updateFields.username = username;
-    }
-
-    if (password) {
-        const salt = await bcrypt.genSalt(10);
-        const hash = await bcrypt.hash(password, salt);
-        updateFields.password = hash;
-    }
-
-    await Admin.updateOne({ username }, { $set: updateFields });
     try {
+        connectToDB();
+
+        const updateFields = {};
+
+        if (username) {
+            updateFields.username = username;
+        }
+
+        if (password) {
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(password, salt);
+            updateFields.password = hash;
+        }
+
+        await Admin.updateOne({ username }, { $set: updateFields });
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to update user!");
     }
 
@@ -83,7 +81,6 @@ export const checkAdminPassword = async (username, oldPassword) => {
     await connectToDB();
     const adminFound = await Admin.findOne({ username: username });
     if (!adminFound) {
-        console.log("admin not found");
         return false;
     }
 
@@ -192,7 +189,6 @@ export const addCourse = async (formData) => {
 
         await newCourse.save();
     } catch (err) {
-        console.log(err);
         throw new Error("some error occured while adding the course");
     }
 
@@ -318,7 +314,6 @@ export const updateCourse = async (formData) => {
 
         await Course.findByIdAndUpdate(id, updateFields);
     } catch (err) {
-        console.log(err);
         throw new Error(err);
     }
 
@@ -333,7 +328,6 @@ export const deleteAdmin = async (formData) => {
         connectToDB();
         await Admin.findByIdAndDelete(id);
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to delete admin!");
     }
 
@@ -347,7 +341,6 @@ export const deleteCourse = async (formData) => {
         connectToDB();
         await Course.findByIdAndDelete(id);
     } catch (err) {
-        console.log(err);
         throw new Error("Failed to delete course!");
     }
 
@@ -360,7 +353,6 @@ export const fetchVideoGalleryTabs = async () => {
         const tabs = await Video.find();
         return tabs;
     } catch (err) {
-        console.log(err);
         throw new Error("Error while fetching details");
     }
 };
@@ -370,7 +362,6 @@ export const addUrlToGallery = async ({ _id, value: newUrl }) => {
         await connectToDB();
         await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
     } catch (err) {
-        console.log(err);
         throw new Error("error while adding url to the video gallery");
     }
     revalidatePath("/dashboard/content");
@@ -412,11 +403,7 @@ export const authenticate = async (prevState, formData) => {
 
     connectToDB();
 
-    try {
-        await signIn("credentials", { username, password });
-    } catch (err) {
-        return "Username/Password is incorrect.";
-    }
+    await signIn("credentials", { username, password });
 };
 
 export const updateHomeContent = async (formData) => {
@@ -505,16 +492,11 @@ export const sendLink = async (prevState, formData) => {
         const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
 
         try {
-            console.log("yo");
-            console.log(email, admin.username, url);
             await triggerClientEmailSending(email, admin.username, url);
 
             return "A reset link has been sent to your email. Please check your email.";
         } catch (error) {
-            console.log();
-            console.log("OH NOOOOOO");
-            console.log();
-            console.log("tHe eRrOr iS", error);
+            return "Whoops. Something went wrong.";
         }
     } else {
         return "This email is not associated with an account.";
@@ -525,21 +507,22 @@ export const resetPassword = async (prevState, formData) => {
     const { email, signature, password, confirmPassword } =
         Object.fromEntries(formData);
     if (password === confirmPassword) {
+        const updateFields = {};
+
         // * Decrypt string
         const crypter = new Cryptr(Env.SECRET_KEY);
         const emailDecrypted = crypter.decrypt(email);
 
-        const admin = await Admin.findOneAndUpdate(
-            {
-                email: emailDecrypted,
-                password_reset_token: signature,
-            },
-            { password_reset_token: null, password }
-        );
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(password, salt);
 
-        if (admin == null || admin == undefined) {
-            return "Reset URL is incorrect.";
-        }
+        updateFields.password = hash;
+        updateFields.password_reset_token = null;
+
+        await Admin.updateOne(
+            { email: emailDecrypted, password_reset_token: signature },
+            { $set: updateFields }
+        );
 
         redirect("/login");
     } else {

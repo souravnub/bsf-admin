@@ -10,7 +10,6 @@ export async function GET() {
 
         return NextResponse.json(content);
     } catch (error) {
-        console.log(error);
         throw new Error("Failed to fetch website content!");
     }
 }

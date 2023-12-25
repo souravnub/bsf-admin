@@ -1,25 +1,17 @@
 import nodemailer from "nodemailer";
 import Env from "./env";
 
-/*
-export const transporter = nodemailer.createTransport({
-    host: Env.SMPT_USER,
-    port: Number(Env.SMTP_PORT),
-    secure: true,
+const smtpConfig = {
+    host: Env.SMTP_HOST,
+    port: 587,
+    secure: false,
     auth: {
-        user: Env.SMPT_USER,
+        user: Env.SMTP_USER,
         pass: Env.SMTP_PASSWORD,
     },
-});
- */
+};
 
-export const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS,
-    },
-});
+export const transporter = nodemailer.createTransport(smtpConfig);
 
 export const sendEmail = async (to, subject, html) => {
     const info = await transporter.sendMail({
@@ -30,3 +22,5 @@ export const sendEmail = async (to, subject, html) => {
     });
     return info?.messageId;
 };
+
+// Ask banks to either disable 2FA or create another app for this.

@@ -55,7 +55,6 @@ const VideoUpload = ({ url, requiredInput, index, source }) => {
             if (response.ok) {
                 const data = await response.json();
                 setMessage("Uploaded successfully!");
-                console.log("Video uploaded successfully:", data);
             } else {
                 console.error("Video upload failed:", response.statusText);
             }
@@ -66,13 +65,13 @@ const VideoUpload = ({ url, requiredInput, index, source }) => {
 
     return (
         <div style={{ marginTop: "1.5rem" }}>
-            <label htmlFor='video'>Upload Video*</label>
+            <label htmlFor="video">Upload Video*</label>
 
             <input
-                type='file'
+                type="file"
                 name={`video${index}`}
-                id='video'
-                accept='.mp4, .webm, .ogg'
+                id="video"
+                accept=".mp4, .webm, .ogg"
                 onChange={handleOnChange}
                 required={requiredInput ? true : false}
             />
@@ -110,7 +109,7 @@ const VideoUpload = ({ url, requiredInput, index, source }) => {
                             marginBottom: "30px",
                         }}
                     >
-                        <source src={url} type='video/mp4' />
+                        <source src={url} type="video/mp4" />
                         Your browser does not support the video tag.
                     </video>
                 </div>
