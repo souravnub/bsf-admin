@@ -19,7 +19,6 @@ const Messages = async () => {
                         interestCategories,
                         message,
                         createdAt,
-                        time,
                     }) => {
                         return (
                             <div key={String(_id)}>
@@ -27,10 +26,12 @@ const Messages = async () => {
                                     <div
                                         className={
                                             messageStyles.contentContainer
-                                        }>
+                                        }
+                                    >
                                         <div>
                                             <span
-                                                className={messageStyles.name}>
+                                                className={messageStyles.name}
+                                            >
                                                 {firstName + " " + lastName}
                                             </span>
                                             <RxDotFilled />
@@ -41,7 +42,8 @@ const Messages = async () => {
                                                             key={category}
                                                             className={
                                                                 messageStyles.category
-                                                            }>
+                                                            }
+                                                        >
                                                             <span>
                                                                 {category}
                                                             </span>
@@ -57,12 +59,14 @@ const Messages = async () => {
                                     <div
                                         className={
                                             messageStyles.dateTimeContainer
-                                        }>
+                                        }
+                                    >
                                         <span>{createdAt}</span>
                                     </div>
                                 </div>
                                 <div
-                                    className={`${messageStyles.container} ${messageStyles.btnContainer}`}>
+                                    className={`${messageStyles.container} ${messageStyles.btnContainer}`}
+                                >
                                     <form>
                                         <input
                                             type="hidden"
@@ -70,7 +74,8 @@ const Messages = async () => {
                                             value={_id}
                                         />
                                         <button
-                                            className={`${styles.button} ${styles.delete}`}>
+                                            className={`${styles.button} ${styles.delete}`}
+                                        >
                                             Delete
                                         </button>
                                     </form>
@@ -87,7 +92,8 @@ const Messages = async () => {
                                             value={email}
                                         />
                                         <button
-                                            className={`${styles.button} ${styles.view}`}>
+                                            className={`${styles.button} ${styles.view}`}
+                                        >
                                             Reply
                                         </button>
                                     </form>
