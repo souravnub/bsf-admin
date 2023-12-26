@@ -5,10 +5,9 @@ import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
-import { connectToDB, uploadFileToS3 } from "./utils";
+import { connectToDB, deleteFileFromS3, uploadFileToS3 } from "./utils";
 import { redirect } from "next/navigation";
 import { signIn } from "../auth";
-import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
 import Env from "./config/env";
 
@@ -186,17 +185,13 @@ export const addCourse = async (formData) => {
     redirect("/dashboard/courses");
 };
 
-async function deleteImageFromCloudinary(id) {
-    const oldCourse = await Course.findById(id);
-    const parts = oldCourse.image.split("/");
-    const filenameWithExtension = parts[parts.length - 1];
-    const filenameParts = filenameWithExtension.split(".");
-    const imageName = filenameParts.slice(0, -1).join(".");
-
-    cloudinary.v2.api.delete_resources([`my-uploads/${imageName}`], {
-        type: "upload",
-        resource_type: "image",
-    });
+export async function deleteFile(fileName) {
+    try {
+        const fileKey = await deleteFileFromS3(fileName);
+        return { success: true, msg: "File successfully deleted!", fileKey };
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 export const updateCourse = async (formData) => {
@@ -251,8 +246,6 @@ export const updateCourse = async (formData) => {
         isInDemand,
     } = Object.fromEntries(formData);
 
-    deleteImageFromCloudinary(id);
-
     const categoryFound = await CourseCategory.findOne({ category: category });
 
     let newCategoryId;
@@ -268,7 +261,14 @@ export const updateCourse = async (formData) => {
         newCategoryId = savedCategory._id;
     }
     // if the image is provided in the form entries
-    if (image1 !== undefined) {
+    if (image1 !== "") {
+        const course = await Course.findById(id);
+        const splitStrs = course.image.split("/");
+        const prevImgFileName = splitStrs[splitStrs.length - 1]
+            .split("+")
+            .join(" ");
+
+        await deleteFile(prevImgFileName);
         newImageUrl = getS3FileUrl(image1);
     }
 
@@ -438,8 +438,6 @@ export const updateHomeContent = async (formData) => {
             description3,
             video3,
         } = Object.fromEntries(formData);
-
-        console.log(Object.fromEntries(formData));
 
         const homeContent = await WebsiteContent.findById(
             "6582621f6224f786a42635e1"
