@@ -10,7 +10,7 @@ const CharacterCountInput = ({ label, name, value, onChange, maxLength }) => {
         const text = e.target.value;
         if (text.length <= maxLength) {
             setCharCount(text.length);
-            onChange(text); // Pass the updated text value to the parent component
+            onChange && onChange(text); // Pass the updated text value to the parent component
         }
     };
 

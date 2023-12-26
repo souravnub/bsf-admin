@@ -5,7 +5,7 @@ import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
-import { connectToDB } from "./utils";
+import { connectToDB, uploadFileToS3 } from "./utils";
 import { redirect } from "next/navigation";
 import { signIn } from "../auth";
 import { cloudinary } from "../cloudinaryConfig";
@@ -350,8 +350,9 @@ export const fetchVideoGalleryTabs = async () => {
 export const addUrlToGallery = async ({ _id, value: newUrl }) => {
     try {
         await connectToDB();
-        await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
+        await Video.findByIdAndUpdate(_id, { $push: { videos: newUrl } });
     } catch (err) {
+        console.log(err);
         throw new Error("error while adding url to the video gallery");
     }
     revalidatePath("/dashboard/content");
@@ -370,18 +371,17 @@ export const deleteVideoGalleryCategory = async (_id) => {
 export const addVideoGalleryCategory = async ({ value: name }) => {
     try {
         await connectToDB();
-        const newCategory = new Video({ category: name, url: [] });
+        const newCategory = new Video({ name, videos: [] });
         await newCategory.save();
     } catch (err) {
         throw new Error("error while adding new video gallery category");
     }
     revalidatePath("/dashboard/content");
 };
-
 export const deleteUrlFromGallery = async (_id, url) => {
     try {
         await connectToDB();
-        await Video.findByIdAndUpdate(_id, { $pull: { url } });
+        await Video.findByIdAndUpdate(_id, { $pull: { videos: url } });
     } catch (err) {
         throw new Error("error while deleting url from the video gallery");
     }
@@ -447,6 +447,10 @@ export const updateHomeContent = async (formData) => {
 
         const cardsData = homeContent.section.cards;
 
+        cardsData[0].description = description1;
+        cardsData[1].description = description2;
+        cardsData[2].description = description3;
+
         if (image1 !== "") {
             const img1 = getS3FileUrl(image1);
             cardsData[0].bannerImage = img1;
@@ -460,16 +464,16 @@ export const updateHomeContent = async (formData) => {
             cardsData[2].bannerImage = img3;
         }
         if (video1 !== "") {
-            // const vid1 = getS3FileUrl(video1);
-            // cardsData[0].video = vid1;
+            const vid1 = getS3FileUrl(video1);
+            cardsData[0].video = vid1;
         }
         if (video2 !== "") {
-            // const vid2 = getS3FileUrl(video2);
-            // cardsData[1].video = vid2;
+            const vid2 = getS3FileUrl(video2);
+            cardsData[1].video = vid2;
         }
         if (video3 !== "") {
-            // const vid3 = getS3FileUrl(video3);
-            // cardsData.video = vid3;
+            const vid3 = getS3FileUrl(video3);
+            cardsData[2].video = vid3;
         }
 
         await WebsiteContent.findByIdAndUpdate("6582621f6224f786a42635e1", {
