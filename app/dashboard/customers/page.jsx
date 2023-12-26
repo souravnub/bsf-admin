@@ -42,18 +42,6 @@ const customersPage = async ({ searchParams }) => {
                                             View
                                         </button>
                                     </Link>
-                                    <form action={deleteUser}>
-                                        <input
-                                            type="hidden"
-                                            name="id"
-                                            value={customer._id}
-                                        />
-                                        <button
-                                            className={`${styles.button} ${styles.delete}`}
-                                        >
-                                            Delete
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>
