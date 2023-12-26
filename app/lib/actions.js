@@ -18,16 +18,6 @@ import Cryptr from "cryptr";
 
 import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
 
-function getImageUrl(fileName, type) {
-    const baseUrl =
-        "https://res.cloudinary.com/dmssr3ii7/image/upload/v1700699608/my-uploads";
-    const imageUrl = `${baseUrl}/${fileName}.${
-        type === "image" ? ".jpg" : ".mp4"
-    }`;
-
-    return imageUrl;
-}
-
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
 
@@ -143,7 +133,7 @@ export const addCourse = async (formData) => {
     const {
         name,
         category,
-        image,
+        image1,
         price,
         description,
         priceIncludesTax,
@@ -167,7 +157,7 @@ export const addCourse = async (formData) => {
 
     try {
         await connectToDB();
-        const imageUrl = getImageUrl(image.name, "image");
+        const imageUrl = getS3FileUrl(image1);
         const newCourse = new Course({
             name,
             // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
@@ -252,7 +242,7 @@ export const updateCourse = async (formData) => {
         id,
         name,
         category,
-        image,
+        image1,
         price,
         startDate,
         endDate,
@@ -278,8 +268,8 @@ export const updateCourse = async (formData) => {
         newCategoryId = savedCategory._id;
     }
     // if the image is provided in the form entries
-    if (image !== undefined) {
-        newImageUrl = getImageUrl(image.name, "image");
+    if (image1 !== undefined) {
+        newImageUrl = getS3FileUrl(image1);
     }
 
     try {
@@ -406,6 +396,30 @@ export const authenticate = async (prevState, formData) => {
     await signIn("credentials", { username, password });
 };
 
+export async function uploadFile(formData) {
+    try {
+        const file = formData.get("file");
+
+        if (!file) {
+            return { msg: "File is required.", success: false };
+        }
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+
+        const fileKey = await uploadFileToS3(buffer, file.name);
+
+        return { success: true, msg: "File uploaded successfully!", fileKey };
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+function getS3FileUrl(fileName) {
+    // amazon s3 replaces a " " with a +
+    fileName = fileName.split(" ").join("+");
+    return `https://${Env.AWS_S3_BUCKET_NAME}.s3.${Env.AWS_S3_REGION}.amazonaws.com/${fileName}`;
+}
+
 export const updateHomeContent = async (formData) => {
     connectToDB();
 
@@ -425,45 +439,47 @@ export const updateHomeContent = async (formData) => {
             video3,
         } = Object.fromEntries(formData);
 
-        const img1 = getImageUrl(image1.name, "image");
-        const img2 = getImageUrl(image2.name, "image");
-        const img3 = getImageUrl(image3.name, "image");
+        console.log(Object.fromEntries(formData));
 
-        const vid1 = getImageUrl(video1.name, "video");
-        const vid2 = getImageUrl(video2.name, "video");
-        const vid3 = getImageUrl(video3.name, "video");
-
-        const cardsData = [
-            {
-                bannerImage: img1,
-                description: description1,
-                video: vid1,
-            },
-            {
-                bannerImage: img2,
-                description: description2,
-                video: vid2,
-            },
-            {
-                bannerImage: img3,
-                description: description3,
-                video: vid3,
-            },
-        ];
-
-        const homeContent = await WebsiteContent.findByIdAndUpdate(
-            "6582621f6224f786a42635e1",
-            {
-                heroText,
-                section: { smallHeading, bigHeading, cards: cardsData },
-            }
+        const homeContent = await WebsiteContent.findById(
+            "6582621f6224f786a42635e1"
         );
 
-        if (!homeContent) {
-            throw new Error("Content not found");
+        const cardsData = homeContent.section.cards;
+
+        if (image1 !== "") {
+            const img1 = getS3FileUrl(image1);
+            cardsData[0].bannerImage = img1;
+        }
+        if (image2 !== "") {
+            const img2 = getS3FileUrl(image2);
+            cardsData[1].bannerImage = img2;
+        }
+        if (image3 !== "") {
+            const img3 = getS3FileUrl(image3);
+            cardsData[2].bannerImage = img3;
+        }
+        if (video1 !== "") {
+            // const vid1 = getS3FileUrl(video1);
+            // cardsData[0].video = vid1;
+        }
+        if (video2 !== "") {
+            // const vid2 = getS3FileUrl(video2);
+            // cardsData[1].video = vid2;
+        }
+        if (video3 !== "") {
+            // const vid3 = getS3FileUrl(video3);
+            // cardsData.video = vid3;
         }
 
-        await homeContent.save();
+        await WebsiteContent.findByIdAndUpdate("6582621f6224f786a42635e1", {
+            heroText,
+            section: {
+                smallHeading,
+                bigHeading,
+                cards: cardsData,
+            },
+        });
     } catch (error) {
         throw new Error(`Error updating home content: ${error.message}`);
     }

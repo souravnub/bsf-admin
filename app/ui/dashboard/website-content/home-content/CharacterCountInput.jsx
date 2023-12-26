@@ -4,7 +4,7 @@ import styles from "@/app/ui/dashboard/website-content/website-content.css.modul
 import { useState } from "react";
 
 const CharacterCountInput = ({ label, name, value, onChange, maxLength }) => {
-    const [charCount, setCharCount] = useState(value.length);
+    const [charCount, setCharCount] = useState(value?.length);
 
     const handleInputChange = (e) => {
         const text = e.target.value;
@@ -31,7 +31,7 @@ const CharacterCountInput = ({ label, name, value, onChange, maxLength }) => {
                 </span>
             </label>
             <input
-                type='text'
+                type="text"
                 name={name}
                 defaultValue={value}
                 onChange={handleInputChange}
