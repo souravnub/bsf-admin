@@ -29,7 +29,7 @@ const AddCoursePage = async () => {
                     <Category categories={categoriesJSON} />
                 </div>
 
-                <ImageUpload requiredInput={true} index={0} />
+                <ImageUpload requiredInput={true} />
 
                 <div>
                     <label htmlFor="price">Price*</label>

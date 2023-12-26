@@ -5,10 +5,9 @@ import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
-import { connectToDB } from "./utils";
+import { connectToDB, deleteFileFromS3, uploadFileToS3 } from "./utils";
 import { redirect } from "next/navigation";
 import { signIn } from "../auth";
-import { cloudinary } from "../cloudinaryConfig";
 import { Video } from "./models/Video";
 import Env from "./config/env";
 
@@ -17,16 +16,6 @@ import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
 
 import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
-
-function getImageUrl(fileName, type) {
-    const baseUrl =
-        "https://res.cloudinary.com/dmssr3ii7/image/upload/v1700699608/my-uploads";
-    const imageUrl = `${baseUrl}/${fileName}.${
-        type === "image" ? ".jpg" : ".mp4"
-    }`;
-
-    return imageUrl;
-}
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -143,7 +132,7 @@ export const addCourse = async (formData) => {
     const {
         name,
         category,
-        image,
+        image1,
         price,
         description,
         priceIncludesTax,
@@ -167,7 +156,7 @@ export const addCourse = async (formData) => {
 
     try {
         await connectToDB();
-        const imageUrl = getImageUrl(image.name, "image");
+        const imageUrl = getS3FileUrl(image1);
         const newCourse = new Course({
             name,
             // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
@@ -196,17 +185,13 @@ export const addCourse = async (formData) => {
     redirect("/dashboard/courses");
 };
 
-async function deleteImageFromCloudinary(id) {
-    const oldCourse = await Course.findById(id);
-    const parts = oldCourse.image.split("/");
-    const filenameWithExtension = parts[parts.length - 1];
-    const filenameParts = filenameWithExtension.split(".");
-    const imageName = filenameParts.slice(0, -1).join(".");
-
-    cloudinary.v2.api.delete_resources([`my-uploads/${imageName}`], {
-        type: "upload",
-        resource_type: "image",
-    });
+export async function deleteFile(fileName) {
+    try {
+        const fileKey = await deleteFileFromS3(fileName);
+        return { success: true, msg: "File successfully deleted!", fileKey };
+    } catch (error) {
+        throw new Error(error);
+    }
 }
 
 export const updateCourse = async (formData) => {
@@ -252,7 +237,7 @@ export const updateCourse = async (formData) => {
         id,
         name,
         category,
-        image,
+        image1,
         price,
         startDate,
         endDate,
@@ -260,8 +245,6 @@ export const updateCourse = async (formData) => {
         priceIncludesTax,
         isInDemand,
     } = Object.fromEntries(formData);
-
-    deleteImageFromCloudinary(id);
 
     const categoryFound = await CourseCategory.findOne({ category: category });
 
@@ -278,8 +261,10 @@ export const updateCourse = async (formData) => {
         newCategoryId = savedCategory._id;
     }
     // if the image is provided in the form entries
-    if (image !== undefined) {
-        newImageUrl = getImageUrl(image.name, "image");
+    if (image1 !== "") {
+        const course = await Course.findById(id);
+        await deleteFile(getS3FileKey(course.image));
+        newImageUrl = getS3FileUrl(image1);
     }
 
     try {
@@ -360,8 +345,9 @@ export const fetchVideoGalleryTabs = async () => {
 export const addUrlToGallery = async ({ _id, value: newUrl }) => {
     try {
         await connectToDB();
-        await Video.findByIdAndUpdate(_id, { $push: { url: newUrl } });
+        await Video.findByIdAndUpdate(_id, { $push: { videos: newUrl } });
     } catch (err) {
+        console.log(err);
         throw new Error("error while adding url to the video gallery");
     }
     revalidatePath("/dashboard/content");
@@ -380,18 +366,17 @@ export const deleteVideoGalleryCategory = async (_id) => {
 export const addVideoGalleryCategory = async ({ value: name }) => {
     try {
         await connectToDB();
-        const newCategory = new Video({ category: name, url: [] });
+        const newCategory = new Video({ name, videos: [] });
         await newCategory.save();
     } catch (err) {
         throw new Error("error while adding new video gallery category");
     }
     revalidatePath("/dashboard/content");
 };
-
 export const deleteUrlFromGallery = async (_id, url) => {
     try {
         await connectToDB();
-        await Video.findByIdAndUpdate(_id, { $pull: { url } });
+        await Video.findByIdAndUpdate(_id, { $pull: { videos: url } });
     } catch (err) {
         throw new Error("error while deleting url from the video gallery");
     }
@@ -405,6 +390,33 @@ export const authenticate = async (prevState, formData) => {
 
     await signIn("credentials", { username, password });
 };
+
+export async function uploadFile(formData) {
+    try {
+        const file = formData.get("file");
+
+        if (!file) {
+            return { msg: "File is required.", success: false };
+        }
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const uniqueFileName = cryptoRandomString({ length: 15 });
+
+        const fileKey = await uploadFileToS3(buffer, uniqueFileName);
+
+        return { success: true, msg: "File uploaded successfully!", fileKey };
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+function getS3FileUrl(fileName) {
+    return `https://${Env.AWS_S3_BUCKET_NAME}.s3.${Env.AWS_S3_REGION}.amazonaws.com/${fileName}`;
+}
+function getS3FileKey(s3FileUrl) {
+    const splitStrs = s3FileUrl.split("/");
+    return splitStrs[splitStrs.length - 1];
+}
 
 export const updateHomeContent = async (formData) => {
     connectToDB();
@@ -425,45 +437,63 @@ export const updateHomeContent = async (formData) => {
             video3,
         } = Object.fromEntries(formData);
 
-        const img1 = getImageUrl(image1.name, "image");
-        const img2 = getImageUrl(image2.name, "image");
-        const img3 = getImageUrl(image3.name, "image");
-
-        const vid1 = getImageUrl(video1.name, "video");
-        const vid2 = getImageUrl(video2.name, "video");
-        const vid3 = getImageUrl(video3.name, "video");
-
-        const cardsData = [
-            {
-                bannerImage: img1,
-                description: description1,
-                video: vid1,
-            },
-            {
-                bannerImage: img2,
-                description: description2,
-                video: vid2,
-            },
-            {
-                bannerImage: img3,
-                description: description3,
-                video: vid3,
-            },
-        ];
-
-        const homeContent = await WebsiteContent.findByIdAndUpdate(
-            "6582621f6224f786a42635e1",
-            {
-                heroText,
-                section: { smallHeading, bigHeading, cards: cardsData },
-            }
+        const homeContent = await WebsiteContent.findById(
+            "6582621f6224f786a42635e1"
         );
 
-        if (!homeContent) {
-            throw new Error("Content not found");
+        const cardsData = homeContent.section.cards;
+
+        cardsData[0].description = description1;
+        cardsData[1].description = description2;
+        cardsData[2].description = description3;
+
+        if (image1 !== "") {
+            const img1 = getS3FileUrl(image1);
+            console.log(homeContent.section.cards[0].bannerImage);
+            await deleteFile(
+                getS3FileKey(homeContent.section.cards[0].bannerImage)
+            );
+            cardsData[0].bannerImage = img1;
+        }
+        if (image2 !== "") {
+            const img2 = getS3FileUrl(image2);
+            await deleteFile(
+                getS3FileKey(homeContent.section.cards[1].bannerImage)
+            );
+            cardsData[1].bannerImage = img2;
+        }
+        if (image3 !== "") {
+            const img3 = getS3FileUrl(image3);
+            await deleteFile(
+                getS3FileKey(homeContent.section.cards[2].bannerImage)
+            );
+
+            cardsData[2].bannerImage = img3;
+        }
+        if (video1 !== "") {
+            const vid1 = getS3FileUrl(video1);
+            await deleteFile(getS3FileKey(homeContent.section.cards[0].video));
+            cardsData[0].video = vid1;
+        }
+        if (video2 !== "") {
+            const vid2 = getS3FileUrl(video2);
+            await deleteFile(getS3FileKey(homeContent.section.cards[1].video));
+            cardsData[1].video = vid2;
+        }
+        if (video3 !== "") {
+            const vid3 = getS3FileUrl(video3);
+            await deleteFile(getS3FileKey(homeContent.section.cards[2].video));
+            cardsData[2].video = vid3;
         }
 
-        await homeContent.save();
+        await WebsiteContent.findByIdAndUpdate("6582621f6224f786a42635e1", {
+            heroText,
+            section: {
+                smallHeading,
+                bigHeading,
+                cards: cardsData,
+            },
+        });
     } catch (error) {
         throw new Error(`Error updating home content: ${error.message}`);
     }

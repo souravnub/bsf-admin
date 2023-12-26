@@ -33,11 +33,13 @@ const WatchDemo = async () => {
                         <div>
                             <h2>{name}</h2>
                             <Button
+                                type="button"
                                 className={`${styles.button} ${styles.removeButton}`}
                                 onClick={deleteVideoGalleryCategory.bind(
                                     null,
                                     _id
-                                )}>
+                                )}
+                            >
                                 Remove Category
                             </Button>
                         </div>
@@ -47,12 +49,14 @@ const WatchDemo = async () => {
                                     <li key={url}>
                                         <span>{url}</span>
                                         <Button
+                                            type="button"
                                             className={`${styles.deleteButton}`}
                                             onClick={deleteUrlFromGallery.bind(
                                                 null,
                                                 _id,
                                                 url
-                                            )}>
+                                            )}
+                                        >
                                             <TiDelete />
                                         </Button>
                                     </li>

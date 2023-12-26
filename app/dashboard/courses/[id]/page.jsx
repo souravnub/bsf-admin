@@ -18,7 +18,7 @@ const SingleProductPage = async ({ params }) => {
             <div className={styles.formContainer}>
                 <form action={updateCourse} className={styles.form}>
                     <div className={styles.infoContainer}>
-                        <ImageUpload url={course.image} />
+                        <ImageUpload source={course.image} />
                         {course.title}
                     </div>
                     <input
@@ -92,7 +92,8 @@ const SingleProductPage = async ({ params }) => {
                         name="description"
                         id="desc"
                         rows="10"
-                        defaultValue={course.description}></textarea>
+                        defaultValue={course.description}
+                    ></textarea>
                     <button class={styles.button}>Update</button>
                 </form>
             </div>

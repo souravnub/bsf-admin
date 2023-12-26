@@ -12,10 +12,6 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
     const [smallHding, setSmallHding] = useState(smallHeading);
     const [bigHding, setBigHding] = useState(bigHeading);
 
-    const handleInputChange = (setter) => (event) => {
-        setter(event.target.value);
-    };
-
     return (
         <div className={styles.container}>
             <h3>Change content of the home page</h3>
@@ -28,7 +24,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     label="Hero section text*"
                     name={"heroText"}
                     value={heroTxt}
-                    onChange={handleInputChange(setHeroTxt)}
+                    onChange={setHeroTxt}
                     maxLength={250}
                 />
 
@@ -36,7 +32,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     label="Small heading*"
                     name={"smallHeading"}
                     value={smallHding}
-                    onChange={handleInputChange(setSmallHding)}
+                    onChange={setSmallHding}
                     maxLength={20}
                 />
 
@@ -44,7 +40,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     label="Big heading*"
                     name={"bigHeading"}
                     value={bigHding}
-                    onChange={handleInputChange(setBigHding)}
+                    onChange={setBigHding}
                     maxLength={45}
                 />
 
@@ -61,9 +57,8 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                             />
                             <CharacterCountInput
                                 label={`Description*`}
-                                name={`description${index}`}
+                                name={`description${index + 1}`}
                                 value={card.description}
-                                onChange={handleInputChange(setBigHding)}
                                 maxLength={130}
                             />
                             <VideoUpload index={index} source={card.video} />
