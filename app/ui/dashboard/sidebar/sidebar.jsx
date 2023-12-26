@@ -1,15 +1,11 @@
-import Image from "next/image";
 import MenuLink from "./menuLink/menuLink";
 import styles from "./sidebar.module.css";
 import {
     MdDashboard,
     MdSupervisedUserCircle,
-    MdAttachMoney,
     MdWork,
     MdAnalytics,
     MdPeople,
-    MdOutlineSettings,
-    MdHelpCenter,
     MdLogout,
     MdAdminPanelSettings,
     MdLibraryBooks,
@@ -98,7 +94,8 @@ const Sidebar = async () => {
                 action={async () => {
                     "use server";
                     await signOut();
-                }}>
+                }}
+            >
                 <button className={styles.logout}>
                     <MdLogout />
                     Logout

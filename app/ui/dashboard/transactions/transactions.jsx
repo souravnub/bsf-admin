@@ -1,8 +1,6 @@
 import styles from "./transactions.module.css";
-import { getLatestTransactions } from "@/app/lib/data";
 
 const Transactions = async () => {
-    const transactions = await getLatestTransactions();
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>Latest Transactions</h2>

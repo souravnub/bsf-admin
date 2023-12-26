@@ -54,7 +54,6 @@ const ImageUpload = ({ url, requiredInput, index, source }) => {
             );
 
             if (response.ok) {
-                const data = await response.json();
                 setMessage("Uploaded successfully!");
             } else {
                 console.error("Image upload failed:", response.statusText);

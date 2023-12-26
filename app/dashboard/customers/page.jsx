@@ -1,4 +1,3 @@
-import { deleteUser } from "@/app/lib/actions";
 import { fetchCustomers } from "@/app/lib/data";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Search from "@/app/ui/dashboard/search/search";

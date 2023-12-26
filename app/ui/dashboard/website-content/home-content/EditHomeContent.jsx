@@ -6,7 +6,6 @@ import CharacterCountInput from "./CharacterCountInput";
 import { useState } from "react";
 import ImageUpload from "../../courses/addCourseForm/imageUpload/imageUpload";
 import VideoUpload from "../video-upload/VideoUpload";
-import Image from "next/image";
 
 function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
     const [heroTxt, setHeroTxt] = useState(heroText);
@@ -26,7 +25,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                 className={`${styles.form} ${styles.EditHomeContentForm}`}
             >
                 <CharacterCountInput
-                    label='Hero section text*'
+                    label="Hero section text*"
                     name={"heroText"}
                     value={heroTxt}
                     onChange={handleInputChange(setHeroTxt)}
@@ -34,7 +33,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                 />
 
                 <CharacterCountInput
-                    label='Small heading*'
+                    label="Small heading*"
                     name={"smallHeading"}
                     value={smallHding}
                     onChange={handleInputChange(setSmallHding)}
@@ -42,7 +41,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                 />
 
                 <CharacterCountInput
-                    label='Big heading*'
+                    label="Big heading*"
                     name={"bigHeading"}
                     value={bigHding}
                     onChange={handleInputChange(setBigHding)}
@@ -73,7 +72,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                 </div>
 
                 <button
-                    type='submit'
+                    type="submit"
                     className={`${styles.button} ${styles.editHomeContentBtn}`}
                 >
                     Update Info

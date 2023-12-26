@@ -1,6 +1,5 @@
 "use client";
 
-import moment from "moment";
 import React, { useState } from "react";
 
 const CourseSchedulePicker = ({ info }) => {
