@@ -8,6 +8,7 @@ import React, { useRef, useState } from "react";
 const ImageUpload = ({ index = 0, requiredInput, source }) => {
     const imgInputRef = useRef();
     const [imageFile, setImageFile] = useState(null);
+    const [uploadedFileKey, setUploadedFileKey] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const [isImageUploading, setIsImageUploading] = useState(false);
     const [isImageUploaded, setIsImageUploaded] = useState(false);
@@ -39,10 +40,11 @@ const ImageUpload = ({ index = 0, requiredInput, source }) => {
         formData.append("file", imageFile);
         try {
             setIsImageUploading(true);
-            const { success } = await uploadFile(formData);
+            const { success, fileKey } = await uploadFile(formData);
             setIsImageUploading(false);
             if (success) {
                 setIsImageUploaded(true);
+                setUploadedFileKey(fileKey);
             } else {
                 console.error(response);
                 setIsImageUploading(false);
@@ -60,7 +62,7 @@ const ImageUpload = ({ index = 0, requiredInput, source }) => {
             <input
                 type="text"
                 name={`image${index + 1}`}
-                value={imageFile?.name || ""}
+                value={uploadedFileKey || ""}
                 hidden
             />
             <input

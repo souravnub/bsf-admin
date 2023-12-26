@@ -263,12 +263,7 @@ export const updateCourse = async (formData) => {
     // if the image is provided in the form entries
     if (image1 !== "") {
         const course = await Course.findById(id);
-        const splitStrs = course.image.split("/");
-        const prevImgFileName = splitStrs[splitStrs.length - 1]
-            .split("+")
-            .join(" ");
-
-        await deleteFile(prevImgFileName);
+        await deleteFile(getS3FileKey(course.image));
         newImageUrl = getS3FileUrl(image1);
     }
 
@@ -405,8 +400,9 @@ export async function uploadFile(formData) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
+        const uniqueFileName = cryptoRandomString({ length: 15 });
 
-        const fileKey = await uploadFileToS3(buffer, file.name);
+        const fileKey = await uploadFileToS3(buffer, uniqueFileName);
 
         return { success: true, msg: "File uploaded successfully!", fileKey };
     } catch (error) {
@@ -415,9 +411,11 @@ export async function uploadFile(formData) {
 }
 
 function getS3FileUrl(fileName) {
-    // amazon s3 replaces a " " with a +
-    fileName = fileName.split(" ").join("+");
     return `https://${Env.AWS_S3_BUCKET_NAME}.s3.${Env.AWS_S3_REGION}.amazonaws.com/${fileName}`;
+}
+function getS3FileKey(s3FileUrl) {
+    const splitStrs = s3FileUrl.split("/");
+    return splitStrs[splitStrs.length - 1];
 }
 
 export const updateHomeContent = async (formData) => {
@@ -451,26 +449,40 @@ export const updateHomeContent = async (formData) => {
 
         if (image1 !== "") {
             const img1 = getS3FileUrl(image1);
+            console.log(homeContent.section.cards[0].bannerImage);
+            await deleteFile(
+                getS3FileKey(homeContent.section.cards[0].bannerImage)
+            );
             cardsData[0].bannerImage = img1;
         }
         if (image2 !== "") {
             const img2 = getS3FileUrl(image2);
+            await deleteFile(
+                getS3FileKey(homeContent.section.cards[1].bannerImage)
+            );
             cardsData[1].bannerImage = img2;
         }
         if (image3 !== "") {
             const img3 = getS3FileUrl(image3);
+            await deleteFile(
+                getS3FileKey(homeContent.section.cards[2].bannerImage)
+            );
+
             cardsData[2].bannerImage = img3;
         }
         if (video1 !== "") {
             const vid1 = getS3FileUrl(video1);
+            await deleteFile(getS3FileKey(homeContent.section.cards[0].video));
             cardsData[0].video = vid1;
         }
         if (video2 !== "") {
             const vid2 = getS3FileUrl(video2);
+            await deleteFile(getS3FileKey(homeContent.section.cards[1].video));
             cardsData[1].video = vid2;
         }
         if (video3 !== "") {
             const vid3 = getS3FileUrl(video3);
+            await deleteFile(getS3FileKey(homeContent.section.cards[2].video));
             cardsData[2].video = vid3;
         }
 

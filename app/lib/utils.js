@@ -32,19 +32,19 @@ const s3Client = new S3Client({
         secretAccessKey: Env.AWS_S3_SECRET_ACCESS_KEY,
     },
 });
-export async function uploadFileToS3(file, fileName) {
+export async function uploadFileToS3(file, fileKey) {
     const fileBuffer = file;
 
     const params = {
         Bucket: Env.AWS_S3_BUCKET_NAME,
-        Key: `${fileName}`,
+        Key: `${fileKey}`,
         Body: fileBuffer,
         ContentType: "image/jpg",
     };
 
     const command = new PutObjectCommand(params);
     await s3Client.send(command);
-    return fileName;
+    return fileKey;
 }
 
 export async function deleteFileFromS3(fileName) {
@@ -52,8 +52,6 @@ export async function deleteFileFromS3(fileName) {
         Bucket: Env.AWS_S3_BUCKET_NAME,
         Key: `${fileName}`,
     };
-
-    console.log(params);
 
     const command = new DeleteObjectCommand(params);
     await s3Client.send(command);

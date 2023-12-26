@@ -8,6 +8,7 @@ import React, { useRef, useState } from "react";
 const VideoUpload = ({ requiredInput, index = 0, source }) => {
     const vidInputRef = useRef();
     const [videoFile, setVideoFile] = useState(null);
+    const [uploadedFileKey, setUploadedFileKey] = useState(null);
     const [videoPreview, setVideoPreview] = useState(null);
     const [isVideoUploading, setIsVideoUploading] = useState(false);
     const [isVideoUploaded, setIsVideoUploaded] = useState(false);
@@ -39,10 +40,11 @@ const VideoUpload = ({ requiredInput, index = 0, source }) => {
         formData.append("file", videoFile);
         try {
             setIsVideoUploading(true);
-            const { success } = await uploadFile(formData);
+            const { success, fileKey } = await uploadFile(formData);
             setIsVideoUploading(false);
             if (success) {
                 setIsVideoUploaded(true);
+                setUploadedFileKey(fileKey);
             } else {
                 console.error(response);
                 setIsVideoUploading(false);
@@ -60,7 +62,7 @@ const VideoUpload = ({ requiredInput, index = 0, source }) => {
             <input
                 type="text"
                 name={`video${index + 1}`}
-                value={videoFile?.name || ""}
+                value={uploadedFileKey || ""}
                 hidden
             />
 
