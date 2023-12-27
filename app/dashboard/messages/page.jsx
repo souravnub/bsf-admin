@@ -7,6 +7,8 @@ import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Sort from "@/app/ui/dashboard/sort/sort";
 import ReplyModal from "@/app/ui/dashboard/reply-modal/replyModal";
 
+import { deleteMessage } from "@/app/lib/actions";
+
 const Messages = async ({ searchParams }) => {
     const q = searchParams?.q || "";
     const page = searchParams?.page || 1;
@@ -79,7 +81,7 @@ const Messages = async ({ searchParams }) => {
                                 <div
                                     className={`${messageStyles.container} ${messageStyles.btnContainer}`}
                                 >
-                                    <form>
+                                    <form action={deleteMessage}>
                                         <input
                                             type="hidden"
                                             name="id"

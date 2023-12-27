@@ -580,6 +580,7 @@ export const sendReply = async (prevState, formData) => {
         Object.fromEntries(formData);
 
     try {
+        connectToDB();
         await Contact.findOneAndUpdate({ email }, { replied: true });
         await triggerClientEmailSending(
             email,
@@ -597,4 +598,16 @@ export const sendReply = async (prevState, formData) => {
     } catch (error) {
         return "Whoops. Something went wrong.";
     }
+};
+
+export const deleteMessage = async (formData) => {
+    const { id } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+        await Contact.findByIdAndDelete(JSON.parse(id));
+    } catch (error) {
+        throw new Error("Beep Bop 🤖 Failed to delete the message");
+    }
+    revalidatePath("/dashboard/messages");
 };

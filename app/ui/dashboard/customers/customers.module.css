@@ -55,6 +55,7 @@
 .replied {
     background-color: teal;
     font-size: 12px;
+    cursor: default;
 }
 
 .delete {
