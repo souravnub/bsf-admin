@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "@/app/ui/dashboard/customers/customers.module.css";
 import messageStyles from "@/app/ui/dashboard/messages/message.module.css";
 import { fetchMessages } from "@/app/lib/data";
@@ -13,6 +12,7 @@ const Messages = async ({ searchParams }) => {
     const sortBy = searchParams?.sort || "newest_first";
 
     const { count, messages } = await fetchMessages(q, page, sortBy);
+
     return (
         <>
             <div className={`${styles.container} ${messageStyles.flex}`}>
