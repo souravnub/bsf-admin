@@ -5,6 +5,7 @@ import { RxDotFilled } from "react-icons/rx";
 import Search from "@/app/ui/dashboard/search/search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Sort from "@/app/ui/dashboard/sort/sort";
+import ReplyModal from "@/app/ui/dashboard/reply-modal/replyModal";
 
 const Messages = async ({ searchParams }) => {
     const q = searchParams?.q || "";
@@ -29,6 +30,7 @@ const Messages = async ({ searchParams }) => {
                         interestCategories,
                         message,
                         createdAt,
+                        replied,
                     }) => {
                         return (
                             <div key={String(_id)}>
@@ -81,7 +83,7 @@ const Messages = async ({ searchParams }) => {
                                         <input
                                             type="hidden"
                                             name="id"
-                                            value={_id}
+                                            value={JSON.stringify(_id)}
                                         />
                                         <button
                                             className={`${styles.button} ${styles.delete}`}
@@ -89,24 +91,20 @@ const Messages = async ({ searchParams }) => {
                                             Delete
                                         </button>
                                     </form>
-
-                                    <form>
-                                        <input
-                                            type="hidden"
-                                            name="id"
-                                            value={_id}
-                                        />
-                                        <input
-                                            type="hidden"
-                                            name="email"
-                                            value={email}
-                                        />
-                                        <button
-                                            className={`${styles.button} ${styles.view}`}
+                                    {replied ? (
+                                        <p
+                                            className={`${styles.button} ${styles.replied}`}
                                         >
-                                            Reply
-                                        </button>
-                                    </form>
+                                            Replied
+                                        </p>
+                                    ) : (
+                                        <ReplyModal
+                                            message={message}
+                                            firstName={firstName}
+                                            lastName={lastName}
+                                            email={email}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         );
