@@ -8,11 +8,9 @@ export async function GET(request) {
         // getting the id from the url
         const id = request.url.slice(request.url.lastIndexOf("/") + 1);
 
-        const course = await Course.find({
-            _id: id,
-        });
+        const course = await Course.findById(id);
 
-        return NextResponse.json({ course });
+        return NextResponse.json(course);
     } catch (err) {
         return NextResponse.json(
             {

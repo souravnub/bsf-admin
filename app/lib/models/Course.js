@@ -11,6 +11,9 @@ const courseSchema = new mongoose.Schema(
             },
         ],
 
+        pageTitle: { type: String, required: true },
+        pageSubTitle: { type: String, required: true },
+
         image: {
             type: String,
             required: true,
