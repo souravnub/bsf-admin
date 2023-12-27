@@ -14,10 +14,12 @@ export default function ForgotPasswordEmail({ name, url }) {
                 ignore this email.
             </Text>
             <Button
-                pX={20}
-                pY={20}
                 href={url}
-                style={{ background: "#000", color: "#FFFFFF" }}
+                style={{
+                    background: "#000",
+                    color: "#FFFFFF",
+                    padding: "20px",
+                }}
             >
                 Reset Password
             </Button>

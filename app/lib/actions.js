@@ -15,7 +15,11 @@ import bcrypt from "bcrypt";
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
 
-import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
+import {
+    renderEmailHtml,
+    sendRenderedEmail,
+} from "../ui/login/emails/renderAndSendEmail";
+import ForgotPasswordEmail from "../ui/login/emails/ForgotPasswordEmail";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -529,10 +533,25 @@ export const sendLink = async (prevState, formData) => {
         const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
 
         try {
-            await triggerClientEmailSending(email, admin.username, url);
+            const renderedEmail = renderEmailHtml(
+                {
+                    name: admin.username,
+                    url,
+                },
+                ForgotPasswordEmail
+            );
+
+            await sendRenderedEmail(
+                {
+                    email,
+                    subject: "Reset Password | BSF Systems",
+                },
+                renderedEmail
+            );
 
             return "A reset link has been sent to your email. Please check your email.";
         } catch (error) {
+            console.log(error);
             return "Whoops. Something went wrong.";
         }
     } else {
