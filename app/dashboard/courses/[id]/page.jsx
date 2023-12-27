@@ -18,7 +18,7 @@ const SingleProductPage = async ({ params }) => {
             <div className={styles.formContainer}>
                 <form action={updateCourse} className={styles.form}>
                     <div className={styles.infoContainer}>
-                        <ImageUpload url={course.image} />
+                        <ImageUpload source={course.image} />
                         {course.title}
                     </div>
                     <input
@@ -28,6 +28,26 @@ const SingleProductPage = async ({ params }) => {
                     />
                     <label>Course Name</label>
                     <input type="text" name="name" defaultValue={course.name} />
+
+                    <label htmlFor="title">Single Course page title*</label>
+                    <input
+                        type="text"
+                        name="pageTitle"
+                        id="title"
+                        required
+                        defaultValue={course.pageTitle}
+                    />
+
+                    <label htmlFor="subTitle">
+                        Single Course page Sub-title*
+                    </label>
+                    <input
+                        type="text"
+                        name="pageSubTitle"
+                        id="subTitle"
+                        required
+                        defaultValue={course.pageSubTitle}
+                    />
 
                     <div className={addCoursePageStyles.demandInputContainer}>
                         <label htmlFor="demand">Is in demand?</label>
@@ -92,7 +112,8 @@ const SingleProductPage = async ({ params }) => {
                         name="description"
                         id="desc"
                         rows="10"
-                        defaultValue={course.description}></textarea>
+                        defaultValue={course.description}
+                    ></textarea>
                     <button class={styles.button}>Update</button>
                 </form>
             </div>

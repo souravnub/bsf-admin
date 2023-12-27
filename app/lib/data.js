@@ -105,23 +105,55 @@ export const fetchCategories = async () => {
     }
 };
 
-export const fetchMessages = async () => {
+export const fetchMessages = async (q, page, sortBy) => {
+    const regex = new RegExp(q, "i");
+    const ITEM_PER_PAGE = 10;
+
     try {
-        await connectToDB();
-        const messages = await Contact.find();
-        const messageWithFormatedDate = messages.map((message) => {
-            const formatedDate = moment(message.createdAt).format(
+        connectToDB();
+
+        let query = Contact.find({
+            $or: [{ firstName: regex }, { lastName: regex }],
+        });
+
+        switch (sortBy) {
+            case "newest_first":
+                query = query.sort({ createdAt: -1 }); // Sort by latest date
+                break;
+            case "oldest":
+                query = query.sort({ createdAt: 1 }); // Sort by oldest date
+                break;
+            case "replied_to":
+                query = query.find({ replied: true }); // Filter by replied messages
+                break;
+            default:
+                // For other cases or default sorting
+                query = query.sort({ createdAt: -1 }); // Default: Sort by latest date
+                break;
+        }
+
+        const count = await Contact.countDocuments({
+            $or: [{ firstName: regex }, { lastName: regex }],
+        });
+
+        const messages = await query
+            .limit(ITEM_PER_PAGE)
+            .skip(ITEM_PER_PAGE * (page - 1))
+            .exec();
+
+        const messageWithFormattedDate = messages.map((message) => {
+            const formattedDate = moment(message.createdAt).format(
                 "MMM D, dddd"
             );
             return {
                 ...message._doc,
-
-                createdAt: formatedDate,
+                createdAt: formattedDate,
             };
         });
-        return messageWithFormatedDate;
+
+        return { count, messages: messageWithFormattedDate };
     } catch (err) {
-        throw new Error("Falied to fetch messages");
+        throw new Error("Failed to fetch messages!");
     }
 };
 

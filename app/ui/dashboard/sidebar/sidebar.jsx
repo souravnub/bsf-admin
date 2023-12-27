@@ -28,11 +28,6 @@ const menuItems = [
                 icon: <MdSupervisedUserCircle />,
             },
             {
-                title: "Messages",
-                path: "/dashboard/messages",
-                icon: <MdChat />,
-            },
-            {
                 title: "Admins",
                 path: "/dashboard/admins",
                 icon: <MdAdminPanelSettings />,
@@ -53,14 +48,9 @@ const menuItems = [
                 icon: <MdWork />,
             },
             {
-                title: "...",
-                path: "/dashboard/reports",
-                icon: <MdAnalytics />,
-            },
-            {
-                title: "...",
-                path: "/dashboard/teams",
-                icon: <MdPeople />,
+                title: "Messages",
+                path: "/dashboard/messages",
+                icon: <MdChat />,
             },
         ],
     },

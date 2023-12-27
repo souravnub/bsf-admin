@@ -19,6 +19,23 @@ const AddCoursePage = async () => {
                     <input type="text" name="name" id="name" required />
                 </div>
 
+                <div>
+                    <label htmlFor="title">Single Course page title*</label>
+                    <input type="text" name="pageTitle" id="title" required />
+                </div>
+
+                <div>
+                    <label htmlFor="subTitle">
+                        Single Course page Sub-title*
+                    </label>
+                    <input
+                        type="text"
+                        name="pageSubTitle"
+                        id="subTitle"
+                        required
+                    />
+                </div>
+
                 <div className={styles.demandInputContainer}>
                     <label htmlFor="demand">Is in demand?</label>
                     <input type="checkbox" name="isInDemand" value="true" />
@@ -29,7 +46,7 @@ const AddCoursePage = async () => {
                     <Category categories={categoriesJSON} />
                 </div>
 
-                <ImageUpload requiredInput={true} index={0} />
+                <ImageUpload requiredInput={true} />
 
                 <div>
                     <label htmlFor="price">Price*</label>
