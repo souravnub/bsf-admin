@@ -118,10 +118,10 @@ export const fetchMessages = async (q, page, sortBy) => {
 
         switch (sortBy) {
             case "newest_first":
-                query = query.sort({ createdAt: -1 }); // Sort by latest date
+                query = query.sort({ createdAt: -1, replied: false }); // Sort by latest date
                 break;
             case "oldest":
-                query = query.sort({ createdAt: 1 }); // Sort by oldest date
+                query = query.sort({ createdAt: 1, replied: false }); // Sort by oldest date
                 break;
             case "replied_to":
                 query = query.find({ replied: true }); // Filter by replied messages
