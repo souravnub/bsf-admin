@@ -521,8 +521,7 @@ export const sendLink = async (prevState, formData) => {
             type: "alphanumeric",
         });
 
-        admin.password_reset_token = randomStr;
-        await admin.save();
+        await Admin.updateOne({ email }, { password_reset_token: randomStr });
 
         // Encrypt user email
         const crypt = new Cryptr(Env.SECRET_KEY);
