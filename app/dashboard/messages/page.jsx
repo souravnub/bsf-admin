@@ -13,7 +13,9 @@ const Messages = async ({ searchParams }) => {
     return (
         <>
             <div className={`${styles.container} ${messageStyles.flex}`}>
-                <Search placeholder={"Search for a particular name..."} />
+                <div className={styles.top}>
+                    <Search placeholder={"Search for a name..."} />
+                </div>
                 {messages.map(
                     ({
                         _id,
