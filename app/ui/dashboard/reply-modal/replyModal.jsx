@@ -5,9 +5,11 @@ import { useFormState } from "react-dom";
 import styles from "./replyModal.module.css";
 import { sendReply } from "@/app/lib/actions";
 
-const ReplyModal = ({ message, firstName, lastName, email }) => {
+const ReplyModal = ({ message, firstName, lastName, email, id }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [state, formAction] = useFormState(sendReply, undefined);
+
+    const objectId = JSON.parse(id);
 
     const openModal = () => {
         setIsOpen(true);
@@ -56,6 +58,11 @@ const ReplyModal = ({ message, firstName, lastName, email }) => {
                                 type="hidden"
                                 name="message"
                                 defaultValue={message}
+                            />
+                            <input
+                                type="hidden"
+                                name="id"
+                                defaultValue={objectId}
                             />
                             <label htmlFor="reply">Your message here</label>
                             <textarea

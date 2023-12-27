@@ -575,12 +575,16 @@ export const resetPassword = async (prevState, formData) => {
 };
 
 export const sendReply = async (prevState, formData) => {
-    const { firstName, lastName, email, message, reply } =
+    const { firstName, lastName, email, message, reply, id } =
         Object.fromEntries(formData);
 
     try {
-        connectToDB();
-        await Contact.findOneAndUpdate({ email }, { replied: true });
+        try {
+            connectToDB();
+            await Contact.findByIdAndUpdate(id, { replied: true });
+        } catch (error) {
+            console.log("error updating message");
+        }
         await triggerClientEmailSending(
             email,
             "Reply from BSF Systems",
