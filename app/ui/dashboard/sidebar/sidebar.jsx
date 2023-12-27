@@ -4,8 +4,6 @@ import {
     MdDashboard,
     MdSupervisedUserCircle,
     MdWork,
-    MdAnalytics,
-    MdPeople,
     MdLogout,
     MdAdminPanelSettings,
     MdLibraryBooks,

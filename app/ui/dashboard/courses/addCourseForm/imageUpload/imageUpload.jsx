@@ -46,7 +46,6 @@ const ImageUpload = ({ index = 0, requiredInput, source }) => {
                 setIsImageUploaded(true);
                 setUploadedFileKey(fileKey);
             } else {
-                console.error(response);
                 setIsImageUploading(false);
             }
         } catch (error) {

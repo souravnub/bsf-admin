@@ -46,7 +46,6 @@ const VideoUpload = ({ requiredInput, index = 0, source }) => {
                 setIsVideoUploaded(true);
                 setUploadedFileKey(fileKey);
             } else {
-                console.error(response);
                 setIsVideoUploading(false);
             }
         } catch (error) {
