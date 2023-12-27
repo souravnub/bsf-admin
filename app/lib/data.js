@@ -105,20 +105,38 @@ export const fetchCategories = async () => {
     }
 };
 
-export const fetchMessages = async (q, page) => {
+export const fetchMessages = async (q, page, sortBy) => {
     const regex = new RegExp(q, "i");
     const ITEM_PER_PAGE = 10;
 
     try {
         connectToDB();
 
+        let query = Contact.find({
+            $or: [{ firstName: regex }, { lastName: regex }],
+        });
+
+        switch (sortBy) {
+            case "newest_first":
+                query = query.sort({ createdAt: -1 }); // Sort by latest date
+                break;
+            case "oldest":
+                query = query.sort({ createdAt: 1 }); // Sort by oldest date
+                break;
+            case "replied_to":
+                query = query.find({ replied: true }); // Filter by replied messages
+                break;
+            default:
+                // For other cases or default sorting
+                query = query.sort({ createdAt: -1 }); // Default: Sort by latest date
+                break;
+        }
+
         const count = await Contact.countDocuments({
             $or: [{ firstName: regex }, { lastName: regex }],
         });
 
-        const messages = await Contact.find({
-            $or: [{ firstName: regex }, { lastName: regex }],
-        })
+        const messages = await query
             .limit(ITEM_PER_PAGE)
             .skip(ITEM_PER_PAGE * (page - 1))
             .exec();

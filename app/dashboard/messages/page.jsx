@@ -5,16 +5,20 @@ import { fetchMessages } from "@/app/lib/data";
 import { RxDotFilled } from "react-icons/rx";
 import Search from "@/app/ui/dashboard/search/search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
+import Sort from "@/app/ui/dashboard/sort/sort";
 
 const Messages = async ({ searchParams }) => {
     const q = searchParams?.q || "";
     const page = searchParams?.page || 1;
-    const { count, messages } = await fetchMessages(q, page);
+    const sortBy = searchParams?.sort || "newest_first";
+
+    const { count, messages } = await fetchMessages(q, page, sortBy);
     return (
         <>
             <div className={`${styles.container} ${messageStyles.flex}`}>
                 <div className={styles.top}>
                     <Search placeholder={"Search for a name..."} />
+                    <Sort options={["Newest first", "Replied to", "Oldest"]} />
                 </div>
                 {messages.map(
                     ({
