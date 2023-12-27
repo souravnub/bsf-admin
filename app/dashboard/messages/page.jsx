@@ -93,7 +93,7 @@ const Messages = async ({ searchParams }) => {
                                             Delete
                                         </button>
                                     </form>
-                                    {replied ? (
+                                    {replied === true ? (
                                         <p
                                             className={`${styles.button} ${styles.replied}`}
                                         >
@@ -105,6 +105,7 @@ const Messages = async ({ searchParams }) => {
                                             firstName={firstName}
                                             lastName={lastName}
                                             email={email}
+                                            id={JSON.stringify(_id)}
                                         />
                                     )}
                                 </div>
