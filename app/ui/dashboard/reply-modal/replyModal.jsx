@@ -1,18 +1,79 @@
 "use client";
 
+import { useState } from "react";
+import { useFormState } from "react-dom";
 import styles from "./replyModal.module.css";
+import { sendReply } from "@/app/lib/actions";
 
-const ReplyModal = ({ isOpen, closeModal }) => {
+const ReplyModal = ({ message, firstName, lastName, email }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [state, formAction] = useFormState(sendReply, undefined);
+
+    const openModal = () => {
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+    };
+
     return (
-        <div className={styles.modal + ` ${isOpen ? "show" : ""}`}>
-            <div className={styles.modalContent}>
-                <span className="close" onClick={closeModal}>
-                    &times;
-                </span>
-                <h2>Modal Title</h2>
-                <p>Modal Content Goes Here</p>
-            </div>
-        </div>
+        <>
+            <button
+                className={`${styles.button} ${styles.view}`}
+                onClick={openModal}
+            >
+                Reply
+            </button>
+            {isOpen && (
+                <div className={styles.modal}>
+                    <div className={styles.modalContent}>
+                        <span className="close" onClick={closeModal}>
+                            <p>&times;</p>
+                        </span>
+                        <div className={styles.quote}>
+                            <h2>Replying to:</h2>
+                            <p>{message}</p>
+                        </div>
+
+                        <form action={formAction} className={styles.form}>
+                            <input
+                                type="hidden"
+                                name="firstName"
+                                defaultValue={firstName}
+                            />
+                            <input
+                                type="hidden"
+                                name="lastName"
+                                defaultValue={lastName}
+                            />
+                            <input
+                                type="hidden"
+                                name="email"
+                                defaultValue={email}
+                            />
+                            <input
+                                type="hidden"
+                                name="message"
+                                defaultValue={message}
+                            />
+                            <label htmlFor="reply">Your message here</label>
+                            <textarea
+                                name="reply"
+                                id="reply"
+                                cols="30"
+                                rows="10"
+                                className={styles.textarea}
+                                placeholder="Start typing..."
+                            ></textarea>
+
+                            <button className={styles.sendBtn}>Send</button>
+                        </form>
+                        <p className={styles.message}>{state && state}</p>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 

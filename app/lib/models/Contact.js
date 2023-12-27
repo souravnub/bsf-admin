@@ -28,9 +28,16 @@ const contactSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        repliedAt: {
+            type: Date, // Field to store the reply timestamp
+            expires: 60 * 60 * 24 * 90, // 90 days in seconds
+            default: null, // Set to null when the message is not replied to
+        },
     },
     { timestamps: true }
 );
+
+contactSchema.index({ repliedAt: 1 }, { expireAfterSeconds: 0 });
 
 export const Contact =
     mongoose.models.Contact || mongoose.model("Contact", contactSchema);

@@ -16,6 +16,7 @@ import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
 
 import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
+import { Contact } from "./models/Contact";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -520,8 +521,7 @@ export const sendLink = async (prevState, formData) => {
             type: "alphanumeric",
         });
 
-        admin.password_reset_token = randomStr;
-        await admin.save();
+        await Admin.updateOne({ email }, { password_reset_token: randomStr });
 
         // Encrypt user email
         const crypt = new Cryptr(Env.SECRET_KEY);
@@ -530,7 +530,13 @@ export const sendLink = async (prevState, formData) => {
         const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
 
         try {
-            await triggerClientEmailSending(email, admin.username, url);
+            await triggerClientEmailSending(
+                email,
+                "Reset Password | BSF Systems",
+                "forgot password",
+                admin.username,
+                url
+            );
 
             return "A reset link has been sent to your email. Please check your email.";
         } catch (error) {
@@ -566,4 +572,41 @@ export const resetPassword = async (prevState, formData) => {
     } else {
         return "Passwords do not match.";
     }
+};
+
+export const sendReply = async (prevState, formData) => {
+    const { firstName, lastName, email, message, reply } =
+        Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+        await Contact.findOneAndUpdate({ email }, { replied: true });
+        await triggerClientEmailSending(
+            email,
+            "Reply from BSF Systems",
+            "reply",
+            null,
+            null,
+            message,
+            reply,
+            firstName,
+            lastName
+        );
+
+        return "Reply has been sent successfully.";
+    } catch (error) {
+        return "Whoops. Something went wrong.";
+    }
+};
+
+export const deleteMessage = async (formData) => {
+    const { id } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+        await Contact.findByIdAndDelete(JSON.parse(id));
+    } catch (error) {
+        throw new Error("Beep Bop 🤖 Failed to delete the message");
+    }
+    revalidatePath("/dashboard/messages");
 };

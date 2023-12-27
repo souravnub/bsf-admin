@@ -1,6 +1,6 @@
 /* Modal styles */
 .modal {
-    display: none;
+    display: block;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -9,29 +9,120 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.5); /* Overlay color */
-    transition: opacity 0.3s ease; /* Smooth transition */
 }
 
 .modalContent {
-    background-color: #fefefe;
-    margin: 15% auto;
+    background-color: var(--bg);
+    margin: 10% auto; /* Adjust the modal margin */
     padding: 20px;
-    border: 1px solid #888;
     width: 80%;
     max-width: 600px;
     position: relative;
-    border-radius: 5px;
+    border-radius: 8px;
+    color: #333;
+    font-size: 14px;
+
+    transition: opacity 0.3s ease; /* Smooth transition */
+    backdrop-filter: blur(5px); /* Creates a frosted glass effect */
 }
 
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+.quote {
+    background-color: var(--bgSoft);
+    padding: 10px;
+    margin-top: 40px;
+    border-radius: 5px;
+    border-left: 5px solid teal;
+    color: var(--textSoft);
+}
+
+.quote h2 {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.quote p {
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.form {
+    margin-top: 20px;
+}
+
+.form label {
+    color: var(--textSoft);
+}
+
+.textarea {
+    width: 100%;
+    resize: none; /* Disable textarea resizing */
+    height: 150px; /* Adjust the height as needed */
+    margin: 10px 0;
+    border-radius: 5px;
+
+    background-color: #2e374a;
+    border: none;
+
+    color: #fff;
+
+    padding: 10px;
+    font-family: "Inter", sans-serif;
+}
+
+.sendBtn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    color: #fff;
+    background-color: teal;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.sendBtn:hover {
+    background-color: #008080;
+}
+
+.modalContent span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    float: right;
+    cursor: pointer;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    color: #fff;
+
+    transition: 0.2s;
+}
+
+.modalContent span:hover {
+    background-color: #2e374a;
+}
+
+.modalContent span p {
+    font-size: 24px;
+}
+
+.close:hover {
+    color: #555; /* Change color on hover */
+}
+
+.button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: var(--text);
+    border: none;
     cursor: pointer;
 }
 
-/* Show modal when 'show' class is added */
-.modal.show {
-    display: block;
-    opacity: 1;
+.view {
+    background-color: #eccc68;
+    color: #000;
+}
+
+.message {
+    margin-top: 20px;
+    color: #eccc68;
 }
