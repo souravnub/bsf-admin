@@ -10,12 +10,14 @@ export default function ReplyEmail({ message, reply, firstName, lastName }) {
         <Html>
             <Heading as="h2">Request to Response</Heading>
             <Text>
-                Hello {firstName + " " + lastName}, thanks for contacting BSF
+                Hello {firstName} {lastName}, Thank you for reaching out to BSF
                 Systems.
             </Text>
 
-            <Text>Your message: {message}</Text>
+            <Text>Your message:</Text>
+            <Text>{message}</Text>
 
+            <Text>Our Response:</Text>
             <Text>{reply}</Text>
 
             <Hr />
