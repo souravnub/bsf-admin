@@ -3,13 +3,17 @@ import styles from "@/app/ui/dashboard/customers/customers.module.css";
 import messageStyles from "@/app/ui/dashboard/messages/message.module.css";
 import { fetchMessages } from "@/app/lib/data";
 import { RxDotFilled } from "react-icons/rx";
+import Search from "@/app/ui/dashboard/search/search";
+import Pagination from "@/app/ui/dashboard/pagination/pagination";
 
-const Messages = async () => {
-    const messages = await fetchMessages();
-
+const Messages = async ({ searchParams }) => {
+    const q = searchParams?.q || "";
+    const page = searchParams?.page || 1;
+    const { count, messages } = await fetchMessages(q, page);
     return (
         <>
             <div className={`${styles.container} ${messageStyles.flex}`}>
+                <Search placeholder={"Search for a particular name..."} />
                 {messages.map(
                     ({
                         _id,
@@ -102,6 +106,7 @@ const Messages = async () => {
                         );
                     }
                 )}
+                <Pagination count={count} />
             </div>
         </>
     );

@@ -13,8 +13,8 @@ const CoursesPage = async ({ searchParams }) => {
     return (
         <div className={styles.container}>
             <div className={styles.top}>
-                <Search placeholder='Search for a course...' />
-                <Link href='/dashboard/courses/add'>
+                <Search placeholder="Search for a course..." />
+                <Link href="/dashboard/courses/add">
                     <button className={styles.addButton}>Add New</button>
                 </Link>
             </div>
@@ -62,8 +62,8 @@ const CoursesPage = async ({ searchParams }) => {
                                     </Link>
                                     <form action={deleteCourse}>
                                         <input
-                                            type='hidden'
-                                            name='id'
+                                            type="hidden"
+                                            name="id"
                                             value={course._id}
                                         />
                                         <button
