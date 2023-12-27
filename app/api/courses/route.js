@@ -15,20 +15,19 @@ export async function GET() {
             const courses = await Course.find({ category: category._id });
 
             const formattedCourses = courses.map((course) => ({
-                id: course._id.toString(),
+                _id: course._id.toString(),
                 name: course.name,
-                img: {
-                    url: course.image,
-                },
-                features: course.features,
+                image: course.image,
                 price: course.price,
                 category: category.category,
             }));
 
-            formattedData.push({
-                category: category.category,
-                courses: formattedCourses,
-            });
+            if (formattedCourses.length !== 0) {
+                formattedData.push({
+                    category: category.category,
+                    courses: formattedCourses,
+                });
+            }
         }
 
         return NextResponse.json(formattedData);

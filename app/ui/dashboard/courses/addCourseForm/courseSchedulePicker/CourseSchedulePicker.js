@@ -2,9 +2,23 @@
 
 import React, { useState } from "react";
 
-const CourseSchedulePicker = ({ info }) => {
+const CourseSchedulePicker = ({ info: aInfo }) => {
     const [isClassDaysShown, setIsClassDaysShown] = useState(false);
-
+    const [info, setInfo] = useState(
+        aInfo || {
+            start: "",
+            end: "",
+            classDays: {
+                monday: {},
+                tuesday: {},
+                wednesday: {},
+                thursday: {},
+                friday: {},
+                saturday: {},
+                sunday: {},
+            },
+        }
+    );
     return (
         <div>
             <label htmlFor="start">Start Date</label>

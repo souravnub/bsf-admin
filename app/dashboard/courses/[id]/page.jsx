@@ -29,6 +29,26 @@ const SingleProductPage = async ({ params }) => {
                     <label>Course Name</label>
                     <input type="text" name="name" defaultValue={course.name} />
 
+                    <label htmlFor="title">Single Course page title*</label>
+                    <input
+                        type="text"
+                        name="pageTitle"
+                        id="title"
+                        required
+                        defaultValue={course.pageTitle}
+                    />
+
+                    <label htmlFor="subTitle">
+                        Single Course page Sub-title*
+                    </label>
+                    <input
+                        type="text"
+                        name="pageSubTitle"
+                        id="subTitle"
+                        required
+                        defaultValue={course.pageSubTitle}
+                    />
+
                     <div className={addCoursePageStyles.demandInputContainer}>
                         <label htmlFor="demand">Is in demand?</label>
                         <input
