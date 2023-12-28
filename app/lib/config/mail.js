@@ -14,6 +14,7 @@ const smtpConfig = {
 export const transporter = nodemailer.createTransport(smtpConfig);
 
 export const sendEmail = async (to, subject, html) => {
+    console.log("HERE IS THE CONFIG", smtpConfig);
     const mailData = {
         from: Env.EMAIL_FROM,
         to,
