@@ -28,10 +28,9 @@ const reviewSchema = new mongoose.Schema(
 
 // pushing the review id into the course's reviews array once review is added by customer
 reviewSchema.post("save", async function () {
-    await Course.findOneAndUpdate(
-        { _id: this.courseId },
-        { $push: { reviews: this._id } }
-    );
+    await Course.findByIdAndUpdate(this.courseId, {
+        $push: { reviews: this._id },
+    });
 });
 
 export const Review =
