@@ -27,6 +27,7 @@ const contactSchema = new mongoose.Schema(
         replied: {
             type: Boolean,
             default: false,
+            required: true,
         },
         repliedAt: {
             type: Date, // Field to store the reply timestamp
