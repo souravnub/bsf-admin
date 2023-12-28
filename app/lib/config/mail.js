@@ -14,22 +14,20 @@ const smtpConfig = {
 export const transporter = nodemailer.createTransport(smtpConfig);
 
 export const sendEmail = async (to, subject, html) => {
+    const mailData = {
+        from: Env.EMAIL_FROM,
+        to,
+        subject,
+        html,
+    };
     await new Promise((resolve, reject) => {
-        transporter.sendMail(
-            {
-                from: Env.EMAIL_FROM,
-                to,
-                subject,
-                html,
-            },
-            (err, info) => {
-                if (err) {
-                    console.error(err);
-                    reject(err);
-                } else {
-                    resolve(info);
-                }
+        transporter.sendMail(mailData, (err, info) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                resolve(info);
             }
-        );
+        });
     });
 };
