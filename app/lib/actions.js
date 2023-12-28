@@ -602,7 +602,6 @@ export const sendReply = async (prevState, formData) => {
         return "Whoops. Something went wrong.";
     }
 };
-
 export const deleteMessage = async (formData) => {
     const { id } = Object.fromEntries(formData);
 
