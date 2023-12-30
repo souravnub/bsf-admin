@@ -1,0 +1,31 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 17rem;
+}
+
+.heading {
+    font-weight: 500;
+}
+
+.main {
+    margin-top: 3rem;
+}
+
+.link {
+    background-color: var(--bgSoft);
+    color: var(--textSoft);
+    padding: 1rem 3rem;
+
+    border-radius: 10px;
+
+    transition: 0.2s;
+}
+
+.link:hover {
+    color: #fff;
+    background-color: rgb(34, 47, 77);
+}
