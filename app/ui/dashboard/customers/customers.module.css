@@ -5,10 +5,6 @@
     margin-top: 20px;
 }
 
-.view {
-    background-color: teal;
-}
-
 .top {
     display: flex;
     align-items: center;
@@ -30,6 +26,14 @@
 
 .table td {
     padding: 10px;
+}
+
+.table thead {
+    font-weight: 400;
+}
+
+.table tbody {
+    font-weight: 300;
 }
 
 .user {
@@ -56,6 +60,10 @@
     cursor: pointer;
 }
 
+.view {
+    background-color: teal;
+}
+
 .replied {
     background-color: teal;
     font-size: 12px;
@@ -64,4 +72,28 @@
 
 .delete {
     background-color: crimson;
+}
+
+.emailBtnContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    width: max-content;
+}
+
+.emailBtnContainer .emailBtn {
+    background-color: #2e374a;
+    color: var(--textSoft);
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.emailBtnContainer .emailBtn:hover {
+    background-color: #29334b;
+    color: #fff;
 }

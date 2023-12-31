@@ -13,6 +13,16 @@ const customersPage = async ({ searchParams }) => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <Search placeholder="Search for a customer..." />
+                <div className={styles.emailBtnContainer}>
+                    <button className={`${styles.emailBtn} ${styles.toAllBtn}`}>
+                        Send Email to All Customers
+                    </button>
+                    <button
+                        className={`${styles.emailBtn} ${styles.toSpecific}`}
+                    >
+                        Send Email to Course Enrollees
+                    </button>
+                </div>
             </div>
             <table className={styles.table}>
                 <thead>
