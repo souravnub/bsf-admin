@@ -15,8 +15,15 @@ import bcrypt from "bcrypt";
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
 
-import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
+import {
+    renderEmailHtml,
+    sendRenderedEmail,
+} from "../ui/login/emails/renderAndSendEmail";
+import ForgotPasswordEmail from "../ui/login/emails/ForgotPasswordEmail";
 import { Contact } from "./models/Contact";
+import { Customer } from "./models/Customer";
+import ReplyEmail from "../ui/login/emails/ReplyEmail";
+import EmailToAll from "../ui/login/emails/EmailToAll";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -530,16 +537,25 @@ export const sendLink = async (prevState, formData) => {
         const url = `${Env.APP_URL}/reset-password/${encrypted_email}?signature=${randomStr}`;
 
         try {
-            await triggerClientEmailSending(
-                email,
-                "Reset Password | BSF Systems",
-                "forgot password",
-                admin.username,
-                url
+            const renderedEmail = renderEmailHtml(
+                {
+                    name: admin.username,
+                    url,
+                },
+                ForgotPasswordEmail
+            );
+
+            await sendRenderedEmail(
+                {
+                    email,
+                    subject: "Reset Password | BSF Systems",
+                },
+                renderedEmail
             );
 
             return "A reset link has been sent to your email. Please check your email.";
         } catch (error) {
+            console.log(error);
             return "Whoops. Something went wrong.";
         }
     } else {
@@ -585,16 +601,23 @@ export const sendReply = async (prevState, formData) => {
         } catch (error) {
             console.log("error updating message");
         }
-        await triggerClientEmailSending(
-            email,
-            "Reply from BSF Systems",
-            "reply",
-            null,
-            null,
-            message,
-            reply,
-            firstName,
-            lastName
+
+        const renderedEmail = renderEmailHtml(
+            {
+                message,
+                reply,
+                firstName,
+                lastName,
+            },
+            ReplyEmail
+        );
+
+        await sendRenderedEmail(
+            {
+                email,
+                subject: "Reply from BSF Systems",
+            },
+            renderedEmail
         );
 
         return "Reply has been sent successfully.";
@@ -612,4 +635,43 @@ export const deleteMessage = async (formData) => {
         throw new Error("Beep Bop 🤖 Failed to delete the message");
     }
     revalidatePath("/dashboard/messages");
+};
+
+export const getCustomerCount = async () => {
+    const totalCustomers = await Customer.find({}).count();
+
+    return totalCustomers;
+};
+
+export const sendToAll = async (prevState, formData) => {
+    const { subject, body } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+
+        const emails = await Customer.find({}, { email: 1, _id: 0 });
+
+        const renderedEmail = renderEmailHtml(
+            {
+                message: body,
+            },
+            EmailToAll
+        );
+
+        await sendRenderedEmail(
+            {
+                emails,
+                subject,
+            },
+            renderedEmail
+        );
+
+        return "Email sent successfully.";
+    } catch (error) {
+        return "Error sending emails.";
+    }
+};
+
+export const sendToSelected = async (prevState, formData) => {
+    console.log("hey.");
 };

@@ -5,24 +5,16 @@ import { Heading } from "@react-email/heading";
 import { Text } from "@react-email/text";
 import { Hr } from "@react-email/hr";
 
-export default function ForgotPasswordEmail({ name, url }) {
+export default function OTPEmail({ name, OTP }) {
     return (
         <Html>
             <Heading as="h2">Hello {name}</Heading>
             <Text>
-                We received a password request. If it&apos;s not you then please
-                ignore this email.
+                We received a verification request for this email. If it&apos;s
+                not you then please ignore this email.
             </Text>
-            <Button
-                href={url}
-                style={{
-                    background: "#000",
-                    color: "#FFFFFF",
-                    padding: "20px",
-                }}
-            >
-                Reset Password
-            </Button>
+
+            <Heading as="h1">{OTP}</Heading>
 
             <Hr />
 
