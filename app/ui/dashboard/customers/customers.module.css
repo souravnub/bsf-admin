@@ -5,6 +5,10 @@
     margin-top: 20px;
 }
 
+.view {
+    background-color: teal;
+}
+
 .top {
     display: flex;
     align-items: center;
