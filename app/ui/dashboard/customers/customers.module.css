@@ -81,19 +81,3 @@
     padding: 10px;
     width: max-content;
 }
-
-.emailBtnContainer .emailBtn {
-    background-color: #2e374a;
-    color: var(--textSoft);
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-
-    transition: 0.2s;
-    cursor: pointer;
-}
-
-.emailBtnContainer .emailBtn:hover {
-    background-color: #29334b;
-    color: #fff;
-}

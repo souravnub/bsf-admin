@@ -3,6 +3,7 @@ import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Search from "@/app/ui/dashboard/search/search";
 import styles from "@/app/ui/dashboard/customers/customers.module.css";
 import Link from "next/link";
+import EmailModal from "@/app/ui/dashboard/email-modal/EmailModal";
 
 const customersPage = async ({ searchParams }) => {
     const q = searchParams?.q || "";
@@ -14,14 +15,14 @@ const customersPage = async ({ searchParams }) => {
             <div className={styles.top}>
                 <Search placeholder="Search for a customer..." />
                 <div className={styles.emailBtnContainer}>
-                    <button className={`${styles.emailBtn} ${styles.toAllBtn}`}>
-                        Send Email to All Customers
-                    </button>
-                    <button
-                        className={`${styles.emailBtn} ${styles.toSpecific}`}
-                    >
-                        Send Email to Course Enrollees
-                    </button>
+                    <EmailModal
+                        title={"Send Email to All Customers"}
+                        purpose={"all"}
+                    />
+                    <EmailModal
+                        title={"Send Email to Course Enrollees"}
+                        purpose={"selected"}
+                    />
                 </div>
             </div>
             <table className={styles.table}>

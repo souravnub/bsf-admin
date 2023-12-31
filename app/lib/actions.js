@@ -17,6 +17,7 @@ import Cryptr from "cryptr";
 
 import { triggerClientEmailSending } from "../ui/login/emails/triggerClientEmailSending";
 import { Contact } from "./models/Contact";
+import { Customer } from "./models/Customer";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -612,4 +613,34 @@ export const deleteMessage = async (formData) => {
         throw new Error("Beep Bop 🤖 Failed to delete the message");
     }
     revalidatePath("/dashboard/messages");
+};
+
+export const sendToAll = async (prevState, formData) => {
+    const { subject, body } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+
+        const emails = await Customer.find({}, { email: 1, _id: 0 });
+
+        await triggerClientEmailSending(
+            emails,
+            subject,
+            "all",
+            null,
+            null,
+            body,
+            null,
+            null,
+            null
+        );
+
+        return "Email sent successfully.";
+    } catch (error) {
+        throw new Error("Beep Bop 🤖 Failed to send emails");
+    }
+};
+
+export const sendToSelected = async (prevState, formData) => {
+    console.log("hey.");
 };

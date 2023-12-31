@@ -2,6 +2,7 @@ import { render } from "@react-email/render"; // Import necessary email renderin
 import { sendEmail } from "@/app/lib/config/mail"; // Import the email sending function
 import ForgotPasswordEmail from "./ForgotPasswordEmail";
 import ReplyEmail from "./ReplyEmail";
+import EmailToAll from "./EmailToAll";
 
 export const triggerClientEmailSending = async (
     userEmail,
@@ -26,6 +27,9 @@ export const triggerClientEmailSending = async (
                 lastName,
             })
         );
+        await sendEmail(userEmail, subject, html);
+    } else if (reason == "all") {
+        const html = render(EmailToAll({ message }));
         await sendEmail(userEmail, subject, html);
     }
     // Send email to the user
