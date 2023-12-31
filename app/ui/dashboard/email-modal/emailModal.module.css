@@ -69,6 +69,18 @@
     font-family: "Inter", sans-serif;
 }
 
+.subject {
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #2e374a;
+    border: none;
+
+    color: #fff;
+
+    padding: 10px;
+}
+
 .sendBtn {
     padding: 8px 16px;
     border-radius: 5px;
@@ -110,16 +122,19 @@
 }
 
 .button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: var(--text);
+    background-color: #2e374a;
+    color: var(--textSoft);
+    padding: 10px 15px;
     border: none;
+    border-radius: 5px;
+
+    transition: 0.2s;
     cursor: pointer;
 }
 
-.view {
-    background-color: #eccc68;
-    color: #000;
+.button:hover {
+    background-color: #29334b;
+    color: #fff;
 }
 
 .message {

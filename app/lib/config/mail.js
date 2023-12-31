@@ -3,7 +3,7 @@ import Env from "./env";
 
 const smtpConfig = {
     host: Env.SMTP_HOST,
-    port: 587,
+    port: Env.SMTP_PORT,
     secure: false,
     auth: {
         user: Env.SMTP_USER,
@@ -14,13 +14,22 @@ const smtpConfig = {
 export const transporter = nodemailer.createTransport(smtpConfig);
 
 export const sendEmail = async (to, subject, html) => {
-    const info = await transporter.sendMail({
+    const mailData = {
         from: Env.EMAIL_FROM,
         to,
         subject,
         html,
-    });
-    return info?.messageId;
-};
+    };
 
-// Ask banks to either disable 2FA or create another app for this.
+    console.log("MAILDATA", mailData);
+    await new Promise((resolve, reject) => {
+        transporter.sendMail(mailData, (err, info) => {
+            if (err) {
+                console.error(err);
+                reject(err);
+            } else {
+                resolve(info);
+            }
+        });
+    });
+};

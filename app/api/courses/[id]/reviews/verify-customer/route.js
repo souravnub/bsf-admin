@@ -10,20 +10,26 @@ export async function GET(request, { params }) {
         const courseId = params.id;
 
         if (!email)
-            return NextResponse.json({
-                success: false,
-                msg: "Provide an email",
-            });
+            return NextResponse.json(
+                {
+                    success: false,
+                    msg: "Provide an email",
+                },
+                { status: 400 }
+            );
 
         await connectToDB();
 
         const customer = await Customer.findOne({ email });
 
         if (!customer) {
-            return NextResponse.json({
-                success: false,
-                msg: "Cannot find a customer with this email",
-            });
+            return NextResponse.json(
+                {
+                    success: false,
+                    msg: "Cannot find a customer with this email",
+                },
+                { status: 404 }
+            );
         }
 
         const courseToReview = await Course.findById(courseId);
@@ -33,10 +39,13 @@ export async function GET(request, { params }) {
         );
 
         if (!canCustomerReview)
-            return NextResponse.json({
-                success: false,
-                msg: "Cannot add a review to this course (not a customer/already have a review)",
-            });
+            return NextResponse.json(
+                {
+                    success: false,
+                    msg: "Cannot add a review to this course (already have a review / not a customer) ",
+                },
+                { status: 404 }
+            );
 
         const encryptedOTP = await customer.genAndSendOTP();
         customer.otp_token = encryptedOTP;

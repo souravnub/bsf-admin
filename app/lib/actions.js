@@ -20,6 +20,10 @@ import {
     sendRenderedEmail,
 } from "../ui/login/emails/renderAndSendEmail";
 import ForgotPasswordEmail from "../ui/login/emails/ForgotPasswordEmail";
+import { Contact } from "./models/Contact";
+import { Customer } from "./models/Customer";
+import ReplyEmail from "../ui/login/emails/ReplyEmail";
+import EmailToAll from "../ui/login/emails/EmailToAll";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -584,4 +588,90 @@ export const resetPassword = async (prevState, formData) => {
     } else {
         return "Passwords do not match.";
     }
+};
+
+export const sendReply = async (prevState, formData) => {
+    const { firstName, lastName, email, message, reply, id } =
+        Object.fromEntries(formData);
+
+    try {
+        try {
+            connectToDB();
+            await Contact.findByIdAndUpdate(id, { replied: true });
+        } catch (error) {
+            console.log("error updating message");
+        }
+
+        const renderedEmail = renderEmailHtml(
+            {
+                message,
+                reply,
+                firstName,
+                lastName,
+            },
+            ReplyEmail
+        );
+
+        await sendRenderedEmail(
+            {
+                email,
+                subject: "Reply from BSF Systems",
+            },
+            renderedEmail
+        );
+
+        return "Reply has been sent successfully.";
+    } catch (error) {
+        return "Whoops. Something went wrong.";
+    }
+};
+export const deleteMessage = async (formData) => {
+    const { id } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+        await Contact.findByIdAndDelete(JSON.parse(id));
+    } catch (error) {
+        throw new Error("Beep Bop 🤖 Failed to delete the message");
+    }
+    revalidatePath("/dashboard/messages");
+};
+
+export const getCustomerCount = async () => {
+    const totalCustomers = await Customer.find({}).count();
+
+    return totalCustomers;
+};
+
+export const sendToAll = async (prevState, formData) => {
+    const { subject, body } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+
+        const emails = await Customer.find({}, { email: 1, _id: 0 });
+
+        const renderedEmail = renderEmailHtml(
+            {
+                message: body,
+            },
+            EmailToAll
+        );
+
+        await sendRenderedEmail(
+            {
+                emails,
+                subject,
+            },
+            renderedEmail
+        );
+
+        return "Email sent successfully.";
+    } catch (error) {
+        return "Error sending emails.";
+    }
+};
+
+export const sendToSelected = async (prevState, formData) => {
+    console.log("hey.");
 };
