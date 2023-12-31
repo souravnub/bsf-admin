@@ -615,6 +615,12 @@ export const deleteMessage = async (formData) => {
     revalidatePath("/dashboard/messages");
 };
 
+export const getCustomerCount = async () => {
+    const totalCustomers = await Customer.find({}).count();
+
+    return totalCustomers;
+};
+
 export const sendToAll = async (prevState, formData) => {
     const { subject, body } = Object.fromEntries(formData);
 
@@ -637,7 +643,7 @@ export const sendToAll = async (prevState, formData) => {
 
         return "Email sent successfully.";
     } catch (error) {
-        throw new Error("Beep Bop 🤖 Failed to send emails");
+        return "Error sending emails.";
     }
 };
 

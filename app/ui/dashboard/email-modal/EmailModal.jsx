@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 import styles from "./emailModal.module.css";
-import { sendToAll, sendToSelected } from "@/app/lib/actions";
+import { getCustomerCount, sendToAll, sendToSelected } from "@/app/lib/actions";
 
 const EmailModal = ({ title, purpose }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [state1, formAction1] = useFormState(sendToAll, undefined);
     const [state2, formAction2] = useFormState(sendToSelected, undefined);
+    const totalCustomersRef = useRef(0);
+
+    useEffect(() => {
+        totalCustomersRef.current = getCustomerCount();
+    }, []);
 
     const openModal = () => {
         setIsOpen(true);
@@ -34,8 +39,8 @@ const EmailModal = ({ title, purpose }) => {
                             <div className={styles.quote}>
                                 <h2>Note:</h2>
                                 <p>
-                                    This email will be sent to all {"48,000"}{" "}
-                                    customers.
+                                    This email will be sent to all{" "}
+                                    {totalCustomersRef.current} customers.
                                 </p>
                             </div>
 
