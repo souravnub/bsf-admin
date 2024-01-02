@@ -4,7 +4,7 @@ import EditHomeContent from "@/app/ui/dashboard/website-content/home-content/Edi
 
 import WatchDemo from "@/app/ui/dashboard/website-content/watch-demo/WatchDemo";
 
-const ContentPage = async () => {
+const HomePageContent = async () => {
     const tabs = await fetchVideoGalleryTabs();
     const allUrls = tabs.map((tab) => tab.url).flat();
     const { homeContent } = await fetchHomeContent();
@@ -23,4 +23,4 @@ const ContentPage = async () => {
     );
 };
 
-export default ContentPage;
+export default HomePageContent;
