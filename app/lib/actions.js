@@ -434,6 +434,33 @@ function getS3FileKey(s3FileUrl) {
     return splitStrs[splitStrs.length - 1];
 }
 
+export async function uploadFiles(formData) {
+    const buffers = [];
+
+    Array.from(formData.keys()).forEach(async (key) => {
+        const file = formData.get(key);
+        const buffer = Buffer.from(await file.arrayBuffer());
+        buffers.push({
+            buffer,
+            key: cryptoRandomString({ length: 15 }),
+        });
+    });
+
+    const fileUploadPromises = [];
+
+    buffers.forEach(({ buffer, key }) => {
+        fileUploadPromises.push(uploadFileToS3(buffer, key));
+    });
+
+    const results = await Promise.allSettled(fileUploadPromises);
+    const uploadedUrls = [];
+    results.forEach(({ status, value: uploadedFileKey }) => {
+        if (status === "fulfilled") {
+            uploadedUrls.push(getS3FileUrl(uploadedFileKey));
+        }
+    });
+    return uploadedUrls;
+}
 export const updateHomeContent = async (formData) => {
     connectToDB();
 

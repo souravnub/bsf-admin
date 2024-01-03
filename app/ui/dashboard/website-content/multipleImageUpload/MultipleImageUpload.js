@@ -3,40 +3,60 @@
 import React, { useRef, useState } from "react";
 import styles from "./multipleImageUpload.module.css";
 import webContentStyles from "../website-content.css.module.css";
+import { uploadFiles } from "@/app/lib/actions";
 
 const MultipleImageUpload = ({ images }) => {
     const inputRef = useRef();
-    const [imageFiles, setImageFiles] = useState(images || []);
+
+    const [newFiles, setNewFiles] = useState([]);
+    const [dataUrlFiles, setDataUrlFiles] = useState(images || []);
+    const [isLoading, setIsLoading] = useState(false);
+    const [uploadedFileUrls, setUploadedFileUrls] = useState([]);
 
     const handleImageInput = (e) => {
         const files = e.target.files;
+        setNewFiles(files);
 
         Array.from(files).forEach((file) => {
             const reader = new FileReader();
-            reader.readAsDataURL(file);
             reader.onload = () => {
-                setImageFiles((prev) => [...prev, reader.result]);
+                setDataUrlFiles((prev) => [...prev, reader.result]);
             };
+            reader.readAsDataURL(file);
         });
     };
 
     const handleRemoveImg = (image) => {
-        setImageFiles((prev) => prev.filter((img) => img !== image));
+        setDataUrlFiles((prev) => prev.filter((img) => img !== image));
     };
     const handleRemoveAllImg = () => {
         const res = window.confirm("Are you sure to remove all images");
 
         if (res === true) {
-            setImageFiles([]);
+            setDataUrlFiles([]);
             inputRef.current.value = "";
+        }
+    };
+
+    const handleUpload = async () => {
+        const formData = new FormData();
+        try {
+            setIsLoading(true);
+            Array.from(newFiles).forEach((file, idx) => {
+                formData.append(`files[${idx}]`, file);
+            });
+            setUploadedFileUrls(await uploadFiles(formData));
+            setIsLoading(false);
+        } catch (err) {
+            console.error("Error uploading files: ", err);
         }
     };
 
     return (
         <div style={{ marginTop: "1rem" }}>
-            {imageFiles.length > 0 && (
+            {dataUrlFiles.length > 0 && (
                 <ul className={styles.mainImgContainer}>
-                    {imageFiles.map((image) => (
+                    {dataUrlFiles.map((image) => (
                         <div className={styles.imgContainer}>
                             <img src={image} />
                             <button
@@ -53,6 +73,10 @@ const MultipleImageUpload = ({ images }) => {
 
             <label htmlFor="files">Upload all image files</label>
 
+            {images.concat(uploadedFileUrls).map((url, idx) => (
+                <input type="text" name={`image${idx}`} hidden value={url} />
+            ))}
+
             <input
                 ref={inputRef}
                 id="files"
@@ -61,16 +85,23 @@ const MultipleImageUpload = ({ images }) => {
                 onChange={handleImageInput}
                 multiple={true}
             />
-            {imageFiles.length !== 0 && (
+            {dataUrlFiles.length !== 0 && (
                 <div className={styles.btnContainer}>
                     <button
                         type="button"
                         onClick={handleRemoveAllImg}
                         className={webContentStyles.removeButton}
+                        disabled={isLoading}
                     >
                         Remove All
                     </button>
-                    <button>Upload All</button>
+                    <button
+                        type="button"
+                        onClick={handleUpload}
+                        disabled={isLoading}
+                    >
+                        Upload All
+                    </button>
                 </div>
             )}
         </div>
