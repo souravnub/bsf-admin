@@ -5,7 +5,7 @@ import styles from "@/app/ui/dashboard/customers/customers.module.css";
 import Link from "next/link";
 import EmailModal from "@/app/ui/dashboard/email-modal/EmailModal";
 
-const customersPage = async ({ searchParams }) => {
+const Customers = async ({ searchParams }) => {
     const q = searchParams?.q || "";
     const page = searchParams?.page || 1;
     const { count, customers } = await fetchCustomers(q, page);
@@ -64,4 +64,4 @@ const customersPage = async ({ searchParams }) => {
     );
 };
 
-export default customersPage;
+export default Customers;

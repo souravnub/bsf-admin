@@ -4,15 +4,18 @@ import { useState, useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
 import styles from "./emailModal.module.css";
 import { getCustomerCount, sendToAll, sendToSelected } from "@/app/lib/actions";
+import { fetchCategories } from "@/app/lib/data";
 
 const EmailModal = ({ title, purpose }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [state1, formAction1] = useFormState(sendToAll, undefined);
     const [state2, formAction2] = useFormState(sendToSelected, undefined);
     const totalCustomersRef = useRef(0);
+    const categories = useRef([]);
 
     useEffect(() => {
         totalCustomersRef.current = getCustomerCount();
+        categories.current = fetchCategories();
     }, []);
 
     const openModal = () => {
@@ -83,6 +86,21 @@ const EmailModal = ({ title, purpose }) => {
                             </span>
 
                             <form action={formAction2} className={styles.form}>
+                                <label htmlFor="cat">
+                                    Kindly choose the course for which you wish
+                                    to send notifications to all enrolled
+                                    customers.
+                                </label>
+                                <select name="category" id="cat">
+                                    {categories.current.map((category) => (
+                                        <option
+                                            value={category.category}
+                                            key={category._id}
+                                        >
+                                            {category.category}
+                                        </option>
+                                    ))}
+                                </select>
                                 <label htmlFor="message">
                                     Your message here for selected
                                 </label>
