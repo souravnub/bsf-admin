@@ -613,13 +613,7 @@ export const sendReply = async (prevState, formData) => {
             ReplyEmail
         );
 
-        await sendRenderedEmail(
-            {
-                email,
-                subject: "Reply from BSF Systems",
-            },
-            renderedEmail
-        );
+        await sendRenderedEmail(email, "Reply from BSF Systems", renderedEmail);
 
         return "Reply has been sent successfully.";
     } catch (error) {
