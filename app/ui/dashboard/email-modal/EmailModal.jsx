@@ -5,7 +5,7 @@ import { useFormState } from "react-dom";
 import styles from "./emailModal.module.css";
 import { getCustomerCount, sendToAll, sendToSelected } from "@/app/lib/actions";
 
-const EmailModal = ({ title, purpose }) => {
+const EmailModal = ({ title, purpose, categories }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [state1, formAction1] = useFormState(sendToAll, undefined);
     const [state2, formAction2] = useFormState(sendToSelected, undefined);
@@ -83,16 +83,46 @@ const EmailModal = ({ title, purpose }) => {
                             </span>
 
                             <form action={formAction2} className={styles.form}>
-                                <label htmlFor="message">
-                                    Your message here for selected
-                                </label>
+                                <div className={styles.quote}>
+                                    <label htmlFor="cat">
+                                        Kindly choose the course for which you
+                                        wish to send notifications to all
+                                        enrolled customers.
+                                    </label>
+                                    <select
+                                        name="category"
+                                        id="cat"
+                                        className={styles.categoriesSelect}
+                                    >
+                                        {JSON.parse(categories).map(
+                                            (category) => (
+                                                <option
+                                                    value={category.category}
+                                                    key={JSON.stringify(
+                                                        category._id
+                                                    )}
+                                                >
+                                                    {category.category}
+                                                </option>
+                                            )
+                                        )}
+                                    </select>
+                                </div>
+
+                                <label htmlFor="message">Email</label>
+                                <input
+                                    type="text"
+                                    name="subject"
+                                    placeholder="Subject"
+                                    className={styles.subject}
+                                />
                                 <textarea
-                                    name="message"
+                                    name="body"
                                     id="message"
                                     cols="30"
                                     rows="10"
                                     className={styles.textarea}
-                                    placeholder="Start typing..."
+                                    placeholder="Body"
                                 ></textarea>
 
                                 <button className={styles.sendBtn}>Send</button>
