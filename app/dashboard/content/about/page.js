@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/app/ui/dashboard/website-content/website-content.css.module.css";
-import MultipleImageUpload from "@/app/ui/dashboard/website-content/multipleImageUpload/MultipleImageUpload";
+import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/imageUpload/imageUpload";
 
 const AboutPageContent = () => {
     return (
@@ -24,7 +24,7 @@ const AboutPageContent = () => {
                     <input id="slogan" name="sectionTitle" />
                 </div>
 
-                <MultipleImageUpload />
+                <ImageUpload />
 
                 <h3 style={{ marginTop: "2rem" }}>Cards</h3>
                 <div className={styles.inputContainer}>
