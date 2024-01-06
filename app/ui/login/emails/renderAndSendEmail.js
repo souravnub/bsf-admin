@@ -4,6 +4,6 @@ import { sendEmail } from "@/app/lib/config/mail"; // Import the email sending f
 export const renderEmailHtml = (templateProps, template) =>
     render(template(templateProps));
 
-export const sendRenderedEmail = async (emailProps, renderedHtmlEmail) => {
-    await sendEmail(emailProps.email, emailProps.subject, renderedHtmlEmail);
+export const sendRenderedEmail = async (emails, subject, renderedHtmlEmail) => {
+    await sendEmail(emails, subject, renderedHtmlEmail);
 };

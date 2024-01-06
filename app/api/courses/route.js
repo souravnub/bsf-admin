@@ -1,37 +1,69 @@
-import { Course } from "@/app/lib/models/Course";
-import { CourseCategory } from "@/app/lib/models/CourseCategory";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
+import { Course } from "@/app/lib/models/Course";
+import { CourseCategory } from "@/app/lib/models/CourseCategory";
 
-// @params: brand_new: bool || popular: bool, category: categoryId, count: number
-export async function GET() {
+export async function GET(request) {
     try {
+        const page = request.nextUrl.searchParams.get(["page"]);
+        const sortBy = request.nextUrl.searchParams.get(["sortBy"]);
+        const category = request.nextUrl.searchParams.get(["category"]);
         connectToDB();
-        const categories = await CourseCategory.find({});
+        const ITEM_PER_PAGE = 10;
+        let query = Course.find({})
+            .select("name price description image category")
+            .populate("category");
+        let countQuery = Course.find({});
 
-        const formattedData = [];
+        switch (sortBy) {
+            case "latest":
+                query = query.sort({ createdAt: -1 });
+                break;
+            case "low":
+                query = query.sort({ price: 1 });
+                break;
+            case "high":
+                query = query.sort({ price: -1 });
+                break;
+            default:
+                query = query.sort({ createdAt: -1 });
+                break;
+        }
 
-        for (const category of categories) {
-            const courses = await Course.find({ category: category._id });
+        // Apply pagination
+        query = query.limit(ITEM_PER_PAGE).skip(ITEM_PER_PAGE * (page - 1));
+        countQuery = countQuery.countDocuments();
 
-            const formattedCourses = courses.map((course) => ({
-                _id: course._id.toString(),
-                name: course.name,
-                image: course.image,
-                price: course.price,
-                category: category.category,
-            }));
+        if (category) {
+            const categories = category.split(","); // Split categories by comma
 
-            if (formattedCourses.length !== 0) {
-                formattedData.push({
-                    category: category.category,
-                    courses: formattedCourses,
-                });
+            // Find the category IDs matching any of the categories in the list
+            const categoryIDs = await CourseCategory.find({
+                category: { $in: categories },
+            }).distinct("_id");
+
+            if (categoryIDs && categoryIDs.length > 0) {
+                query = query
+                    .find({ category: { $in: categoryIDs } })
+                    .select("name price description image category")
+                    .populate("category");
+                countQuery = countQuery
+                    .find({
+                        category: { $in: categoryIDs },
+                    })
+                    .select("name price description image category")
+                    .populate("category");
             }
         }
 
-        return NextResponse.json(formattedData);
+        const [count, courses] = await Promise.all([
+            countQuery.exec(),
+            query.exec(),
+        ]);
+
+        return NextResponse.json({ count, courses });
     } catch (error) {
+        console.log(error);
         return NextResponse.json(
             {
                 errorMessage: "Error while fetching courses",
@@ -41,16 +73,3 @@ export async function GET() {
         );
     }
 }
-
-/*
-    APIs needed-
-    1. Courses (course_count?: number, popular?: boolean, brand_new: boolean )
-    2. Course (id)
-    3. checkIfCustomer(email) -> boolean {true if customer but no review, false if customer and review or not customer} 
-    4. getReviews (numberofreviewsneeded) => customername, review_description, rating: Number, course
-
-    5. successful_transaction(course_id, *payment_info)
-    6. message_save({...message_content}) => send an email when message is saved in the db.
-
-    * -> not sure
-*/

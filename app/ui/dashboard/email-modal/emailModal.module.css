@@ -30,6 +30,7 @@
     background-color: var(--bgSoft);
     padding: 10px;
     margin-top: 40px;
+    margin-bottom: 20px;
     border-radius: 5px;
     border-left: 5px solid teal;
     color: var(--textSoft);
@@ -88,11 +89,11 @@
     background-color: teal;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: 0.2s;
 }
 
 .sendBtn:hover {
-    background-color: #008080;
+    background-color: #015959;
 }
 
 .modalContent span {
@@ -140,4 +141,23 @@
 .message {
     margin-top: 20px;
     color: #eccc68;
+}
+
+.categoriesSelect {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    width: max-content;
+
+    background-color: #2e374a;
+    color: var(--text);
+
+    outline: none;
+    border: none;
+
+    margin-top: 10px;
+
+    cursor: pointer;
 }

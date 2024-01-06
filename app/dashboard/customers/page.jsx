@@ -1,14 +1,15 @@
-import { fetchCustomers } from "@/app/lib/data";
+import { fetchCategories, fetchCustomers } from "@/app/lib/data";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Search from "@/app/ui/dashboard/search/search";
 import styles from "@/app/ui/dashboard/customers/customers.module.css";
 import Link from "next/link";
 import EmailModal from "@/app/ui/dashboard/email-modal/EmailModal";
 
-const customersPage = async ({ searchParams }) => {
+const Customers = async ({ searchParams }) => {
     const q = searchParams?.q || "";
     const page = searchParams?.page || 1;
     const { count, customers } = await fetchCustomers(q, page);
+    const categories = await fetchCategories();
 
     return (
         <div className={styles.container}>
@@ -22,6 +23,7 @@ const customersPage = async ({ searchParams }) => {
                     <EmailModal
                         title={"Send Email to Course Enrollees"}
                         purpose={"selected"}
+                        categories={JSON.stringify(categories)}
                     />
                 </div>
             </div>
@@ -64,4 +66,4 @@ const customersPage = async ({ searchParams }) => {
     );
 };
 
-export default customersPage;
+export default Customers;
