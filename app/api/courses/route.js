@@ -8,6 +8,8 @@ export async function GET(request) {
         const page = request.nextUrl.searchParams.get(["page"]);
         const sortBy = request.nextUrl.searchParams.get(["sortBy"]);
         const category = request.nextUrl.searchParams.get(["category"]);
+        const jobs = request.nextUrl.searchParams.get(["jobs"]);
+
         connectToDB();
         const ITEM_PER_PAGE = 10;
         let query = Course.find({})
@@ -54,6 +56,20 @@ export async function GET(request) {
                     .select("name price description image category")
                     .populate("category");
             }
+        }
+
+        if (jobs) {
+            const jobOpportunities = jobs.split(","); // Split job opportunities by comma
+
+            // Find courses where jobOpportunities array contains any of the provided jobs
+            query = query
+                .find({ jobOpportunities: { $in: jobOpportunities } })
+                .select("name price description image category")
+                .populate("category");
+            countQuery = countQuery
+                .find({ jobOpportunities: { $in: jobOpportunities } })
+                .select("name price description image category")
+                .populate("category");
         }
 
         const [count, courses] = await Promise.all([
