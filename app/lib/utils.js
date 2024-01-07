@@ -57,3 +57,11 @@ export async function deleteFileFromS3(fileName) {
     await s3Client.send(command);
     return fileName;
 }
+
+export function getS3FileUrl(fileName) {
+    return `https://${Env.AWS_S3_BUCKET_NAME}.s3.${Env.AWS_S3_REGION}.amazonaws.com/${fileName}`;
+}
+export function getS3FileKey(s3FileUrl) {
+    const splitStrs = s3FileUrl.split("/");
+    return splitStrs[splitStrs.length - 1];
+}

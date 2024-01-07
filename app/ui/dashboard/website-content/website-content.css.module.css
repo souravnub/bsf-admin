@@ -14,7 +14,8 @@
     padding-block-end: 0.5rem;
     font-size: 0.9rem;
 }
-.form input {
+.form input,
+.form textarea {
     padding: 0.9em;
     background-color: var(--bg);
     color: var(--inputText);
@@ -32,15 +33,19 @@
     color: var(--text);
     margin-inline-start: 0.5em;
 }
+.button:hover,
+.form button:hover {
+    background-color: #37466a;
+}
 .button:disabled,
 .form button:disabled {
     opacity: 0.5;
 }
 .removeButton {
-    background-color: rgb(255, 82, 82);
+    background-color: rgb(255, 82, 82) !important;
 }
 .removeButton:hover {
-    background-color: rgb(203, 66, 66);
+    background-color: rgb(203, 66, 66) !important;
 }
 .form button:active {
     background-color: var(--bg);

@@ -1,3 +1,4 @@
+import { AboutPageContent } from "./models/AboutPageContent";
 import { Admin } from "./models/Admin";
 import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
@@ -252,5 +253,19 @@ export const fetchHomeContent = async () => {
         return { homeContent };
     } catch (error) {
         throw new Error(`Error fetching home content: ${error.message}`);
+    }
+};
+
+export const fetchAboutContent = async () => {
+    connectToDB();
+
+    try {
+        const aboutContent = await AboutPageContent.findById(
+            "6594d31fb3aceb3350a605a5"
+        );
+        return aboutContent;
+    } catch (err) {
+        console.log(err);
+        throw new Error(`Error fetching about content`);
     }
 };

@@ -41,8 +41,13 @@ const menuItems = [
         title: "Website",
         list: [
             {
-                title: "Manage Content",
-                path: "/dashboard/content",
+                title: "Home page Content",
+                path: "/dashboard/content/home",
+                icon: <MdWork />,
+            },
+            {
+                title: "About page Content",
+                path: "/dashboard/content/about",
                 icon: <MdWork />,
             },
             {
