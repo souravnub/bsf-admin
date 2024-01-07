@@ -5,7 +5,13 @@ import { Admin } from "./models/Admin";
 import { Course } from "./models/Course";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
-import { connectToDB, deleteFileFromS3, uploadFileToS3 } from "./utils";
+import {
+    connectToDB,
+    deleteFileFromS3,
+    getS3FileKey,
+    getS3FileUrl,
+    uploadFileToS3,
+} from "./utils";
 import { redirect } from "next/navigation";
 import { signIn } from "../auth";
 import { Video } from "./models/Video";
@@ -24,6 +30,7 @@ import { Contact } from "./models/Contact";
 import { Customer } from "./models/Customer";
 import ReplyEmail from "../ui/login/emails/ReplyEmail";
 import EmailToAll from "../ui/login/emails/EmailToAll";
+import { AboutPageContent } from "./models/AboutPageContent";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -426,41 +433,53 @@ export async function uploadFile(formData) {
     }
 }
 
-function getS3FileUrl(fileName) {
-    return `https://${Env.AWS_S3_BUCKET_NAME}.s3.${Env.AWS_S3_REGION}.amazonaws.com/${fileName}`;
-}
-function getS3FileKey(s3FileUrl) {
-    const splitStrs = s3FileUrl.split("/");
-    return splitStrs[splitStrs.length - 1];
-}
+export const updateAboutContent = async (formData) => {
+    connectToDB();
 
-export async function uploadFiles(formData) {
-    const buffers = [];
+    try {
+        const {
+            title,
+            description,
+            sectionTitle,
+            image1,
+            image2,
+            image3,
+            vission,
+            mission,
+            strategy,
+        } = Object.fromEntries(formData);
 
-    Array.from(formData.keys()).forEach(async (key) => {
-        const file = formData.get(key);
-        const buffer = Buffer.from(await file.arrayBuffer());
-        buffers.push({
-            buffer,
-            key: cryptoRandomString({ length: 15 }),
-        });
-    });
+        console.log(Object.fromEntries(formData));
 
-    const fileUploadPromises = [];
+        const images = {};
 
-    buffers.forEach(({ buffer, key }) => {
-        fileUploadPromises.push(uploadFileToS3(buffer, key));
-    });
-
-    const results = await Promise.allSettled(fileUploadPromises);
-    const uploadedUrls = [];
-    results.forEach(({ status, value: uploadedFileKey }) => {
-        if (status === "fulfilled") {
-            uploadedUrls.push(getS3FileUrl(uploadedFileKey));
+        if (image1 !== "") {
+            images.image1 = getS3FileUrl(image1);
         }
-    });
-    return uploadedUrls;
-}
+        if (image2 !== "") {
+            images.image2 = getS3FileUrl(image2);
+        }
+        if (image3 !== "") {
+            images.image3 = getS3FileUrl(image3);
+        }
+
+        await AboutPageContent.findByIdAndUpdate("6594d31fb3aceb3350a605a5", {
+            $set: {
+                title,
+                description,
+                sectionTitle,
+                ...images,
+                vission,
+                mission,
+                strategy,
+            },
+        });
+    } catch (err) {
+        console.log(err);
+        throw new Error(err);
+    }
+};
+
 export const updateHomeContent = async (formData) => {
     connectToDB();
 
