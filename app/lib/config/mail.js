@@ -21,7 +21,6 @@ export const sendEmail = async (to, subject, html) => {
         html,
     };
 
-    console.log("MAILDATA", mailData);
     await new Promise((resolve, reject) => {
         transporter.sendMail(mailData, (err, info) => {
             if (err) {

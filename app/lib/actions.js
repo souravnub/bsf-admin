@@ -31,6 +31,8 @@ import { Customer } from "./models/Customer";
 import ReplyEmail from "../ui/login/emails/ReplyEmail";
 import EmailToAll from "../ui/login/emails/EmailToAll";
 import { AboutPageContent } from "./models/AboutPageContent";
+import EmailToEnrollees from "../ui/login/emails/EmailToEnrollees";
+
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -658,13 +660,7 @@ export const sendReply = async (prevState, formData) => {
             ReplyEmail
         );
 
-        await sendRenderedEmail(
-            {
-                email,
-                subject: "Reply from BSF Systems",
-            },
-            renderedEmail
-        );
+        await sendRenderedEmail(email, "Reply from BSF Systems", renderedEmail);
 
         return "Reply has been sent successfully.";
     } catch (error) {
@@ -704,13 +700,7 @@ export const sendToAll = async (prevState, formData) => {
             EmailToAll
         );
 
-        await sendRenderedEmail(
-            {
-                emails,
-                subject,
-            },
-            renderedEmail
-        );
+        await sendRenderedEmail(emails, subject, renderedEmail);
 
         return "Email sent successfully.";
     } catch (error) {
@@ -719,5 +709,47 @@ export const sendToAll = async (prevState, formData) => {
 };
 
 export const sendToSelected = async (prevState, formData) => {
-    console.log("hey.");
+    const { category, subject, body } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+
+        const categoryId = await CourseCategory.find({ category });
+
+        // Find courses in the specified category
+        const courses = await Course.find({ category: categoryId });
+
+        // Extract unique customer IDs from these courses
+        const customerIds = courses.reduce((acc, course) => {
+            acc.push(...course.customers);
+            return acc;
+        }, []);
+
+        // Retrieve customers with their emails
+        const customersWithEmails = await Customer.find(
+            { _id: { $in: customerIds } },
+            { email: 1 }
+        );
+
+        const emails = customersWithEmails.map((customer) => customer.email);
+
+        // Find the category by its name
+        if (emails.length < 0) {
+            return "There are no students in that course category.";
+        }
+
+        const renderedEmail = renderEmailHtml(
+            {
+                message: body,
+                category: category,
+            },
+            EmailToEnrollees
+        );
+
+        await sendRenderedEmail(emails, subject, renderedEmail);
+
+        return "Email sent successfully.";
+    } catch (error) {
+        return "Error sending emails.";
+    }
 };
