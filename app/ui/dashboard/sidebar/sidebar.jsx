@@ -8,6 +8,7 @@ import {
     MdAdminPanelSettings,
     MdLibraryBooks,
     MdChat,
+    MdRateReview,
 } from "react-icons/md";
 import { auth, signOut } from "@/app/auth";
 
@@ -34,6 +35,11 @@ const menuItems = [
                 title: "Courses",
                 path: "/dashboard/courses",
                 icon: <MdLibraryBooks />,
+            },
+            {
+                title: "Reviews",
+                path: "/dashboard/course-reviews",
+                icon: <MdRateReview />,
             },
         ],
     },

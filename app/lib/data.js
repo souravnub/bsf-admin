@@ -4,6 +4,7 @@ import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
+import { Review } from "./models/Review";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { connectToDB } from "./utils";
 import moment from "moment";
@@ -92,6 +93,32 @@ export const fetchCourse = async (id) => {
         return course;
     } catch (err) {
         throw new Error("Failed to fetch course!");
+    }
+};
+
+export const fetchReviews = async (id = null) => {
+    try {
+        connectToDB();
+
+        const reviews = await Review.find(id && { _id: id })
+            .populate("customerId", "email -_id")
+            .populate("courseId", "name -_id")
+            .exec();
+
+        const output = reviews.map((review) => {
+            const r = {
+                ...review._doc,
+                customerEmail: review.customerId.email,
+                courseName: review.courseId.name,
+            };
+            delete r.customerId;
+            delete r.courseId;
+            return r;
+        });
+
+        return output;
+    } catch (err) {
+        throw new Error("Failed to fetch reviews");
     }
 };
 

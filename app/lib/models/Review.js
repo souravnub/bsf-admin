@@ -20,7 +20,11 @@ const reviewSchema = new mongoose.Schema(
         },
         message: {
             type: String,
-            require: [true, "review message is required"],
+            required: [true, "review message is required"],
+        },
+        isShown: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true }

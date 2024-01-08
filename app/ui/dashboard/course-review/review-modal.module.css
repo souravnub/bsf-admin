@@ -1,0 +1,19 @@
+.container {
+    padding-block: 2rem;
+    color: rgb(215, 215, 215);
+}
+
+.container h2 {
+    margin-bottom: 0.4rem;
+}
+
+.container p {
+    font-size: 0.8rem;
+}
+.container p:first-of-type {
+    margin-block: 0.3rem;
+}
+.container > div {
+    margin-top: 1.4rem;
+    font-size: 1rem;
+}

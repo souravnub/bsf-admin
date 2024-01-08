@@ -32,6 +32,7 @@ import ReplyEmail from "../ui/login/emails/ReplyEmail";
 import EmailToAll from "../ui/login/emails/EmailToAll";
 import { AboutPageContent } from "./models/AboutPageContent";
 import EmailToEnrollees from "../ui/login/emails/EmailToEnrollees";
+import { Review } from "./models/Review";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -328,6 +329,10 @@ export const updateCourse = async (formData) => {
 
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
+};
+
+export const setReviewVisibility = async (reviewId, isShown) => {
+    await Review.findByIdAndUpdate(reviewId, { $set: { isShown } });
 };
 
 export const deleteAdmin = async (formData) => {
