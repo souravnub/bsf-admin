@@ -1,51 +1,52 @@
-// /api/courses/courserId/reviews
-
 import { Course } from "@/app/lib/models/Course";
-import { Review } from "@/app/lib/models/Review";
+import { Customer } from "@/app/lib/models/Customer";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
-
-export async function POST(request) {
+export async function GET(request, { params }) {
     try {
+        const queryParams = request.nextUrl.searchParams;
+        const email = queryParams.get("email");
+        const courseId = params.id;
+
+        if (!email)
+            return NextResponse.json({
+                success: false,
+                msg: "Provide an email",
+            });
+
         await connectToDB();
 
-        // getting the courseId from url
-        const reqStrArr = request.url.split("/");
-        const courseId = reqStrArr[reqStrArr.length - 2];
+        const customer = await Customer.findOne({ email });
 
-        const body = await request.json();
-
-        if (body.customerId == undefined) {
-            throw new Error(`credentials not provided - customerId`);
+        if (!customer) {
+            return NextResponse.json({
+                success: false,
+                msg: "Cannot find a customer with this email",
+            });
         }
 
-        const course = await Course.findOne({ _id: courseId });
+        const courseToReview = await Course.findById(courseId);
 
-        const canCustomerReview = await course.canCustomerReview(
-            body.customerId
+        const canCustomerReview = await courseToReview.canCustomerReview(
+            customer._id.toString()
         );
 
-        if (canCustomerReview) {
-            const newReview = new Review({ courseId, ...body });
-            await newReview.save();
+        if (!canCustomerReview)
+            return NextResponse.json({
+                success: false,
+                msg: "Cannot add a review to this course (not a customer/already have a review)",
+            });
 
-            return NextResponse.json({ message: "Review added successfully" });
-        } else {
-            return NextResponse.json(
-                {
-                    message:
-                        "cannot add review, as not a customer or already have review",
-                },
-                { status: 400 }
-            );
-        }
+        const encryptedOTP = await customer.genAndSendOTP();
+        customer.otp_token = encryptedOTP;
+        await customer.save();
+
+        return NextResponse.json({
+            success: true,
+            msg: "An OTP had been sent to your email.",
+        });
     } catch (err) {
-        return NextResponse.json(
-            {
-                errorMessage: "Error while adding review",
-                error: err.message,
-            },
-            { status: 500 }
-        );
+        console.log(err);
+        throw new Error(err);
     }
 }

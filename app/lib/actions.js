@@ -33,7 +33,6 @@ import EmailToAll from "../ui/login/emails/EmailToAll";
 import { AboutPageContent } from "./models/AboutPageContent";
 import EmailToEnrollees from "../ui/login/emails/EmailToEnrollees";
 
-
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
 
@@ -594,10 +593,9 @@ export const sendLink = async (prevState, formData) => {
             );
 
             await sendRenderedEmail(
-                {
-                    email,
-                    subject: "Reset Password | BSF Systems",
-                },
+                email,
+                "Reset Password | BSF Systems",
+
                 renderedEmail
             );
 

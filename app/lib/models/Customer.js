@@ -39,7 +39,6 @@ const customerSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-
 customerSchema.methods.genAndSendOTP = async function () {
     const OTP = cryptoRandomString({
         length: 5,
@@ -55,11 +54,11 @@ customerSchema.methods.genAndSendOTP = async function () {
         },
         OTPEmail
     );
+
     await sendRenderedEmail(
-        {
-            email: this.email,
-            subject: "Email Verification | BSF Systems",
-        },
+        this.email,
+        "Email Verification | BSF Systems",
+
         renderedEmail
     );
 
@@ -74,6 +73,5 @@ customerSchema.methods.isOTPValid = async function (OTP) {
     }
     return false;
 };
-
 export const Customer =
     mongoose.models.Customer || mongoose.model("Customer", customerSchema);
