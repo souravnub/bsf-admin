@@ -7,7 +7,7 @@ import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Sort from "@/app/ui/dashboard/sort/sort";
 import ReplyModal from "@/app/ui/dashboard/reply-modal/replyModal";
 
-import { deleteMessage } from "@/app/lib/actions";
+import { deleteMessage, sendReply } from "@/app/lib/actions";
 
 const Messages = async ({ searchParams }) => {
     const q = searchParams?.q || "";
@@ -33,6 +33,7 @@ const Messages = async ({ searchParams }) => {
                         message,
                         createdAt,
                         replied,
+                        reply,
                     }) => {
                         return (
                             <div key={String(_id)}>
@@ -67,7 +68,16 @@ const Messages = async ({ searchParams }) => {
                                             </ul>
                                         </div>
                                         <span> {email}</span>
-                                        <p>{message}</p>
+                                        <p>
+                                            {replied && <span>Message: </span>}
+                                            {message}
+                                        </p>
+                                        {replied && (
+                                            <p>
+                                                <span>Reply: </span>
+                                                {reply}
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div
@@ -101,11 +111,14 @@ const Messages = async ({ searchParams }) => {
                                         </p>
                                     ) : (
                                         <ReplyModal
-                                            message={message}
-                                            firstName={firstName}
-                                            lastName={lastName}
-                                            email={email}
-                                            id={JSON.stringify(_id)}
+                                            formValues={{
+                                                message: message,
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                id: JSON.stringify(_id),
+                                            }}
+                                            action={sendReply}
                                         />
                                     )}
                                 </div>

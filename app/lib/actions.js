@@ -624,7 +624,7 @@ export const sendReply = async (prevState, formData) => {
     try {
         try {
             connectToDB();
-            await Contact.findByIdAndUpdate(id, { replied: true });
+            await Contact.findByIdAndUpdate(id, { replied: true, reply });
         } catch (error) {
             console.log("error updating message");
         }
@@ -640,7 +640,7 @@ export const sendReply = async (prevState, formData) => {
         );
 
         await sendRenderedEmail(email, "Reply from BSF Systems", renderedEmail);
-
+        revalidatePath("/dashboard/messages");
         return "Reply has been sent successfully.";
     } catch (error) {
         return "Whoops. Something went wrong.";
