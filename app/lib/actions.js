@@ -35,6 +35,7 @@ import EmailToEnrollees from "../ui/login/emails/EmailToEnrollees";
 import { Review } from "./models/Review";
 import { HiringMessage } from "./models/HiringMessages";
 import mongoose from "mongoose";
+import { Instructor } from "./models/Instructors";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -348,6 +349,18 @@ export const deleteAdmin = async (formData) => {
     }
 
     revalidatePath("/dashboard/products");
+};
+export const deleteInstructor = async (formData) => {
+    const { id } = Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+        await Instructor.findByIdAndDelete(id);
+    } catch (err) {
+        throw new Error("Failed to delete instructor!");
+    }
+
+    revalidatePath("/dashboard/instructors");
 };
 
 export const deleteCourse = async (formData) => {

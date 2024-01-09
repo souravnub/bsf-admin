@@ -5,6 +5,7 @@ import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
 import { HiringMessage } from "./models/HiringMessages";
+import { Instructor } from "./models/Instructors";
 import { Review } from "./models/Review";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { connectToDB } from "./utils";
@@ -24,6 +25,17 @@ export const fetchAdmins = async (q, page) => {
         return { count, admins };
     } catch (err) {
         throw new Error("Failed to fetch admins!");
+    }
+};
+
+export const fetchInstructors = async () => {
+    try {
+        connectToDB();
+        const instructors = await Instructor.find({});
+        return instructors;
+    } catch (err) {
+        console.log(err);
+        throw new Error("Failed to fetch Instructors");
     }
 };
 

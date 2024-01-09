@@ -10,6 +10,7 @@ import {
     MdChat,
     MdRateReview,
 } from "react-icons/md";
+import { FaChalkboardTeacher } from "react-icons/fa";
 import { auth, signOut } from "@/app/auth";
 import { IoPersonAdd } from "react-icons/io5";
 
@@ -31,6 +32,11 @@ const menuItems = [
                 title: "Admins",
                 path: "/dashboard/admins",
                 icon: <MdAdminPanelSettings />,
+            },
+            {
+                title: "Instructors",
+                path: "/dashboard/instructors",
+                icon: <FaChalkboardTeacher />,
             },
             {
                 title: "Courses",
