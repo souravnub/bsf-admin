@@ -24,10 +24,15 @@ const contactSchema = new mongoose.Schema(
             trim: true,
             minLength: [10, "message should be atleast 10 characters"],
         },
+
         replied: {
             type: Boolean,
             default: false,
             required: true,
+        },
+        reply: {
+            type: String,
+            default: null,
         },
         repliedAt: {
             type: Date, // Field to store the reply timestamp

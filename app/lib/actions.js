@@ -648,7 +648,7 @@ export const sendReply = async (prevState, formData) => {
     try {
         try {
             connectToDB();
-            await Contact.findByIdAndUpdate(id, { replied: true });
+            await Contact.findByIdAndUpdate(id, { replied: true, reply });
         } catch (error) {
             console.log("error updating message");
         }

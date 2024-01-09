@@ -3,11 +3,10 @@
 import { useState } from "react";
 import { useFormState } from "react-dom";
 import styles from "./replyModal.module.css";
-import { sendReply } from "@/app/lib/actions";
 
-const ReplyModal = ({ message, firstName, lastName, email, id }) => {
+const ReplyModal = ({ message, firstName, lastName, email, id, action }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [state, formAction] = useFormState(sendReply, undefined);
+    const [state, formAction] = useFormState(action, undefined);
 
     const objectId = JSON.parse(id);
 
