@@ -11,6 +11,7 @@ import {
     MdRateReview,
 } from "react-icons/md";
 import { auth, signOut } from "@/app/auth";
+import { IoPersonAdd } from "react-icons/io5";
 
 const menuItems = [
     {
@@ -56,10 +57,20 @@ const menuItems = [
                 path: "/dashboard/content/about",
                 icon: <MdWork />,
             },
+        ],
+    },
+    {
+        title: "Contact & Messages",
+        list: [
             {
                 title: "Messages",
                 path: "/dashboard/messages",
                 icon: <MdChat />,
+            },
+            {
+                title: "Hiring Requests",
+                path: "/dashboard/hire-alumni",
+                icon: <IoPersonAdd />,
             },
         ],
     },

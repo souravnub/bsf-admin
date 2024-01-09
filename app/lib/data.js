@@ -4,6 +4,7 @@ import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer } from "./models/Customer";
+import { HiringMessage } from "./models/HiringMessages";
 import { Review } from "./models/Review";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { connectToDB } from "./utils";
@@ -131,6 +132,19 @@ export const fetchCategories = async () => {
     } catch (error) {
         throw new Error("Failed to fetch course categories!");
     }
+};
+
+export const fetchHiringRequests = async () => {
+    connectToDB();
+    const messages = await HiringMessage.find({});
+    const messageWithFormattedDate = messages.map((message) => {
+        const formattedDate = moment(message.createdAt).format("MMM D, dddd");
+        return {
+            ...message._doc,
+            createdAt: formattedDate,
+        };
+    });
+    return messageWithFormattedDate;
 };
 
 export const fetchMessages = async (q, page, sortBy) => {

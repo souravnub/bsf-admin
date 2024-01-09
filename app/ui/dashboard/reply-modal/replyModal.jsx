@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useFormState } from "react-dom";
 import styles from "./replyModal.module.css";
 
-const ReplyModal = ({ formValues, action }) => {
+const ReplyModal = ({ formValues, action, replyingTo }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const [state, formAction] = useFormState(action, undefined);
@@ -33,7 +33,7 @@ const ReplyModal = ({ formValues, action }) => {
                         </span>
                         <div className={styles.quote}>
                             <h2>Replying to:</h2>
-                            <p>{formValues?.message}</p>
+                            <p>{replyingTo}</p>
                         </div>
 
                         <form action={formAction} className={styles.form}>

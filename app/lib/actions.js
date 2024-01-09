@@ -33,6 +33,8 @@ import EmailToAll from "../ui/login/emails/EmailToAll";
 import { AboutPageContent } from "./models/AboutPageContent";
 import EmailToEnrollees from "../ui/login/emails/EmailToEnrollees";
 import { Review } from "./models/Review";
+import { HiringMessage } from "./models/HiringMessages";
+import mongoose from "mongoose";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -641,6 +643,37 @@ export const resetPassword = async (prevState, formData) => {
     }
 };
 
+export const sendReplyToHiringReq = async (prevState, formData) => {
+    const { id, name, email, jobDesc, roleRequired, reply } =
+        Object.fromEntries(formData);
+
+    try {
+        connectToDB();
+        await HiringMessage.findByIdAndUpdate(JSON.parse(id), {
+            replied: true,
+            reply,
+        });
+        const renderedEmail = renderEmailHtml(
+            {
+                jobDesc,
+                roleRequired,
+                reply,
+                name,
+            },
+            HiringReqReplyEmail
+        );
+        await sendRenderedEmail(
+            email,
+            "Response from BSF systems",
+            renderedEmail
+        );
+        revalidatePath("/dashboard/hire-alumni");
+    } catch (err) {
+        console.error(err);
+        return "Whoops. Something went wrong";
+    }
+};
+
 export const sendReply = async (prevState, formData) => {
     const { firstName, lastName, email, message, reply, id } =
         Object.fromEntries(formData);
@@ -648,7 +681,10 @@ export const sendReply = async (prevState, formData) => {
     try {
         try {
             connectToDB();
-            await Contact.findByIdAndUpdate(id, { replied: true, reply });
+            await Contact.findByIdAndUpdate(JSON.parse(id), {
+                replied: true,
+                reply,
+            });
         } catch (error) {
             console.log("error updating message");
         }

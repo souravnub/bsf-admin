@@ -6,6 +6,9 @@ const hiringMsgSchema = new mongoose.Schema({
     roleRequired: { type: String, required: true },
     experience: { type: Number, required: true },
     jobDesc: { type: String, required: true },
+    replied: { type: Boolean, default: false },
+    reply: { type: String, default: null },
+    repliedAt: { type: Date, default: null, expires: 60 * 60 * 24 * 90 },
 });
 
 export const HiringMessage =
