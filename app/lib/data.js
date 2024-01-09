@@ -302,7 +302,7 @@ export const fetchAboutContent = async () => {
 
     try {
         const aboutContent = await AboutPageContent.findById(
-            "6594d31fb3aceb3350a605a5"
+            "659c61e132b7030a5d069033"
         );
         return aboutContent;
     } catch (err) {

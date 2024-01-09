@@ -3,13 +3,10 @@ import { mongoose } from "mongoose";
 const AboutPageContentSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    sectionTitle: { type: String, required: true },
-    image1: { type: String },
-    image2: { type: String },
-    image3: { type: String },
-    vission: { type: String },
-    mission: { type: String },
-    strategy: { type: String },
+    video: { type: String, required: true },
+    vission: { type: String, required: true },
+    mission: { type: String, required: true },
+    strategy: { type: String, required: true },
 });
 
 export const AboutPageContent =
