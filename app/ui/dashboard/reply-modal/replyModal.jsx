@@ -4,11 +4,10 @@ import { useState } from "react";
 import { useFormState } from "react-dom";
 import styles from "./replyModal.module.css";
 
-const ReplyModal = ({ message, firstName, lastName, email, id, action }) => {
+const ReplyModal = ({ formValues, action }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [state, formAction] = useFormState(action, undefined);
 
-    const objectId = JSON.parse(id);
+    const [state, formAction] = useFormState(action, undefined);
 
     const openModal = () => {
         setIsOpen(true);
@@ -34,35 +33,20 @@ const ReplyModal = ({ message, firstName, lastName, email, id, action }) => {
                         </span>
                         <div className={styles.quote}>
                             <h2>Replying to:</h2>
-                            <p>{message}</p>
+                            <p>{formValues?.message}</p>
                         </div>
 
                         <form action={formAction} className={styles.form}>
-                            <input
-                                type="hidden"
-                                name="firstName"
-                                defaultValue={firstName}
-                            />
-                            <input
-                                type="hidden"
-                                name="lastName"
-                                defaultValue={lastName}
-                            />
-                            <input
-                                type="hidden"
-                                name="email"
-                                defaultValue={email}
-                            />
-                            <input
-                                type="hidden"
-                                name="message"
-                                defaultValue={message}
-                            />
-                            <input
-                                type="hidden"
-                                name="id"
-                                defaultValue={objectId}
-                            />
+                            {Object.keys(formValues).map((key) => {
+                                return (
+                                    <input
+                                        key={key}
+                                        type="hidden"
+                                        name={key}
+                                        defaultValue={formValues[key]}
+                                    />
+                                );
+                            })}
                             <label htmlFor="reply">Your message here</label>
                             <textarea
                                 name="reply"

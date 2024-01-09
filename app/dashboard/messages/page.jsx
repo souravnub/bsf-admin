@@ -111,11 +111,13 @@ const Messages = async ({ searchParams }) => {
                                         </p>
                                     ) : (
                                         <ReplyModal
-                                            message={message}
-                                            firstName={firstName}
-                                            lastName={lastName}
-                                            email={email}
-                                            id={JSON.stringify(_id)}
+                                            formValues={{
+                                                message: message,
+                                                firstName: firstName,
+                                                lastName: lastName,
+                                                email: email,
+                                                id: JSON.stringify(_id),
+                                            }}
                                             action={sendReply}
                                         />
                                     )}
