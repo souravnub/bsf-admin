@@ -443,38 +443,14 @@ export const updateAboutContent = async (formData) => {
     connectToDB();
 
     try {
-        const {
-            title,
-            description,
-            sectionTitle,
-            image1,
-            image2,
-            image3,
-            vission,
-            mission,
-            strategy,
-        } = Object.fromEntries(formData);
+        const { title, description, yt, vission, mission, strategy } =
+            Object.fromEntries(formData);
 
-        console.log(Object.fromEntries(formData));
-
-        const images = {};
-
-        if (image1 !== "") {
-            images.image1 = getS3FileUrl(image1);
-        }
-        if (image2 !== "") {
-            images.image2 = getS3FileUrl(image2);
-        }
-        if (image3 !== "") {
-            images.image3 = getS3FileUrl(image3);
-        }
-
-        await AboutPageContent.findByIdAndUpdate("6594d31fb3aceb3350a605a5", {
+        await AboutPageContent.findByIdAndUpdate("659c61e132b7030a5d069033", {
             $set: {
                 title,
                 description,
-                sectionTitle,
-                ...images,
+                video: yt,
                 vission,
                 mission,
                 strategy,
