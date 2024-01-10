@@ -36,6 +36,7 @@ import { Review } from "./models/Review";
 import { HiringMessage } from "./models/HiringMessages";
 import mongoose from "mongoose";
 import { Instructor } from "./models/Instructors";
+import HiringReqReplyEmail from "../ui/login/emails/HiringReqReplyEmail";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
