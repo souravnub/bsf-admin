@@ -37,6 +37,7 @@ import { HiringMessage } from "./models/HiringMessages";
 import mongoose from "mongoose";
 import { Instructor } from "./models/Instructors";
 import HiringReqReplyEmail from "../ui/login/emails/HiringReqReplyEmail";
+import { SocialCategory } from "./models/SocialCategories";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -734,6 +735,20 @@ export const sendToAll = async (prevState, formData) => {
         return "Email sent successfully.";
     } catch (error) {
         return "Error sending emails.";
+    }
+};
+
+export const addSocialCategory = async (newCategory) => {
+    try {
+        connectToDB();
+        const category = new SocialCategory({ category: newCategory });
+        await category.save();
+
+        revalidatePath("/dashboard/instructors/add");
+        return { success: true, msg: "category added successfully" };
+    } catch (err) {
+        console.log(err);
+        throw new Error("error while adding a social category");
     }
 };
 

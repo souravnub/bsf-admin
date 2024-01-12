@@ -7,6 +7,7 @@ import { Customer } from "./models/Customer";
 import { HiringMessage } from "./models/HiringMessages";
 import { Instructor } from "./models/Instructors";
 import { Review } from "./models/Review";
+import { SocialCategory } from "./models/SocialCategories";
 import { WebsiteContent } from "./models/WebsiteContent";
 import { connectToDB } from "./utils";
 import moment from "moment";
@@ -143,6 +144,18 @@ export const fetchCategories = async () => {
         return categories;
     } catch (error) {
         throw new Error("Failed to fetch course categories!");
+    }
+};
+
+export const fetchSocialCategories = async () => {
+    try {
+        connectToDB();
+
+        const categories = await SocialCategory.find();
+        return categories;
+    } catch (error) {
+        console.log(error);
+        throw new Error("Faild to fetch social categories!");
     }
 };
 
