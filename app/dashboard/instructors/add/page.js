@@ -2,8 +2,11 @@ import React from "react";
 import styles from "@/app/ui/dashboard/courses/addCourse/addCourse.module.css";
 import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/imageUpload/imageUpload";
 import SocialCategoriesSelect from "@/app/ui/dashboard/instructors/add/SocialCategoriesSelect";
+import { fetchSocialCategories } from "@/app/lib/data";
 
-const AddInstructor = () => {
+const AddInstructor = async () => {
+    const categories = await fetchSocialCategories();
+
     return (
         <div className={styles.container}>
             <form action="" className={styles.form}>
@@ -23,7 +26,10 @@ const AddInstructor = () => {
                 </div>
                 <div>
                     <label htmlFor="categories">Socials</label>
-                    <SocialCategoriesSelect id="categories" />
+                    <SocialCategoriesSelect
+                        categories={JSON.stringify(categories)}
+                        id="categories"
+                    />
                 </div>
             </form>
         </div>
