@@ -2,7 +2,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import AddSocialCategoryModal from "./AddSocialCategoryModal";
 
-const SocialCategoriesSelect = ({ value, categories, onChange, ...props }) => {
+const SocialCategoriesSelect = ({
+    value,
+    uniqueCategories,
+    categories,
+    onChange,
+    ...props
+}) => {
     const [category, setCategory] = useState(value || categories[0]);
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef();
@@ -28,7 +34,11 @@ const SocialCategoriesSelect = ({ value, categories, onChange, ...props }) => {
                 onChange={handleOptionChange}
             >
                 {JSON.parse(categories)?.map(({ _id, category }) => (
-                    <option key={String(_id)} value={category}>
+                    <option
+                        disabled={!uniqueCategories.includes(category)}
+                        key={String(_id)}
+                        value={category}
+                    >
                         {category}
                     </option>
                 ))}

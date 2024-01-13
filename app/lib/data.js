@@ -39,6 +39,16 @@ export const fetchInstructors = async () => {
         throw new Error("Failed to fetch Instructors");
     }
 };
+export const fetchInstructor = async (id) => {
+    try {
+        connectToDB();
+        const instructor = await Instructor.findById(id);
+        return instructor;
+    } catch (err) {
+        console.log(err);
+        throw new Error("Failed to fetch Instructor");
+    }
+};
 
 export const fetchAdmin = async (id) => {
     try {

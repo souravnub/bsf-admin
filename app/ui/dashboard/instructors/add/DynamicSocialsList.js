@@ -1,15 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SocialCategoriesSelect from "./SocialCategoriesSelect";
 import styles from "./addInstructors.module.css";
 
-const fetchedSocials = [
-    { name: "youtube", href: "youtubeHref" },
-    { name: "instagram", href: "InstaHref" },
-];
-
-const DynamicSocialsList = ({ categories }) => {
-    const [socials, setSocials] = useState(fetchedSocials);
+const DynamicSocialsList = ({ categories, socialsList }) => {
+    const [socials, setSocials] = useState(JSON.parse(socialsList) || []);
     const handleSelectChange = (name, value) => {
         setSocials(
             socials.map((social) => {
@@ -23,6 +18,11 @@ const DynamicSocialsList = ({ categories }) => {
             })
         );
     };
+
+    useEffect(() => {
+        console.log(socials);
+    }, [socials]);
+
     const handleValChange = (e) => {
         setSocials(
             socials.map((social) => {
@@ -60,6 +60,7 @@ const DynamicSocialsList = ({ categories }) => {
             {socials.map(({ name, href }, idx) => (
                 <div key={name} className={styles.contentContainer}>
                     <SocialCategoriesSelect
+                        uniqueCategories={uniqueCategories}
                         name={name}
                         value={name}
                         categories={categories}

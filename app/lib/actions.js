@@ -104,29 +104,81 @@ export const checkAdminPassword = async (username, oldPassword) => {
 };
 
 export const addInstructor = async (formData) => {
-    const socialCategories = await SocialCategory.find();
-    const socialCategorieNames = socialCategories.map((c) => c.category);
-    const { name, role, email, image1 } = Object.fromEntries(formData);
+    try {
+        connectToDB();
+        const socialCategories = await SocialCategory.find();
+        const socialCategorieNames = socialCategories.map((c) => c.category);
+        const { name, role, email, image1 } = Object.fromEntries(formData);
 
-    const socials = [];
+        const socials = [];
 
-    for (let [key, value] of formData.entries()) {
-        if (socialCategorieNames.includes(key)) {
-            // eliminting the select tag value pairs
-            if (key !== value) {
-                socials.push({ name: key, href: value });
+        for (let [key, value] of formData.entries()) {
+            if (socialCategorieNames.includes(key)) {
+                // eliminting the select tag value pairs
+                if (key !== value) {
+                    socials.push({ name: key, href: value });
+                }
             }
         }
+
+        const newInstructor = new Instructor({
+            name,
+            role,
+            email,
+            imgUrl: getS3FileUrl(image1),
+            socials,
+        });
+        await newInstructor.save();
+    } catch (err) {
+        console.log(err);
+        throw new Error(err);
     }
 
-    const newInstructor = new Instructor({
-        name,
-        role,
-        email,
-        imgUrl: getS3FileUrl(image1),
-        socials,
-    });
-    await newInstructor.save();
+    revalidatePath("/dashboard/instructors");
+    redirect("/dashboard/instructors");
+};
+
+export const updateInstructor = async (formData) => {
+    try {
+        connectToDB();
+        const socialCategories = await SocialCategory.find();
+        const socialCategorieNames = socialCategories.map((c) => c.category);
+        const { id, name, role, email, image1 } = Object.fromEntries(formData);
+
+        const socials = [];
+
+        for (let [key, value] of formData.entries()) {
+            if (socialCategorieNames.includes(key)) {
+                // eliminting the select tag value pairs
+                if (key !== value) {
+                    socials.push({ name: key, href: value });
+                }
+            }
+        }
+
+        let newImageUrl;
+        const updateFields = {
+            name,
+            role,
+            email,
+            socials,
+        };
+
+        // imageKey is provided
+        if (image1 !== "") {
+            const instructor = await Instructor.findById(id);
+            await deleteFile(getS3FileKey(instructor.imgUrl));
+            newImageUrl = getS3FileUrl(image1);
+        }
+
+        if (newImageUrl) {
+            updateFields.imgUrl = newImageUrl;
+        }
+
+        await Instructor.findByIdAndUpdate(id, updateFields);
+    } catch (err) {
+        throw new Error(err);
+    }
 
     revalidatePath("/dashboard/instructors");
     redirect("/dashboard/instructors");
