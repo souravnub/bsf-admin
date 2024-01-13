@@ -24,7 +24,7 @@ const SingleProductPage = async ({ params }) => {
                     <input
                         type="hidden"
                         name="id"
-                        defaultValue={String(course._id)}
+                        defaultValue={JSON.stringify(course._id)}
                     />
                     <label>Course Name</label>
                     <input type="text" name="name" defaultValue={course.name} />
@@ -114,6 +114,15 @@ const SingleProductPage = async ({ params }) => {
                         rows="10"
                         defaultValue={course.description}
                     ></textarea>
+
+                    <label htmlFor="link">Link for email*</label>
+                    <input
+                        type="text"
+                        name="link"
+                        id="link"
+                        required
+                        defaultValue={course.email_link}
+                    />
                     <button class={styles.button}>Update</button>
                 </form>
             </div>

@@ -65,3 +65,12 @@ export function getS3FileKey(s3FileUrl) {
     const splitStrs = s3FileUrl.split("/");
     return splitStrs[splitStrs.length - 1];
 }
+
+export function isURL(text) {
+    // Regular expression to match a URL
+    const urlRegex =
+        /^(https?:\/\/)?([\w-]+(\.[\w-]+)+\/?|localhost(:\d{1,5})?)(\/[\w-]+)*\/?(\?[^\s]*)?$/;
+
+    // Test the provided text against the regular expression
+    return urlRegex.test(text);
+}

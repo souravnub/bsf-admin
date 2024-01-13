@@ -77,6 +77,11 @@ const courseSchema = new mongoose.Schema(
                 type: String,
             },
         ],
+
+        email_link: {
+            type: String,
+            required: true,
+        },
     },
     { timestamps: true }
 );

@@ -31,16 +31,9 @@ const CoursesPage = async ({ searchParams }) => {
                 </thead>
                 <tbody>
                     {courses.map((course) => (
-                        <tr key={course._id}>
+                        <tr key={JSON.stringify(course._id)}>
                             <td>
                                 <div className={styles.product}>
-                                    {/* <Image
-                                        src={course.image || "/noproduct.jpg"}
-                                        alt=''
-                                        width={40}
-                                        height={40}
-                                        className={styles.productImage}
-                                    /> */}
                                     {course.name}
                                 </div>
                             </td>

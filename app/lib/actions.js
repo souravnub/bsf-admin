@@ -10,6 +10,7 @@ import {
     deleteFileFromS3,
     getS3FileKey,
     getS3FileUrl,
+    isURL,
     uploadFileToS3,
 } from "./utils";
 import { redirect } from "next/navigation";
@@ -240,6 +241,7 @@ export const addCourse = async (formData) => {
         pageTitle,
         pageSubTitle,
         description,
+        link,
         priceIncludesTax,
         isInDemand,
         startDate,
@@ -259,33 +261,38 @@ export const addCourse = async (formData) => {
         newCategoryId = savedCategory._id;
     }
 
-    try {
-        await connectToDB();
-        const imageUrl = getS3FileUrl(image1);
-        const newCourse = new Course({
-            name,
-            // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
-            category: newCategoryId ? newCategoryId : categoryFound._id,
-            image: imageUrl,
-            description,
-            learnings: { other: otherLearnings, tools },
-            schedule: {
-                startDate,
-                endDate,
-                classDays,
-            },
-            prequisites,
-            jobOpportunities,
-            price,
-            pageTitle,
-            pageSubTitle,
-            priceIncludesTax: priceIncludesTax == "true" ? true : false,
-            isInDemand: isInDemand == "true" ? true : false,
-        });
+    if (isURL(link)) {
+        console.log("hi");
+        console.log(link);
+        try {
+            await connectToDB();
+            const imageUrl = getS3FileUrl(image1);
+            const newCourse = new Course({
+                name,
+                // if newCategoryId is not undefined => newCategory was created.. so use that new category else use pre existed category
+                category: newCategoryId ? newCategoryId : categoryFound._id,
+                image: imageUrl,
+                description,
+                email_link: link,
+                learnings: { other: otherLearnings, tools },
+                schedule: {
+                    startDate,
+                    endDate,
+                    classDays,
+                },
+                prequisites,
+                jobOpportunities,
+                price,
+                pageTitle,
+                pageSubTitle,
+                priceIncludesTax: priceIncludesTax == "true" ? true : false,
+                isInDemand: isInDemand == "true" ? true : false,
+            });
 
-        await newCourse.save();
-    } catch (err) {
-        throw new Error("some error occured while adding the course");
+            await newCourse.save();
+        } catch (err) {
+            throw new Error("some error occured while adding the course");
+        }
     }
 
     revalidatePath("/dashboard/courses");
@@ -351,6 +358,7 @@ export const updateCourse = async (formData) => {
         pageSubTitle,
         endDate,
         description,
+        link,
         priceIncludesTax,
         isInDemand,
     } = Object.fromEntries(formData);
@@ -376,43 +384,45 @@ export const updateCourse = async (formData) => {
         newImageUrl = getS3FileUrl(image1);
     }
 
-    try {
-        await connectToDB();
-        const updateFields = {
-            name,
-            description,
-            prequisites,
-            price,
-            category: newCategoryId ? newCategoryId : categoryFound._id,
-            learnings: {
-                tools,
-                other: otherLearnings,
-            },
-            schedule: {
-                startDate,
-                endDate,
-                classDays,
-            },
-            pageTitle,
-            pageSubTitle,
-            jobOpportunities,
-            priceIncludesTax: priceIncludesTax == "true" ? true : false,
-            isInDemand: isInDemand == "true" ? true : false,
-        };
-        // newCateogryId exists
-        if (newCategoryId) {
-            updateFields.category = newCategoryId;
-        }
-        // newImageUrl exists
-        if (newImageUrl) {
-            updateFields.image = newImageUrl;
-        }
+    if (isURL(link)) {
+        try {
+            await connectToDB();
+            const updateFields = {
+                name,
+                description,
+                email_link: link,
+                prequisites,
+                price,
+                category: newCategoryId ? newCategoryId : categoryFound._id,
+                learnings: {
+                    tools,
+                    other: otherLearnings,
+                },
+                schedule: {
+                    startDate,
+                    endDate,
+                    classDays,
+                },
+                pageTitle,
+                pageSubTitle,
+                jobOpportunities,
+                priceIncludesTax: priceIncludesTax == "true" ? true : false,
+                isInDemand: isInDemand == "true" ? true : false,
+            };
+            // newCateogryId exists
+            if (newCategoryId) {
+                updateFields.category = newCategoryId;
+            }
+            // newImageUrl exists
+            if (newImageUrl) {
+                updateFields.image = newImageUrl;
+            }
 
-        await Course.findByIdAndUpdate(id, updateFields);
-    } catch (err) {
-        throw new Error(err);
+            await Course.findByIdAndUpdate(JSON.parse(id), updateFields);
+        } catch (err) {
+            throw new Error(err);
+        }
     }
-
     revalidatePath("/dashboard/courses");
     redirect("/dashboard/courses");
 };

@@ -83,6 +83,11 @@ const AddCoursePage = async () => {
                     />
                 </div>
 
+                <div>
+                    <label htmlFor="link">Link for email*</label>
+                    <input type="text" name="link" id="link" required />
+                </div>
+
                 <button type="submit" className={styles.button}>
                     Submit
                 </button>
