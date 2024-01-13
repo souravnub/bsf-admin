@@ -34,7 +34,6 @@ import { AboutPageContent } from "./models/AboutPageContent";
 import EmailToEnrollees from "../ui/login/emails/EmailToEnrollees";
 import { Review } from "./models/Review";
 import { HiringMessage } from "./models/HiringMessages";
-import mongoose from "mongoose";
 import { Instructor } from "./models/Instructors";
 import HiringReqReplyEmail from "../ui/login/emails/HiringReqReplyEmail";
 import { SocialCategory } from "./models/SocialCategories";
