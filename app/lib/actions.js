@@ -88,6 +88,7 @@ export const updateAdmin = async (formData) => {
     revalidatePath("/dashboard/admins");
     redirect("/dashboard/admins");
 };
+
 export const checkAdminPassword = async (username, oldPassword) => {
     await connectToDB();
     const adminFound = await Admin.findOne({ username: username });
@@ -100,6 +101,35 @@ export const checkAdminPassword = async (username, oldPassword) => {
         adminFound.password
     );
     return isPassCorrect;
+};
+
+export const addInstructor = async (formData) => {
+    const socialCategories = await SocialCategory.find();
+    const socialCategorieNames = socialCategories.map((c) => c.category);
+    const { name, role, email, image1 } = Object.fromEntries(formData);
+
+    const socials = [];
+
+    for (let [key, value] of formData.entries()) {
+        if (socialCategorieNames.includes(key)) {
+            // eliminting the select tag value pairs
+            if (key !== value) {
+                socials.push({ name: key, href: value });
+            }
+        }
+    }
+
+    const newInstructor = new Instructor({
+        name,
+        role,
+        email,
+        imgUrl: getS3FileUrl(image1),
+        socials,
+    });
+    await newInstructor.save();
+
+    revalidatePath("/dashboard/instructors");
+    redirect("/dashboard/instructors");
 };
 
 const days = [
