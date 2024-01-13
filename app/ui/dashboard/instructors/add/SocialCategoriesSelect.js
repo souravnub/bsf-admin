@@ -1,24 +1,30 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AddSocialCategoryModal from "./AddSocialCategoryModal";
 
-const SocialCategoriesSelect = ({ categories, ...props }) => {
-    const [newCategory, setNewCategory] = useState(categories[0]);
+const SocialCategoriesSelect = ({ value, categories, onChange, ...props }) => {
+    const [category, setCategory] = useState(value || categories[0]);
     const [isOpen, setIsOpen] = useState(false);
     const selectRef = useRef();
 
     const handleOptionChange = (e) => {
         if (e.target.value === "new") {
             setIsOpen(true);
+        } else {
+            setCategory(e.target.value);
         }
     };
+
+    useEffect(() => {
+        onChange(selectRef.current.name, category);
+    }, [category]);
 
     return (
         <>
             <select
                 ref={selectRef}
                 {...props}
-                value={newCategory}
+                value={category}
                 onChange={handleOptionChange}
             >
                 {JSON.parse(categories)?.map(({ _id, category }) => (
@@ -32,7 +38,7 @@ const SocialCategoriesSelect = ({ categories, ...props }) => {
             {isOpen && (
                 <AddSocialCategoryModal
                     setIsOpen={setIsOpen}
-                    setNewCategory={setNewCategory}
+                    setCategory={setCategory}
                 />
             )}
         </>

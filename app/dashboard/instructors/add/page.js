@@ -1,15 +1,15 @@
 import React from "react";
 import styles from "@/app/ui/dashboard/courses/addCourse/addCourse.module.css";
 import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/imageUpload/imageUpload";
-import SocialCategoriesSelect from "@/app/ui/dashboard/instructors/add/SocialCategoriesSelect";
 import { fetchSocialCategories } from "@/app/lib/data";
+import DynamicSocialsList from "@/app/ui/dashboard/instructors/add/DynamicSocialsList";
 
 const AddInstructor = async () => {
     const categories = await fetchSocialCategories();
 
     return (
         <div className={styles.container}>
-            <form action="" className={styles.form}>
+            <form className={styles.form}>
                 <ImageUpload />
 
                 <div>
@@ -26,11 +26,22 @@ const AddInstructor = async () => {
                 </div>
                 <div>
                     <label htmlFor="categories">Socials</label>
-                    <SocialCategoriesSelect
+
+                    <DynamicSocialsList
                         categories={JSON.stringify(categories)}
-                        id="categories"
                     />
                 </div>
+
+                <button
+                    className={styles.button}
+                    style={{
+                        padding: "10px 20px",
+                        width: "auto",
+                        marginTop: "1.3rem",
+                    }}
+                >
+                    submit
+                </button>
             </form>
         </div>
     );

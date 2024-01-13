@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import styles from "@/app/ui/dashboard/reply-modal/replyModal.module.css";
 import { addSocialCategory } from "@/app/lib/actions";
 
-const AddSocialCategoryModal = ({ setNewCategory, setIsOpen }) => {
+const AddSocialCategoryModal = ({ setCategory, setIsOpen }) => {
     const [msg, setMsg] = useState(null);
 
     const inputRef = useRef();
@@ -17,7 +17,7 @@ const AddSocialCategoryModal = ({ setNewCategory, setIsOpen }) => {
         const res = await addSocialCategory(inputRef.current.value);
         if (res && res.success) {
             setMsg(res.msg);
-            setNewCategory(inputRef.current.value);
+            setCategory(inputRef.current.value);
         }
         setTimeout(() => {
             closeModal();
