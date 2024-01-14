@@ -1,3 +1,4 @@
+import { Course } from "@/app/lib/models/Course";
 import { Customer } from "@/app/lib/models/Customer";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
@@ -9,7 +10,7 @@ export async function POST(request) {
         const body = await request.json();
 
         const customerExists = await Customer.findOne({ email: body.email });
-
+        const course = await Course.findOne({ _id: body.course });
         if (customerExists) {
             const currentDate = new Date();
             const courseEnrolled = body.course;
@@ -18,8 +19,9 @@ export async function POST(request) {
                 course: courseEnrolled,
                 purchaseDate: currentDate,
             });
+            course.customers.push(customerExists._id);
 
-            // Save the modified customer instance
+            await course.save();
             await customerExists.save();
             return NextResponse.json({ message: "Success." });
         } else {
@@ -38,6 +40,10 @@ export async function POST(request) {
             };
 
             const newCustomer = new Customer(customerData);
+
+            course.customers.push(newCustomer._id);
+
+            await course.save();
             await newCustomer.save();
 
             return NextResponse.json({ message: "Success." });
