@@ -2,7 +2,7 @@
 import React from "react";
 import { useFormStatus } from "react-dom";
 
-const Button = ({ children, disabledContent }) => {
+const FormButton = ({ children, disabledContent }) => {
     const { pending } = useFormStatus();
 
     return (
@@ -12,4 +12,4 @@ const Button = ({ children, disabledContent }) => {
     );
 };
 
-export default Button;
+export default FormButton;

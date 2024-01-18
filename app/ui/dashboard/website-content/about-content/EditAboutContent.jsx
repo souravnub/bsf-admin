@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "@/app/ui/dashboard/website-content/website-content.css.module.css";
 import CharacterCountInput from "../home-content/CharacterCountInput";
 import { updateAboutContent } from "@/app/lib/actions";
-import Button from "./Button";
+import FormButton from "../FormButton";
 
 function EditAboutContent({
     Title,
@@ -82,7 +82,7 @@ function EditAboutContent({
                     maxLength={150}
                 />
 
-                <Button disabledContent="saving....">save</Button>
+                <FormButton disabledContent="saving....">save</FormButton>
             </form>
         </div>
     );

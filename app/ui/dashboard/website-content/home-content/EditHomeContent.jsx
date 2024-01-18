@@ -6,6 +6,7 @@ import CharacterCountInput from "./CharacterCountInput";
 import { useState } from "react";
 import ImageUpload from "../../courses/addCourseForm/imageUpload/imageUpload";
 import VideoUpload from "../video-upload/VideoUpload";
+import FormButton from "../FormButton";
 
 function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
     const [heroTxt, setHeroTxt] = useState(heroText);
@@ -66,12 +67,12 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     ))}
                 </div>
 
-                <button
-                    type="submit"
+                <FormButton
                     className={`${styles.button} ${styles.editHomeContentBtn}`}
+                    disabledContent={"Updating Info..."}
                 >
                     Update Info
-                </button>
+                </FormButton>
             </form>
         </div>
     );
