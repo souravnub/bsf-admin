@@ -570,7 +570,7 @@ export const updateAboutContent = async (formData) => {
     }
 };
 
-export const updateHomeContent = async (formData) => {
+export const updateHomeContent = async (_, formData) => {
     connectToDB();
 
     try {
@@ -646,8 +646,15 @@ export const updateHomeContent = async (formData) => {
                 cards: cardsData,
             },
         });
+
+        return {
+            success: true,
+        };
     } catch (error) {
-        throw new Error(`Error updating home content: ${error.message}`);
+        console.error(`Error updating home content: ${error.message}`);
+        return {
+            success: false,
+        };
     }
 };
 

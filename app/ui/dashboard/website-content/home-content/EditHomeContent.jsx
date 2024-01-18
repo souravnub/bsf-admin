@@ -7,18 +7,23 @@ import { useState } from "react";
 import ImageUpload from "../../courses/addCourseForm/imageUpload/imageUpload";
 import VideoUpload from "../video-upload/VideoUpload";
 import FormButton from "../FormButton";
+import { useFormState } from "react-dom";
 
 function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
     const [heroTxt, setHeroTxt] = useState(heroText);
     const [smallHding, setSmallHding] = useState(smallHeading);
     const [bigHding, setBigHding] = useState(bigHeading);
 
+    const [data, formAction] = useFormState(updateHomeContent, {
+        success: null,
+    });
+
     return (
         <div className={styles.container}>
             <h3>Change content of the home page</h3>
 
             <form
-                action={updateHomeContent}
+                action={formAction}
                 className={`${styles.form} ${styles.EditHomeContentForm}`}
             >
                 <CharacterCountInput
@@ -71,8 +76,21 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     className={`${styles.button} ${styles.editHomeContentBtn}`}
                     disabledContent={"Updating Info..."}
                 >
-                    Update Info
+                    {data.success === true || data.success === null
+                        ? "Update Info"
+                        : "Failed to Update!"}
                 </FormButton>
+                <p
+                    style={{
+                        fontSize: ".8rem",
+                        marginTop: "1rem",
+                        color: data.success ? "green" : "red",
+                    }}
+                >
+                    {data.success === false &&
+                        "Something went wrong while updating info!"}
+                    {data.success === true && "Content updated successfully"}
+                </p>
             </form>
         </div>
     );
