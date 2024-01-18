@@ -547,7 +547,7 @@ export async function uploadFile(formData) {
     }
 }
 
-export const updateAboutContent = async (formData) => {
+export const updateAboutContent = async (_, formData) => {
     connectToDB();
 
     try {
@@ -564,9 +564,10 @@ export const updateAboutContent = async (formData) => {
                 strategy,
             },
         });
+        return { success: true };
     } catch (err) {
-        console.log(err);
-        throw new Error(err);
+        console.error(err);
+        return { success: false };
     }
 };
 
