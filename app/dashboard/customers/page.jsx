@@ -32,18 +32,20 @@ const Customers = async ({ searchParams }) => {
                     <tr>
                         <td>Name</td>
                         <td>Email</td>
+                        <td>No. of courses enrolled</td>
                         <td>Action</td>
                     </tr>
                 </thead>
                 <tbody>
                     {customers.map((customer) => (
-                        <tr key={customer._id}>
+                        <tr key={JSON.stringify(customer._id)}>
                             <td>
                                 <div className={styles.customer}>
                                     {customer.name}
                                 </div>
                             </td>
                             <td>{customer.email}</td>
+                            <td>{customer.courses.length}</td>
                             <td>
                                 <div className={styles.buttons}>
                                     <Link

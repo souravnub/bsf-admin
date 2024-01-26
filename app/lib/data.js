@@ -83,7 +83,9 @@ export const fetchCustomers = async (q, page) => {
 export const fetchCustomer = async (id) => {
     try {
         connectToDB();
-        const user = await Customer.findById(id);
+        const user = await Customer.findById(id)
+            .populate("courses.course")
+            .exec();
         return user;
     } catch (err) {
         throw new Error("Failed to fetch customer!");
