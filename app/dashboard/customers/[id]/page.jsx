@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { fetchCustomer } from "../../../lib/data";
 import styles from "@/app/ui/dashboard/customers/singleUser/singleUser.module.css";
+import { LiaExternalLinkAltSolid } from "react-icons/lia";
 
 const CustomerInfo = async ({ params }) => {
     const { id } = params;
@@ -8,17 +9,24 @@ const CustomerInfo = async ({ params }) => {
 
     return (
         <div className={styles.container}>
-            <h2>{information.name}</h2>
-            <p>{information.email}</p>
-            <h3>Courses enrolled in:</h3>
+            <h2 className={styles.name}>{information.name}</h2>
+            <p className={styles.email}>{information.email}</p>
+            <h3 className={styles.title}>Courses enrolled in:</h3>
 
             {information.courses.map((course) => (
-                <Link
+                <div
                     key={JSON.stringify(course._id)}
-                    href={`/dashboard/courses/${course.course._id}`}
+                    className={styles.linksContainer}
                 >
-                    {course.course.name}
-                </Link>
+                    <Link
+                        href={`https://bsfsystems.com/courses/${course.course._id}`}
+                        className={styles.link}
+                        target="_blank"
+                    >
+                        {course.course.name}
+                        <LiaExternalLinkAltSolid />
+                    </Link>
+                </div>
             ))}
         </div>
     );
