@@ -82,6 +82,14 @@ const courseSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        background: {
+            type: String,
+            default: "#3B4DD8",
+        },
+        textColor: {
+            type: String,
+            default: "#F5F5F5",
+        },
     },
     { timestamps: true }
 );

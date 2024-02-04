@@ -7,6 +7,7 @@ import Prerequisites from "@/app/ui/dashboard/courses/addCourseForm/prerequisite
 import styles from "@/app/ui/dashboard/courses/singleCourse/singleCourse.module.css";
 import addCoursePageStyles from "@/app/ui/dashboard/courses/addCourse/addCourse.module.css";
 import CourseSchedulePicker from "@/app/ui/dashboard/courses/addCourseForm/courseSchedulePicker/CourseSchedulePicker";
+import ColorPicker from "@/app/ui/dashboard/courses/colorPicker/ColorPicker";
 
 const SingleProductPage = async ({ params }) => {
     const { id } = params;
@@ -122,6 +123,11 @@ const SingleProductPage = async ({ params }) => {
                         id="link"
                         required
                         defaultValue={course.email_link}
+                    />
+                    <ColorPicker
+                        defaultBG={course.background}
+                        defaultTextColor={course.textColor}
+                        textContent={course.pageTitle}
                     />
                     <button class={styles.button}>Update</button>
                 </form>

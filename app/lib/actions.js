@@ -361,6 +361,8 @@ export const updateCourse = async (formData) => {
         link,
         priceIncludesTax,
         isInDemand,
+        background,
+        textColor,
     } = Object.fromEntries(formData);
 
     const categoryFound = await CourseCategory.findOne({ category: category });
@@ -408,7 +410,10 @@ export const updateCourse = async (formData) => {
                 jobOpportunities,
                 priceIncludesTax: priceIncludesTax == "true" ? true : false,
                 isInDemand: isInDemand == "true" ? true : false,
+                background,
+                textColor,
             };
+
             // newCateogryId exists
             if (newCategoryId) {
                 updateFields.category = newCategoryId;
