@@ -91,7 +91,7 @@ const ImageUpload = ({ index = 0, requiredInput, source }) => {
                 {source && (
                     <div>
                         <p>Current Image</p>
-                        <Image
+                        <img
                             src={source}
                             width={312}
                             height={312}
@@ -122,7 +122,7 @@ const ImageUpload = ({ index = 0, requiredInput, source }) => {
                                 undo
                             </button>
                         </div>
-                        <Image
+                        <img
                             src={imagePreview || ""}
                             width={312}
                             height={312}

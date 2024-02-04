@@ -34,7 +34,7 @@ const Instructors = async () => {
                         return (
                             <tr key={String(_id)}>
                                 <td>
-                                    <Image
+                                    <img
                                         alt={name}
                                         src={imgUrl}
                                         width={50}
