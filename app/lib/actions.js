@@ -740,6 +740,7 @@ export const sendReplyToHiringReq = async (prevState, formData) => {
     try {
         connectToDB();
         await HiringMessage.findByIdAndUpdate(JSON.parse(id), {
+            repliedAt: Date.now(),
             replied: true,
             reply,
         });
