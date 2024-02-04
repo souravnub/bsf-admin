@@ -12,7 +12,8 @@ export async function GET(request) {
 
     const courses = await Course.find({});
 
-    const events = courses.map(({ pageTitle, schedule }) => ({
+    const events = courses.map(({ pageTitle, schedule, _id }) => ({
+        id: String(_id),
         title: pageTitle,
         start: getDate(schedule?.startDate),
         end: getDate(schedule?.endDate),
