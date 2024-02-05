@@ -2,6 +2,7 @@ import { WebsiteContent } from "@/app/lib/models/WebsiteContent";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
 
+export const revalidate = 0;
 export async function GET() {
     try {
         connectToDB();

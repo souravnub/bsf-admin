@@ -2,6 +2,7 @@ import { Video } from "@/app/lib/models/Video";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
 
+export const revalidate = 0;
 export async function GET() {
     try {
         connectToDB();
