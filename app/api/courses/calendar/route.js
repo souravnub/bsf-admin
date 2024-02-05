@@ -2,6 +2,8 @@ import { Course } from "@/app/lib/models/Course";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
 
+export const revalidate = 0;
+
 const getDate = (date) => {
     return date.split("T")[0];
 };
