@@ -31,7 +31,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     name={"heroText"}
                     value={heroTxt}
                     onChange={setHeroTxt}
-                    maxLength={250}
+                    maxLength={800}
                 />
 
                 <CharacterCountInput
@@ -39,7 +39,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     name={"smallHeading"}
                     value={smallHding}
                     onChange={setSmallHding}
-                    maxLength={20}
+                    maxLength={100}
                 />
 
                 <CharacterCountInput
@@ -47,7 +47,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                     name={"bigHeading"}
                     value={bigHding}
                     onChange={setBigHding}
-                    maxLength={45}
+                    maxLength={100}
                 />
 
                 <div className={styles.cardContainer}>
@@ -65,7 +65,7 @@ function EditHomeContent({ heroText, smallHeading, bigHeading, cards }) {
                                 label={`Description*`}
                                 name={`description${index + 1}`}
                                 value={card.description}
-                                maxLength={130}
+                                maxLength={800}
                             />
                             <VideoUpload index={index} source={card.video} />
                         </div>

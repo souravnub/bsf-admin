@@ -38,7 +38,7 @@ function EditAboutContent({
                     name={"title"}
                     value={title}
                     onChange={setTitle}
-                    maxLength={250}
+                    maxLength={800}
                 />
 
                 <CharacterCountInput
@@ -46,7 +46,7 @@ function EditAboutContent({
                     name={"description"}
                     value={description}
                     onChange={setDescription}
-                    maxLength={450}
+                    maxLength={800}
                 />
 
                 <div className={styles.inputContainer}>
@@ -67,7 +67,7 @@ function EditAboutContent({
                     name={"vission"}
                     value={vission}
                     onChange={setVission}
-                    maxLength={150}
+                    maxLength={800}
                 />
 
                 <CharacterCountInput
@@ -75,7 +75,7 @@ function EditAboutContent({
                     name={"mission"}
                     value={mission}
                     onChange={setMission}
-                    maxLength={150}
+                    maxLength={800}
                 />
 
                 <CharacterCountInput
@@ -83,7 +83,7 @@ function EditAboutContent({
                     name={"strategy"}
                     value={strategy}
                     onChange={setStrategy}
-                    maxLength={150}
+                    maxLength={800}
                 />
 
                 <FormButton
