@@ -576,6 +576,29 @@ export const updateAboutContent = async (_, formData) => {
     }
 };
 
+export const updateContactInfo = async (_, formData) => {
+    connectToDB();
+
+    try {
+        const { msgEmail, supportEmail, phone } = Object.fromEntries(formData);
+
+        await WebsiteContent.findByIdAndUpdate("6582621f6224f786a42635e1", {
+            $set: {
+                contact: {
+                    msgEmail,
+                    supportEmail,
+                    phone,
+                },
+            },
+        });
+
+        return { success: true };
+    } catch (err) {
+        console.error(err);
+        return { success: false };
+    }
+};
+
 export const updateHomeContent = async (_, formData) => {
     connectToDB();
 

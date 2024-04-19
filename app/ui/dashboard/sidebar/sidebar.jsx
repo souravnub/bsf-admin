@@ -9,6 +9,7 @@ import {
     MdLibraryBooks,
     MdChat,
     MdRateReview,
+    MdContactSupport,
 } from "react-icons/md";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { auth, signOut } from "@/app/auth";
@@ -62,6 +63,11 @@ const menuItems = [
                 title: "About page Content",
                 path: "/dashboard/content/about",
                 icon: <MdWork />,
+            },
+            {
+                title: "Contact information",
+                path: "/dashboard/content/contact",
+                icon: <MdContactSupport />,
             },
         ],
     },

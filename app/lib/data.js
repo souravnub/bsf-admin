@@ -347,3 +347,15 @@ export const fetchAboutContent = async () => {
         throw new Error(`Error fetching about content`);
     }
 };
+
+export const fetchContactInfo = async () => {
+    connectToDB();
+
+    try {
+        const contactInfo = await WebsiteContent.findOne({});
+        return contactInfo.contact;
+    } catch (err) {
+        console.log(err);
+        throw new Error(`Error fetching about content`);
+    }
+};

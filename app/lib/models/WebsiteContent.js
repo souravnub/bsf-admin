@@ -15,6 +15,11 @@ const websiteContentSchema = new mongoose.Schema({
             },
         ],
     },
+    contact: {
+        msgEmail: { type: String },
+        supportEmail: { type: String },
+        phone: { type: String },
+    },
     footerDescription: { type: String },
 });
 
