@@ -1,0 +1,38 @@
+.listContainer {
+    display: flex;
+    flex-direction: column;
+}
+.addFeatureBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #b7bac1b8;
+    background-color: transparent;
+    padding: 15px;
+    width: 120px;
+    margin-top: 0px;
+    margin-bottom: 30px;
+    transition: 0.2s;
+
+    color: var(--text);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.addFeatureBtn:hover {
+    background-color: #b7bac16e;
+}
+
+.featureItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.removeFeatureBtn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    color: #e84118;
+}

@@ -1,0 +1,110 @@
+.container {
+    background-color: var(--bgSoft);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.container h3 {
+    margin-bottom: 0.95rem;
+}
+
+.form label {
+    display: block;
+    padding-block-end: 0.5rem;
+    font-size: 0.9rem;
+}
+.form input,
+.form textarea {
+    padding: 0.9em;
+    background-color: var(--bg);
+    color: var(--inputText);
+    border: 1.5px solid #2e374a;
+    border-radius: 5px;
+}
+.button,
+.form button {
+    padding: 0.6em 0.8em;
+    border-radius: 5px;
+    text-transform: capitalize;
+    border: none;
+    cursor: pointer;
+    background-color: #495e91;
+    color: var(--text);
+    margin-inline-start: 0.5em;
+}
+.button:hover,
+.form button:hover {
+    background-color: #37466a;
+}
+.button:disabled,
+.form button:disabled {
+    opacity: 0.5;
+}
+.removeButton {
+    background-color: rgb(255, 82, 82) !important;
+}
+.removeButton:hover {
+    background-color: rgb(203, 66, 66) !important;
+}
+.form button:active {
+    background-color: var(--bg);
+}
+
+.tabContainer {
+    padding: 1.5em;
+}
+.tabContainer ol {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-block: 1rem;
+}
+.tabContainer ol li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background-color: var(--bg);
+    padding: 0.5em;
+    position: relative;
+}
+.deleteButton {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    color: rgb(255, 82, 82);
+    font-size: 1.5rem;
+}
+.deleteButton:hover {
+    color: rgb(203, 66, 66);
+}
+
+.tabContainer > div:nth-child(1) {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sectionHeading {
+    padding: 15px 0 15px 0;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.editHomeContentBtn {
+    margin-top: 1rem;
+}
+
+.characterCount {
+    font-size: 0.5rem;
+}
+
+.cardContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}

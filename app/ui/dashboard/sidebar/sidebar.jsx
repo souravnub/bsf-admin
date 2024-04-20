@@ -1,20 +1,19 @@
-import Image from "next/image";
 import MenuLink from "./menuLink/menuLink";
 import styles from "./sidebar.module.css";
 import {
     MdDashboard,
     MdSupervisedUserCircle,
-    MdAttachMoney,
     MdWork,
-    MdAnalytics,
-    MdPeople,
-    MdOutlineSettings,
-    MdHelpCenter,
     MdLogout,
     MdAdminPanelSettings,
     MdLibraryBooks,
+    MdChat,
+    MdRateReview,
+    MdContactSupport,
 } from "react-icons/md";
+import { FaChalkboardTeacher } from "react-icons/fa";
 import { auth, signOut } from "@/app/auth";
+import { IoPersonAdd } from "react-icons/io5";
 
 const menuItems = [
     {
@@ -36,9 +35,19 @@ const menuItems = [
                 icon: <MdAdminPanelSettings />,
             },
             {
+                title: "Instructors",
+                path: "/dashboard/instructors",
+                icon: <FaChalkboardTeacher />,
+            },
+            {
                 title: "Courses",
                 path: "/dashboard/courses",
                 icon: <MdLibraryBooks />,
+            },
+            {
+                title: "Reviews",
+                path: "/dashboard/course-reviews",
+                icon: <MdRateReview />,
             },
         ],
     },
@@ -46,19 +55,34 @@ const menuItems = [
         title: "Website",
         list: [
             {
-                title: "Content Change",
-                path: "/dashboard/revenue",
+                title: "Home page Content",
+                path: "/dashboard/content/home",
                 icon: <MdWork />,
             },
             {
-                title: "...",
-                path: "/dashboard/reports",
-                icon: <MdAnalytics />,
+                title: "About page Content",
+                path: "/dashboard/content/about",
+                icon: <MdWork />,
             },
             {
-                title: "...",
-                path: "/dashboard/teams",
-                icon: <MdPeople />,
+                title: "Contact information",
+                path: "/dashboard/content/contact",
+                icon: <MdContactSupport />,
+            },
+        ],
+    },
+    {
+        title: "Contact & Messages",
+        list: [
+            {
+                title: "Messages",
+                path: "/dashboard/messages",
+                icon: <MdChat />,
+            },
+            {
+                title: "Hiring Requests",
+                path: "/dashboard/hire-alumni",
+                icon: <IoPersonAdd />,
             },
         ],
     },

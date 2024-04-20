@@ -23,3 +23,17 @@
 .uploadBtn:hover {
     background-color: #b7bac16e;
 }
+
+.imgContainer,
+.flex {
+    display: flex;
+    gap: 3rem;
+    align-items: center;
+}
+.flex {
+    gap: 1rem;
+}
+.imgContainer > div > p,
+.imgContainer > div > div {
+    margin-bottom: 0.5rem;
+}

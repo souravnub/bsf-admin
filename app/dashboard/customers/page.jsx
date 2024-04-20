@@ -1,60 +1,55 @@
-import { deleteUser } from "@/app/lib/actions";
-import { fetchCustomers, fetchAdmins } from "@/app/lib/data";
+import { fetchCategories, fetchCustomers } from "@/app/lib/data";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Search from "@/app/ui/dashboard/search/search";
 import styles from "@/app/ui/dashboard/customers/customers.module.css";
-import Image from "next/image";
 import Link from "next/link";
+import EmailModal from "@/app/ui/dashboard/email-modal/EmailModal";
 
-const customersPage = async ({ searchParams }) => {
+const Customers = async ({ searchParams }) => {
     const q = searchParams?.q || "";
     const page = searchParams?.page || 1;
     const { count, customers } = await fetchCustomers(q, page);
+    const categories = await fetchCategories();
 
     return (
         <div className={styles.container}>
             <div className={styles.top}>
-                <Search placeholder='Search for a customer...' />
-                <Link href='/dashboard/customers/add'>
-                    <button className={styles.addButton}>Add New</button>
-                </Link>
+                <Search placeholder="Search for a customer..." />
+                <div className={styles.emailBtnContainer}>
+                    <EmailModal
+                        title={"Send Email to All Customers"}
+                        purpose={"all"}
+                    />
+                    <EmailModal
+                        title={"Send Email to Course Enrollees"}
+                        purpose={"selected"}
+                        categories={JSON.stringify(categories)}
+                    />
+                </div>
             </div>
             <table className={styles.table}>
                 <thead>
                     <tr>
                         <td>Name</td>
                         <td>Email</td>
-                        <td>Created At</td>
-                        <td>Role</td>
-                        <td>Status</td>
+                        <td>No. of courses enrolled</td>
                         <td>Action</td>
                     </tr>
                 </thead>
                 <tbody>
                     {customers.map((customer) => (
-                        <tr key={customer.id}>
+                        <tr key={JSON.stringify(customer._id)}>
                             <td>
                                 <div className={styles.customer}>
-                                    <Image
-                                        src={customer.img || "/noavatar.png"}
-                                        alt=''
-                                        width={40}
-                                        height={40}
-                                        className={styles.userImage}
-                                    />
-                                    {customer.username}
+                                    {customer.name}
                                 </div>
                             </td>
                             <td>{customer.email}</td>
-                            <td>
-                                {customer.createdAt?.toString().slice(4, 16)}
-                            </td>
-                            <td>{customer.isAdmin ? "Admin" : "Client"}</td>
-                            <td>{customer.isActive ? "active" : "passive"}</td>
+                            <td>{customer.courses.length}</td>
                             <td>
                                 <div className={styles.buttons}>
                                     <Link
-                                        href={`/dashboard/customers/${user.id}`}
+                                        href={`/dashboard/customers/${customer._id}`}
                                     >
                                         <button
                                             className={`${styles.button} ${styles.view}`}
@@ -62,18 +57,6 @@ const customersPage = async ({ searchParams }) => {
                                             View
                                         </button>
                                     </Link>
-                                    <form action={deleteUser}>
-                                        <input
-                                            type='hidden'
-                                            name='id'
-                                            value={customer.id}
-                                        />
-                                        <button
-                                            className={`${styles.button} ${styles.delete}`}
-                                        >
-                                            Delete
-                                        </button>
-                                    </form>
                                 </div>
                             </td>
                         </tr>
@@ -85,4 +68,4 @@ const customersPage = async ({ searchParams }) => {
     );
 };
 
-export default customersPage;
+export default Customers;

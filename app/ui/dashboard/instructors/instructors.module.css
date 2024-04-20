@@ -1,0 +1,5 @@
+.profileImg {
+    border-radius: 500px;
+    object-fit: cover;
+    object-position: center;
+}

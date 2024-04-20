@@ -3,8 +3,10 @@
 import { useState } from "react";
 import styles from "./prerequisites.module.css";
 
-const Prerequisites = ({ prequisites }) => {
-    const [prerequisitesInput, setPrerequisitesInput] = useState(prequisites);
+const Prerequisites = ({ prerequisites }) => {
+    const [prerequisitesInput, setPrerequisitesInput] = useState(
+        prerequisites || []
+    );
 
     const handlePrerequisiteChange = (e, index) => {
         const updatedPrerequisites = [...prerequisitesInput];
@@ -22,11 +24,11 @@ const Prerequisites = ({ prequisites }) => {
         setPrerequisitesInput(updatedPrerequisites);
     };
 
-    if (prequisites.length > 0) {
+    if (prerequisites?.length > 0) {
         return (
             <div>
                 <label htmlFor='prerequisites'>Prerequisites (optional)</label>
-                {prerequisitesInput.map((prerequisite, index) => (
+                {prerequisitesInput?.map((prerequisite, index) => (
                     <div key={index} className={styles.prerequisiteItem}>
                         <input
                             type='text'
@@ -51,7 +53,7 @@ const Prerequisites = ({ prequisites }) => {
         return (
             <div>
                 <label htmlFor='prerequisites'>Prerequisites (optional)</label>
-                {prerequisitesInput.map((prerequisite, index) => (
+                {prerequisitesInput?.map((prerequisite, index) => (
                     <div key={index} className={styles.prerequisiteItem}>
                         <input
                             type='text'
