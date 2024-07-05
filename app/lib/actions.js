@@ -38,6 +38,7 @@ import { HiringMessage } from "./models/HiringMessages";
 import { Instructor } from "./models/Instructors";
 import HiringReqReplyEmail from "../ui/login/emails/HiringReqReplyEmail";
 import { SocialCategory } from "./models/SocialCategories";
+import mongoose from "mongoose";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -380,6 +381,7 @@ export const updateCourse = async (formData) => {
         newCategoryId = savedCategory._id;
     }
     // if the image is provided in the form entries
+
     if (image1 !== "") {
         const course = await Course.findById(id);
         await deleteFile(getS3FileKey(course.image));
@@ -423,7 +425,7 @@ export const updateCourse = async (formData) => {
                 updateFields.image = newImageUrl;
             }
 
-            await Course.findByIdAndUpdate(JSON.parse(id), updateFields);
+            await Course.findByIdAndUpdate(id, updateFields);
         } catch (err) {
             throw new Error(err);
         }

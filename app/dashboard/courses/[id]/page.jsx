@@ -22,11 +22,7 @@ const SingleProductPage = async ({ params }) => {
                         <ImageUpload source={course.image} />
                         {course.title}
                     </div>
-                    <input
-                        type="hidden"
-                        name="id"
-                        defaultValue={JSON.stringify(course._id)}
-                    />
+                    <input type="hidden" name="id" defaultValue={course._id} />
                     <label>Course Name</label>
                     <input type="text" name="name" defaultValue={course.name} />
 
