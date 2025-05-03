@@ -577,7 +577,6 @@ export const updateAboutContent = async (_, formData) => {
 
         if (video1 !== "") {
             const vid1 = getS3FileUrl(video1);
-            await deleteFile(getS3FileKey(video1));
             dataToUpdate.video = vid1;
         }
 
