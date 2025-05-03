@@ -558,18 +558,27 @@ export const updateAboutContent = async (_, formData) => {
     connectToDB();
 
     try {
-        const { title, description, yt, vission, mission, strategy } =
+        const { title, description, vission, mission, strategy, video1 } =
             Object.fromEntries(formData);
 
+        console.log(Object.fromEntries(formData));
+
+        const dataToUpdate = {
+            title,
+            description,
+            vission,
+            mission,
+            strategy,
+        };
+
+        if (video1 !== "") {
+            const vid1 = getS3FileUrl(video1);
+            await deleteFile(getS3FileKey(video1));
+            dataToUpdate.video = vid1;
+        }
+
         await AboutPageContent.findByIdAndUpdate("659c61e132b7030a5d069033", {
-            $set: {
-                title,
-                description,
-                video: yt,
-                vission,
-                mission,
-                strategy,
-            },
+            $set: dataToUpdate,
         });
         return { success: true };
     } catch (err) {

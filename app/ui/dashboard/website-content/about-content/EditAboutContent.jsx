@@ -6,18 +6,18 @@ import CharacterCountInput from "../home-content/CharacterCountInput";
 import { updateAboutContent } from "@/app/lib/actions";
 import FormButton from "../FormButton";
 import { useFormState } from "react-dom";
+import VideoUpload from "../video-upload/VideoUpload";
 
 function EditAboutContent({
     Title,
     Description,
-    Yt,
+    video,
     Vission,
     Mission,
     Strategy,
 }) {
     const [title, setTitle] = useState(Title);
     const [description, setDescription] = useState(Description);
-    const [yt, setYt] = useState(Yt);
     const [vission, setVission] = useState(Vission);
     const [mission, setMission] = useState(Mission);
     const [strategy, setStrategy] = useState(Strategy);
@@ -50,14 +50,7 @@ function EditAboutContent({
                 />
 
                 <div className={styles.inputContainer}>
-                    <label htmlFor="yt-video">Video URL</label>
-                    <input
-                        defaultValue={yt}
-                        onChange={(e) => setYt(e.target.value)}
-                        type="text"
-                        id="yt-video"
-                        name="yt"
-                    />
+                    <VideoUpload source={video} />
                 </div>
 
                 <h3 style={{ marginTop: "2rem" }}>Cards</h3>

@@ -10,7 +10,7 @@ const AboutPageContent = async () => {
         <EditAboutContent
             Title={title}
             Description={description}
-            Yt={video}
+            video={video}
             Vission={vission}
             Mission={mission}
             Strategy={strategy}
