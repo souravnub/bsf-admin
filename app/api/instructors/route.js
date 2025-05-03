@@ -2,6 +2,8 @@ import { Instructor } from "@/app/lib/models/Instructors";
 import { connectToDB } from "@/app/lib/utils";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
     try {
         connectToDB();

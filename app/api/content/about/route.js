@@ -13,7 +13,7 @@ export async function GET() {
         );
 
         const aboutPageData = {
-            title: "What we do?",
+            title: content.title,
             description: content.description,
             video: content.video,
             tabs: [
