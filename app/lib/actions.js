@@ -546,7 +546,11 @@ export async function uploadFile(formData) {
         const buffer = Buffer.from(await file.arrayBuffer());
         const uniqueFileName = cryptoRandomString({ length: 15 });
 
-        const fileKey = await uploadFileToS3(buffer, uniqueFileName);
+        const fileKey = await uploadFileToS3({
+            buffer,
+            uniqueFileName,
+            fileType: file.type,
+        });
 
         return { success: true, msg: "File uploaded successfully!", fileKey };
     } catch (error) {

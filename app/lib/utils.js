@@ -32,14 +32,14 @@ const s3Client = new S3Client({
         secretAccessKey: Env.AWS_S3_SECRET_ACCESS_KEY,
     },
 });
-export async function uploadFileToS3(file, fileKey) {
+export async function uploadFileToS3({ file, fileKey, fileType }) {
     const fileBuffer = file;
 
     const params = {
         Bucket: Env.AWS_S3_BUCKET_NAME,
         Key: `${fileKey}`,
         Body: fileBuffer,
-        ContentType: "image/jpg",
+        ContentType: fileType,
     };
 
     const command = new PutObjectCommand(params);
