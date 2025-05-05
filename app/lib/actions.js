@@ -46,11 +46,9 @@ export const addAdmin = async (formData) => {
     try {
         connectToDB();
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const newUser = new Admin({
             username,
-            password: hashedPassword,
+            password,
             email,
             isAdmin: isAdmin == "true" ? true : false,
         });
