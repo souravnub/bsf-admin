@@ -18,7 +18,7 @@ import { signIn } from "../auth";
 import { Video } from "./models/Video";
 import Env from "./config/env";
 
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
 
