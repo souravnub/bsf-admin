@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import SocialCategoriesSelect from "./SocialCategoriesSelect";
 import styles from "./addInstructors.module.css";
 
-const DynamicSocialsList = ({ categories, socialsList }) => {
-    const [socials, setSocials] = useState(JSON.parse(socialsList) || []);
+const DynamicSocialsList = ({ categories, socialsList = [] }) => {
+    const [socials, setSocials] = useState(
+        typeof socialsList === "string" ? JSON.parse(socialsList) : socialsList
+    );
     const handleSelectChange = (name, value) => {
         setSocials(
             socials.map((social) => {
