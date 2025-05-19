@@ -56,6 +56,12 @@ const UpdateInstructor = async ({ params }) => {
                     />
                 </div>
 
+                <div>
+                    <label htmlFor="description">Description</label>
+
+                    <textarea id="description" name="description"></textarea>
+                </div>
+
                 <button
                     className={styles.button}
                     style={{

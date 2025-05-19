@@ -145,7 +145,8 @@ export const updateInstructor = async (formData) => {
         connectToDB();
         const socialCategories = await SocialCategory.find();
         const socialCategorieNames = socialCategories.map((c) => c.category);
-        const { id, name, role, email, image1 } = Object.fromEntries(formData);
+        const { id, name, role, email, image1, description } =
+            Object.fromEntries(formData);
 
         const socials = [];
 
@@ -164,6 +165,7 @@ export const updateInstructor = async (formData) => {
             role,
             email,
             socials,
+            description,
         };
 
         // imageKey is provided
