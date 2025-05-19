@@ -107,7 +107,9 @@ export const addInstructor = async (formData) => {
         connectToDB();
         const socialCategories = await SocialCategory.find();
         const socialCategorieNames = socialCategories.map((c) => c.category);
-        const { name, role, email, image1 } = Object.fromEntries(formData);
+        console.log(Object.fromEntries(formData));
+        const { name, role, email, image1, description } =
+            Object.fromEntries(formData);
 
         const socials = [];
 
@@ -126,6 +128,7 @@ export const addInstructor = async (formData) => {
             email,
             imgUrl: getS3FileUrl(image1),
             socials,
+            description,
         });
         await newInstructor.save();
     } catch (err) {

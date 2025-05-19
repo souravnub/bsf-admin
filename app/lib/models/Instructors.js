@@ -14,6 +14,7 @@ const InstructorSchema = mongoose.Schema({
             href: { type: String, required: true },
         },
     ],
+    description: { type: String },
 });
 
 export const Instructor =

@@ -33,6 +33,11 @@ const AddInstructor = async () => {
                     />
                 </div>
 
+                <div className="mt-6!">
+                    <label htmlFor="description">Description</label>
+                    <textarea id="descriptoin" name="description"></textarea>
+                </div>
+
                 <button
                     className={styles.button}
                     style={{
