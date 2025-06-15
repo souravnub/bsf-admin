@@ -1,5 +1,5 @@
 import { fetchCategories, fetchCustomers } from "@/app/lib/data";
-import Pagination from "@/app/ui/dashboard/pagination/pagination";
+
 import Search from "@/app/ui/dashboard/search/search";
 import styles from "@/app/ui/dashboard/customers/customers.module.css";
 import Link from "next/link";
@@ -7,8 +7,7 @@ import EmailModal from "@/app/ui/dashboard/email-modal/EmailModal";
 
 const Customers = async ({ searchParams }) => {
     const q = searchParams?.q || "";
-    const page = searchParams?.page || 1;
-    const { count, customers } = await fetchCustomers(q, page);
+    const { customers } = await fetchCustomers(q);
     const categories = await fetchCategories();
 
     return (
@@ -63,7 +62,6 @@ const Customers = async ({ searchParams }) => {
                     ))}
                 </tbody>
             </table>
-            <Pagination count={count} />
         </div>
     );
 };

@@ -61,20 +61,13 @@ export const fetchAdmin = async (id) => {
     }
 };
 
-export const fetchCustomers = async (q, page) => {
+export const fetchCustomers = async (q) => {
     const regex = new RegExp(q, "i");
-
-    const ITEM_PER_PAGE = 10;
 
     try {
         connectToDB();
-        const count = await Customer.find({
-            email: { $regex: regex },
-        }).count();
-        const users = await Customer.find({ email: { $regex: regex } })
-            .limit(ITEM_PER_PAGE)
-            .skip(ITEM_PER_PAGE * (page - 1));
-        return { count, customers: users };
+        const customers = await Customer.find({ email: { $regex: regex } });
+        return { customers };
     } catch (err) {
         throw new Error("Failed to fetch customers!");
     }
