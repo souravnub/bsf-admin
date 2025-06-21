@@ -1,7 +1,8 @@
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import Env from "../config/env";
+
 import {
     renderEmailHtml,
     sendRenderedEmail,
@@ -39,6 +40,7 @@ const customerSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
+
 customerSchema.methods.genAndSendOTP = async function () {
     const OTP = cryptoRandomString({
         length: 5,
@@ -73,5 +75,6 @@ customerSchema.methods.isOTPValid = async function (OTP) {
     }
     return false;
 };
+
 export const Customer =
     mongoose.models.Customer || mongoose.model("Customer", customerSchema);
