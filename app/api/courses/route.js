@@ -9,12 +9,30 @@ export async function GET(request) {
         const sortBy = request.nextUrl.searchParams.get(["sortBy"]);
         const category = request.nextUrl.searchParams.get(["category"]);
         const jobs = request.nextUrl.searchParams.get(["jobs"]);
+        const withPagination = request.nextUrl.searchParams.get([
+            "withPagination",
+        ]);
 
         connectToDB();
         const ITEM_PER_PAGE = 10;
         let query = Course.find({})
-            .select("name price description image category")
+            .select(
+                "name price description image category background textColor schedule"
+            )
             .populate("category");
+
+        if (withPagination === "false") {
+            const courses = await Course.find();
+
+            console.log("inside here");
+
+            return NextResponse.json({
+                courses,
+            });
+        }
+
+        console.log("outside here");
+
         let countQuery = Course.find({});
 
         switch (sortBy) {
