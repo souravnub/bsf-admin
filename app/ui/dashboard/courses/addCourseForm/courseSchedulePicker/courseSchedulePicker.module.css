@@ -1,0 +1,9 @@
+.customDaysButton {
+    background-color: azure;
+    color: black;
+    padding: 0.8rem;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 2rem;
+    cursor: pointer;
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import styles from "./courseSchedulePicker.module.css";
 
 const CourseSchedulePicker = ({ info: aInfo }) => {
     const [isClassDaysShown, setIsClassDaysShown] = useState(false);
@@ -37,7 +38,11 @@ const CourseSchedulePicker = ({ info: aInfo }) => {
                 defaultValue={info ? info.endDate : ""}
             />
 
-            <button type="button" onClick={() => setIsClassDaysShown(true)}>
+            <button
+                type="button"
+                className={styles.customDaysButton}
+                onClick={() => setIsClassDaysShown(true)}
+            >
                 add custom class days
             </button>
 
