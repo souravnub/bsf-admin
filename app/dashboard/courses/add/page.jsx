@@ -14,6 +14,11 @@ const AddCoursePage = async () => {
     return (
         <div className={styles.container}>
             <form action={addCourse} className={styles.form}>
+                <div className={styles.demandInputContainer}>
+                    <label htmlFor="isActive">Is coures active?</label>
+                    <input type="checkbox" name="isActive" id="isActive" />
+                </div>
+
                 <div>
                     <label htmlFor="name">Course Name*</label>
                     <input type="text" name="name" id="name" required />
@@ -38,7 +43,7 @@ const AddCoursePage = async () => {
 
                 <div className={styles.demandInputContainer}>
                     <label htmlFor="demand">Is in demand?</label>
-                    <input type="checkbox" name="isInDemand" value="true" />
+                    <input type="checkbox" name="isInDemand" />
                 </div>
 
                 <div>
@@ -54,11 +59,7 @@ const AddCoursePage = async () => {
 
                     <div className={styles.taxContainer}>
                         <label htmlFor="tax">Price includes tax</label>
-                        <input
-                            type="checkbox"
-                            name="priceIncludesTax"
-                            value="true"
-                        />
+                        <input type="checkbox" name="priceIncludesTax" />
                     </div>
                 </div>
 

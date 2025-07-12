@@ -248,6 +248,7 @@ export const addCourse = async (formData) => {
         link,
         priceIncludesTax,
         isInDemand,
+        isActive,
         startDate,
         endDate,
     } = Object.fromEntries(formData);
@@ -266,8 +267,6 @@ export const addCourse = async (formData) => {
     }
 
     if (isURL(link)) {
-        console.log("hi");
-        console.log(link);
         try {
             await connectToDB();
             const imageUrl = getS3FileUrl(image1);
@@ -289,8 +288,9 @@ export const addCourse = async (formData) => {
                 price,
                 pageTitle,
                 pageSubTitle,
-                priceIncludesTax: priceIncludesTax == "true" ? true : false,
-                isInDemand: isInDemand == "true" ? true : false,
+                priceIncludesTax: priceIncludesTax == "on" ? true : false,
+                isInDemand: isInDemand == "on" ? true : false,
+                isActive: isInDemand == "on" ? true : false,
             });
 
             await newCourse.save();
@@ -365,6 +365,7 @@ export const updateCourse = async (formData) => {
         link,
         priceIncludesTax,
         isInDemand,
+        isActive,
         background,
         textColor,
     } = Object.fromEntries(formData);
@@ -414,7 +415,8 @@ export const updateCourse = async (formData) => {
                 pageSubTitle,
                 jobOpportunities,
                 priceIncludesTax: priceIncludesTax == "true" ? true : false,
-                isInDemand: isInDemand == "true" ? true : false,
+                isInDemand: isInDemand == "on" ? true : false,
+                isActive: isActive == "on" ? true : false,
                 background,
                 textColor,
             };

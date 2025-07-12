@@ -18,6 +18,15 @@ const SingleProductPage = async ({ params }) => {
         <div className={styles.container}>
             <div className={styles.formContainer}>
                 <form action={updateCourse} className={styles.form}>
+                    <div className={addCoursePageStyles.demandInputContainer}>
+                        <label htmlFor="isActive">Is course Active?</label>
+                        <input
+                            type="checkbox"
+                            name="isActive"
+                            defaultChecked={course.isActive}
+                        />
+                    </div>
+
                     <div className={styles.infoContainer}>
                         <ImageUpload source={course.image} />
                         {course.title}
@@ -52,7 +61,6 @@ const SingleProductPage = async ({ params }) => {
                             type="checkbox"
                             name="isInDemand"
                             defaultChecked={course.isInDemand}
-                            value="true"
                         />
                     </div>
 
@@ -68,7 +76,6 @@ const SingleProductPage = async ({ params }) => {
                             id="tax"
                             type="checkbox"
                             name="priceIncludesTax"
-                            value="true"
                             defaultChecked={course.priceIncludesTax}
                         />
                     </div>

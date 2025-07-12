@@ -90,6 +90,11 @@ const courseSchema = new mongoose.Schema(
             type: String,
             default: "#F5F5F5",
         },
+        isActive: {
+            type: Boolean,
+            default: false,
+            required: true,
+        },
     },
     { timestamps: true }
 );
