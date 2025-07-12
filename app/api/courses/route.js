@@ -17,9 +17,10 @@ export async function GET(request) {
         const ITEM_PER_PAGE = 10;
         let query = Course.find({})
             .select(
-                "name price description image category background textColor schedule"
+                "name price description image category background textColor schedule isActive"
             )
-            .populate("category");
+            .populate("category")
+            .sort({ isActive: -1 });
 
         if (withPagination === "false") {
             const courses = await Course.find();
@@ -30,8 +31,6 @@ export async function GET(request) {
                 courses,
             });
         }
-
-        console.log("outside here");
 
         let countQuery = Course.find({});
 
