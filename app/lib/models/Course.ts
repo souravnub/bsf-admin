@@ -1,6 +1,40 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 
 import { Review } from "./Review";
+
+interface ICourse {
+    customers: mongoose.ObjectId[];
+    pageTitle: string;
+    pageSubTitle: string;
+    image: string;
+    name: string;
+    priceIncludesTax: boolean;
+    isInDemand: boolean;
+    description: string;
+    learnings: {
+        tools?: string[];
+        other?: string[];
+    };
+    schedule: {
+        startDate: string;
+        endDate: string;
+        classDays: Record<string, { from: string; to: string }>;
+    };
+    category: mongoose.ObjectId;
+    reviews: mongoose.ObjectId[];
+    prequisites: string[];
+    price: number;
+
+    jobOpportunities: string[];
+
+    email_link: string;
+    background: string;
+    textColor: string;
+    isActive: boolean;
+}
+
+interface ICourseDocument extends ICourse, Document {}
+interface ICourseModel extends Model<ICourseDocument> {}
 
 const courseSchema = new mongoose.Schema(
     {
@@ -117,6 +151,7 @@ courseSchema.methods.canCustomerReview = async function (customerId) {
     });
 
     const results = await Promise.allSettled(reviewsOnCoursePromises);
+    // @ts-ignore
     results.forEach(({ value: review }) => {
         if (review.customerId == customerId) {
             customerHaveReview = true;
@@ -126,5 +161,5 @@ courseSchema.methods.canCustomerReview = async function (customerId) {
     return reviewerIsCustomer && !customerHaveReview;
 };
 
-export const Course =
+export const Course: ICourseModel =
     mongoose.models.Course || mongoose.model("Course", courseSchema);

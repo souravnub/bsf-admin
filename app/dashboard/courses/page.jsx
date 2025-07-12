@@ -53,6 +53,15 @@ const CoursesPage = async ({ searchParams }) => {
                                             View
                                         </button>
                                     </Link>
+                                    <Link
+                                        href={`/dashboard/courses/${course._id}/customers`}
+                                    >
+                                        <button
+                                            className={`${styles.button} ${styles.customer}`}
+                                        >
+                                            Customers
+                                        </button>
+                                    </Link>
                                     <form action={deleteCourse}>
                                         <input
                                             type="hidden"

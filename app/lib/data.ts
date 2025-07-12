@@ -3,7 +3,7 @@ import { Admin } from "./models/Admin";
 import { Contact } from "./models/Contact";
 import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
-import { Customer } from "./models/Customer";
+import { Customer, ICustomerDocument } from "./models/Customer";
 import { HiringMessage } from "./models/HiringMessages";
 import { Instructor } from "./models/Instructors";
 import { Review } from "./models/Review";
@@ -102,6 +102,18 @@ export const fetchCourses = async (q, page) => {
         return { count, courses };
     } catch (err) {
         throw new Error("Failed to fetch courses!");
+    }
+};
+
+export const fetchCourseCustomers = async (courseId) => {
+    try {
+        connectToDB();
+        const course = await Course.findById(courseId)
+            .populate<{ customers: ICustomerDocument[] }>("customers")
+            .exec();
+        return course.customers;
+    } catch (err) {
+        throw new Error("Failed to fetch course!");
     }
 };
 
@@ -234,7 +246,9 @@ export const dashboardData = async () => {
         connectToDB();
 
         const studentsCount = await Customer.countDocuments();
-        const courses = await Course.find().populate("customers", "email");
+        const courses = await Course.find().populate<{
+            customers: ICustomerDocument[];
+        }>("customers", "email");
 
         let totalRevenue = 0;
         let totalCoursesSold = 0;

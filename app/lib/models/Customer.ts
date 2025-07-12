@@ -1,6 +1,6 @@
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
-import mongoose, { Model } from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 import Env from "../config/env";
 
 import {
@@ -8,6 +8,18 @@ import {
     sendRenderedEmail,
 } from "@/app/ui/login/emails/renderAndSendEmail";
 import OTPEmail from "@/app/ui/login/emails/OTPEmail";
+
+interface ICustomer {
+    email: string;
+    name: string;
+    courses: {
+        course: mongoose.ObjectId;
+        purchaseDate: mongoose.Date;
+    }[];
+    otp_token: string;
+}
+export interface ICustomerDocument extends ICustomer, Document {}
+interface ICustomerModle extends Model<ICustomerDocument> {}
 
 const customerSchema = new mongoose.Schema(
     {
@@ -76,5 +88,5 @@ customerSchema.methods.isOTPValid = async function (OTP) {
     return false;
 };
 
-export const Customer =
+export const Customer: ICustomerModle =
     mongoose.models.Customer || mongoose.model("Customer", customerSchema);
