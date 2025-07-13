@@ -26,7 +26,7 @@ const CourseCustomers = async ({ params }: { params: Promise<{ id: string }> }) 
                   {customer.name}
                 </div>
               </td>
-              <td>${customer.email}</td>
+              <td>{customer.email}</td>
 
 
               <td>
