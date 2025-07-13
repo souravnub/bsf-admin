@@ -2,12 +2,15 @@ import nodemailer from "nodemailer";
 import Env from "./env";
 
 const smtpConfig = {
-    host: Env.SMTP_HOST,
-    port: Env.SMTP_PORT,
-    secure: false,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: process.env.SMTP_SECURE === "false" ? false : true,
     auth: {
-        user: Env.SMTP_USER,
-        pass: Env.SMTP_PASSWORD,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+    },
+    tls: {
+        rejectUnauthorized: false,
     },
 };
 

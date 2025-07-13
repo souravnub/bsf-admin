@@ -1,6 +1,6 @@
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Document, Model, Types } from "mongoose";
 import Env from "../config/env";
 
 import {
@@ -13,7 +13,7 @@ interface ICustomer {
     email: string;
     name: string;
     courses: {
-        course: mongoose.ObjectId;
+        course: Types.ObjectId;
         purchaseDate: mongoose.Date;
     }[];
     otp_token: string;

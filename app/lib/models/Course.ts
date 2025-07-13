@@ -1,9 +1,9 @@
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Document, Model, Types } from "mongoose";
 
 import { Review } from "./Review";
 
 interface ICourse {
-    customers: mongoose.ObjectId[];
+    customers: Types.ObjectId[];
     pageTitle: string;
     pageSubTitle: string;
     image: string;
@@ -20,8 +20,8 @@ interface ICourse {
         endDate: string;
         classDays: Record<string, { from: string; to: string }>;
     };
-    category: mongoose.ObjectId;
-    reviews: mongoose.ObjectId[];
+    category: Types.ObjectId;
+    reviews: Types.ObjectId[];
     prequisites: string[];
     price: number;
 

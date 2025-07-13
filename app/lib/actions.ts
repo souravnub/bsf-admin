@@ -67,7 +67,7 @@ export const updateAdmin = async (formData) => {
     try {
         connectToDB();
 
-        const updateFields = {};
+        const updateFields: { username?: string; password?: string } = {};
 
         if (username) {
             updateFields.username = username;
@@ -176,6 +176,7 @@ export const updateInstructor = async (formData) => {
         }
 
         if (newImageUrl) {
+            // @ts-ignore
             updateFields.imgUrl = newImageUrl;
         }
 
@@ -427,6 +428,7 @@ export const updateCourse = async (formData) => {
             }
             // newImageUrl exists
             if (newImageUrl) {
+                // @ts-ignore
                 updateFields.image = newImageUrl;
             }
 
@@ -582,6 +584,7 @@ export const updateAboutContent = async (_, formData) => {
 
         if (video1 !== "") {
             const vid1 = getS3FileUrl(video1);
+            // @ts-ignore
             dataToUpdate.video = vid1;
         }
 
@@ -766,7 +769,9 @@ export const resetPassword = async (prevState, formData) => {
         const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(password, salt);
 
+        // @ts-ignore
         updateFields.password = hash;
+        // @ts-ignore
         updateFields.password_reset_token = null;
 
         await Admin.updateOne(
@@ -868,7 +873,10 @@ export const sendToAll = async (prevState, formData) => {
     try {
         connectToDB();
 
-        const emails = await Customer.find({}, { email: 1, _id: 0 });
+        const customers = await Customer.find().select<{ email: string }>(
+            "email"
+        );
+        const emails = customers.map((customer) => customer.email);
 
         const renderedEmail = renderEmailHtml(
             {
