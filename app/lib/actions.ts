@@ -876,7 +876,9 @@ export const sendToAll = async (prevState, formData) => {
         const customers = await Customer.find().select<{ email: string }>(
             "email"
         );
-        const emails = customers.map((customer) => customer.email);
+        const emails = Array.from(
+            new Set(customers.map((customer) => customer.email))
+        );
 
         const renderedEmail = renderEmailHtml(
             {
@@ -925,12 +927,14 @@ export const sendToSelected = async (prevState, formData) => {
         }, []);
 
         // Retrieve customers with their emails
-        const customersWithEmails = await Customer.find(
+        const customersWithEmails = await Customer.find<{ email: string }>(
             { _id: { $in: customerIds } },
             { email: 1 }
         );
 
-        const emails = customersWithEmails.map((customer) => customer.email);
+        const emails = Array.from(
+            new Set(customersWithEmails.map((customer) => customer.email))
+        );
 
         // Find the category by its name
         if (emails.length < 0) {
