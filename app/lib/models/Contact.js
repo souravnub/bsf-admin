@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getModel, ModelNames } from ".";
 
 const contactSchema = new mongoose.Schema(
     {
@@ -45,5 +46,4 @@ const contactSchema = new mongoose.Schema(
 
 contactSchema.index({ repliedAt: 1 }, { expireAfterSeconds: 0 });
 
-export const Contact =
-    mongoose.models.Contact || mongoose.model("Contact", contactSchema);
+export const Contact = getModel(ModelNames.Contact, contactSchema);

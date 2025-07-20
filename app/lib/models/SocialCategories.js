@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getModel, ModelNames } from ".";
 
 const socialCategorySchema = new mongoose.Schema({
     category: {
@@ -7,6 +8,7 @@ const socialCategorySchema = new mongoose.Schema({
     },
 });
 
-export const SocialCategory =
-    mongoose.models.SocialCategory ||
-    mongoose.model("SocialCategory", socialCategorySchema);
+export const SocialCategory = getModel(
+    ModelNames.SocialCategory,
+    socialCategorySchema
+);

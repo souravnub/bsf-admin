@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { genHash } from "../utils";
+import { getModel, ModelNames } from ".";
 
 const adminSchema = new mongoose.Schema(
     {
@@ -37,5 +38,4 @@ adminSchema.pre("save", async function () {
     this.password = hash;
 });
 
-export const Admin =
-    mongoose.models.Admin || mongoose.model("Admin", adminSchema);
+export const Admin = getModel(ModelNames.Admin, adminSchema);

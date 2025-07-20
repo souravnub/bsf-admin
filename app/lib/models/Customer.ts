@@ -8,6 +8,7 @@ import {
     sendRenderedEmail,
 } from "@/app/ui/login/emails/renderAndSendEmail";
 import OTPEmail from "@/app/ui/login/emails/OTPEmail";
+import { getModel, ModelNames } from ".";
 
 interface ICustomer {
     email: string;
@@ -36,7 +37,7 @@ const customerSchema = new mongoose.Schema(
             {
                 course: {
                     type: mongoose.Schema.Types.ObjectId,
-                    ref: "Course",
+                    ref: ModelNames.Course,
                 },
                 purchaseDate: {
                     type: Date,
@@ -88,5 +89,7 @@ customerSchema.methods.isOTPValid = async function (OTP) {
     return false;
 };
 
-export const Customer: ICustomerModle =
-    mongoose.models.Customer || mongoose.model("Customer", customerSchema);
+export const Customer: ICustomerModle = getModel(
+    ModelNames.Customer,
+    customerSchema
+);

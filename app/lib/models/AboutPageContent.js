@@ -1,4 +1,5 @@
 import { mongoose } from "mongoose";
+import { getModel, ModelNames } from ".";
 
 const AboutPageContentSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -9,6 +10,7 @@ const AboutPageContentSchema = new mongoose.Schema({
     strategy: { type: String, required: true },
 });
 
-export const AboutPageContent =
-    mongoose.models.AboutPageContent ||
-    mongoose.model("AboutPageContent", AboutPageContentSchema);
+export const AboutPageContent = getModel(
+    ModelNames.AboutPageContent,
+    AboutPageContentSchema
+);

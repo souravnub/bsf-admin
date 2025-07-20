@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { getModel, ModelNames } from ".";
 
 const courseCategorySchema = new mongoose.Schema({
     category: {
@@ -7,6 +8,7 @@ const courseCategorySchema = new mongoose.Schema({
     },
 });
 
-export const CourseCategory =
-    mongoose.models.CourseCategory ||
-    mongoose.model("CourseCategory", courseCategorySchema);
+export const CourseCategory = getModel(
+    ModelNames.CourseCategory,
+    courseCategorySchema
+);

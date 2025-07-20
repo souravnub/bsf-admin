@@ -1,9 +1,11 @@
 import mongoose, { Document, Model, Types } from "mongoose";
 
 import { Review } from "./Review";
+import { getModel, ModelNames } from ".";
 
 interface ICourse {
     customers: Types.ObjectId[];
+    instructor: string;
     pageTitle: string;
     pageSubTitle: string;
     image: string;
@@ -41,7 +43,14 @@ const courseSchema = new mongoose.Schema(
         customers: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Customer",
+                ref: ModelNames.Customer,
+            },
+        ],
+
+        instructor: [
+            {
+                type: mongoose.Schema.ObjectId,
+                ref: ModelNames.Instructor,
             },
         ],
 
@@ -86,13 +95,13 @@ const courseSchema = new mongoose.Schema(
 
         category: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "CourseCategory",
+            ref: ModelNames.CourseCategory,
         },
 
         reviews: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Review",
+                ref: ModelNames.Review,
             },
         ],
         prequisites: [
@@ -161,5 +170,4 @@ courseSchema.methods.canCustomerReview = async function (customerId) {
     return reviewerIsCustomer && !customerHaveReview;
 };
 
-export const Course: ICourseModel =
-    mongoose.models.Course || mongoose.model("Course", courseSchema);
+export const Course: ICourseModel = getModel(ModelNames.Course, courseSchema);

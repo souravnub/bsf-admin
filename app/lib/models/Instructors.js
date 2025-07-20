@@ -1,3 +1,5 @@
+import { getModel, ModelNames } from ".";
+
 const { default: mongoose } = require("mongoose");
 
 const InstructorSchema = mongoose.Schema({
@@ -17,6 +19,4 @@ const InstructorSchema = mongoose.Schema({
     description: { type: String },
 });
 
-export const Instructor =
-    mongoose.models.Instructor ||
-    mongoose.model("Instructor", InstructorSchema);
+export const Instructor = getModel(ModelNames.Instructor, InstructorSchema);

@@ -1,3 +1,5 @@
+import { getModel, ModelNames } from ".";
+
 const { default: mongoose } = require("mongoose");
 
 const hiringMsgSchema = new mongoose.Schema({
@@ -11,6 +13,7 @@ const hiringMsgSchema = new mongoose.Schema({
     repliedAt: { type: Date, default: null, expires: 60 * 60 * 24 * 90 },
 });
 
-export const HiringMessage =
-    mongoose.models.HiringMessage ||
-    mongoose.model("HiringMessage", hiringMsgSchema);
+export const HiringMessage = getModel(
+    ModelNames.HiringMessage,
+    hiringMsgSchema
+);

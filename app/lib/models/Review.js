@@ -1,16 +1,17 @@
 import { mongoose, Schema } from "mongoose";
 
 import { Course } from "./Course";
+import { getModel, ModelNames } from ".";
 
 const reviewSchema = new mongoose.Schema(
     {
         customerId: {
             type: Schema.Types.ObjectId,
-            ref: "Customer",
+            ref: ModelNames.Customer,
         },
         courseId: {
             type: Schema.Types.ObjectId,
-            ref: "Course",
+            ref: ModelNames.Course,
         },
         rating: {
             type: Number,
@@ -37,5 +38,4 @@ reviewSchema.post("save", async function () {
     });
 });
 
-export const Review =
-    mongoose.models.Review || mongoose.model("Review", reviewSchema);
+export const Review = getModel(ModelNames.Review, reviewSchema);

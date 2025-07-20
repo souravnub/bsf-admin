@@ -120,7 +120,10 @@ export const fetchCourseCustomers = async (courseId) => {
 export const fetchCourse = async (id) => {
     try {
         connectToDB();
-        const course = await Course.findById(id).populate("category").exec();
+        const course = await Course.findById(id)
+            .populate("category")
+            .populate("instructor")
+            .exec();
         return course;
     } catch (err) {
         throw new Error("Failed to fetch course!");

@@ -1,4 +1,5 @@
 import { mongoose } from "mongoose";
+import { getModel, ModelNames } from ".";
 
 const modalVideoSchema = new mongoose.Schema({
     name: {
@@ -13,5 +14,4 @@ const modalVideoSchema = new mongoose.Schema({
     ],
 });
 
-export const Video =
-    mongoose.models.Video || mongoose.model("Video", modalVideoSchema);
+export const Video = getModel(ModelNames.Video, modalVideoSchema);

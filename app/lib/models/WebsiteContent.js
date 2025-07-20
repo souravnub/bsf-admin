@@ -1,4 +1,5 @@
 import { mongoose } from "mongoose";
+import { getModel, ModelNames } from ".";
 
 const websiteContentSchema = new mongoose.Schema({
     heroText: {
@@ -23,6 +24,7 @@ const websiteContentSchema = new mongoose.Schema({
     footerDescription: { type: String },
 });
 
-export const WebsiteContent =
-    mongoose.models.WebsiteContent ||
-    mongoose.model("WebsiteContent", websiteContentSchema);
+export const WebsiteContent = getModel(
+    ModelNames.WebsiteContent,
+    websiteContentSchema
+);
