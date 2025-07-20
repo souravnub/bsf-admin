@@ -5,7 +5,7 @@ import { Course } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer, ICustomerDocument } from "./models/Customer";
 import { HiringMessage } from "./models/HiringMessages";
-import { Instructor } from "./models/Instructors";
+import { IInstructorDocument, Instructor } from "./models/Instructors";
 import { Review } from "./models/Review";
 import { SocialCategory } from "./models/SocialCategories";
 import { WebsiteContent } from "./models/WebsiteContent";
@@ -122,7 +122,7 @@ export const fetchCourse = async (id) => {
         connectToDB();
         const course = await Course.findById(id)
             .populate("category")
-            .populate("instructor")
+            .populate<{ instructor: IInstructorDocument }>("instructor")
             .exec();
         return course;
     } catch (err) {

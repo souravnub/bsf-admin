@@ -252,6 +252,7 @@ export const addCourse = async (formData) => {
         isActive,
         startDate,
         endDate,
+        instructor,
     } = Object.fromEntries(formData);
 
     const categoryFound = await CourseCategory.findOne({ category: category });
@@ -284,6 +285,7 @@ export const addCourse = async (formData) => {
                     endDate,
                     classDays,
                 },
+                instructor,
                 prequisites,
                 jobOpportunities,
                 price,
@@ -291,11 +293,12 @@ export const addCourse = async (formData) => {
                 pageSubTitle,
                 priceIncludesTax: priceIncludesTax == "on" ? true : false,
                 isInDemand: isInDemand == "on" ? true : false,
-                isActive: isInDemand == "on" ? true : false,
+                isActive: isActive == "on" ? true : false,
             });
 
             await newCourse.save();
         } catch (err) {
+            console.log(err);
             throw new Error("some error occured while adding the course");
         }
     }
@@ -355,6 +358,7 @@ export const updateCourse = async (formData) => {
     const {
         id,
         name,
+        instructor,
         category,
         image1,
         price,
@@ -398,6 +402,7 @@ export const updateCourse = async (formData) => {
             await connectToDB();
             const updateFields = {
                 name,
+                instructor,
                 description,
                 email_link: link,
                 prequisites,

@@ -1,5 +1,5 @@
 import { updateCourse } from "@/app/lib/actions";
-import { fetchCategories, fetchCourse } from "@/app/lib/data";
+import { fetchCategories, fetchCourse, fetchInstructors } from "@/app/lib/data";
 import Category from "@/app/ui/dashboard/courses/addCourseForm/category/category";
 import EditableList from "@/app/ui/dashboard/courses/addCourseForm/editableList/editableList";
 import ImageUpload from "@/app/ui/dashboard/courses/addCourseForm/imageUpload/imageUpload";
@@ -11,8 +11,12 @@ import ColorPicker from "@/app/ui/dashboard/courses/colorPicker/ColorPicker";
 
 const SingleProductPage = async ({ params }) => {
     const { id } = params;
-    const course = await fetchCourse(id);
-    const categories = await fetchCategories();
+
+    const [course, categories, instructors] = await Promise.all([
+        fetchCourse(id),
+        fetchCategories(),
+        fetchInstructors(),
+    ]);
 
     return (
         <div className={styles.container}>
@@ -86,11 +90,26 @@ const SingleProductPage = async ({ params }) => {
                         readOnly
                         value={course.customers.length}
                     />
+
                     <label>Category</label>
                     <Category
                         categories={categories}
                         selected={course.category.category}
                     />
+
+                    <label htmlFor="instructor">Instructor</label>
+                    <select
+                        name="instructor"
+                        id="instructor"
+                        defaultValue={course.instructor.id}
+                    >
+                        {instructors.map((instructor) => (
+                            <option value={instructor.id} key={instructor.id}>
+                                {instructor.name}
+                            </option>
+                        ))}
+                    </select>
+
                     <EditableList
                         list={course.jobOpportunities}
                         title="Job Opporunities"

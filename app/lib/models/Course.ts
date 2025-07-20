@@ -47,12 +47,10 @@ const courseSchema = new mongoose.Schema(
             },
         ],
 
-        instructor: [
-            {
-                type: mongoose.Schema.ObjectId,
-                ref: ModelNames.Instructor,
-            },
-        ],
+        instructor: {
+            type: mongoose.Schema.ObjectId,
+            ref: ModelNames.Instructor,
+        },
 
         pageTitle: { type: String, required: true },
         pageSubTitle: { type: String, required: true },

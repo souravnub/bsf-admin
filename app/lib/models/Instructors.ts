@@ -1,6 +1,19 @@
+import { Document, Model } from "mongoose";
 import { getModel, ModelNames } from ".";
 
 const { default: mongoose } = require("mongoose");
+
+interface IInstructor {
+    imgUrl: string;
+    email: string;
+    name: string;
+    role: string;
+    socials: { name: string; href: string }[];
+    description: string;
+}
+
+export interface IInstructorDocument extends IInstructor, Document {}
+interface IInstructorModel extends Model<IInstructor> {}
 
 const InstructorSchema = mongoose.Schema({
     imgUrl: {
@@ -19,4 +32,7 @@ const InstructorSchema = mongoose.Schema({
     description: { type: String },
 });
 
-export const Instructor = getModel(ModelNames.Instructor, InstructorSchema);
+export const Instructor: IInstructorModel = getModel(
+    ModelNames.Instructor,
+    InstructorSchema
+);

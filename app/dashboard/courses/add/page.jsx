@@ -1,5 +1,5 @@
 import { addCourse } from "@/app/lib/actions";
-import { fetchCategories } from "@/app/lib/data";
+import { fetchCategories, fetchInstructors } from "@/app/lib/data";
 import Category from "@/app/ui/dashboard/courses/addCourseForm/category/category";
 import styles from "@/app/ui/dashboard/courses/addCourse/addCourse.module.css";
 import Prerequisites from "@/app/ui/dashboard/courses/addCourseForm/prerequisites/prerequisites";
@@ -8,7 +8,13 @@ import EditableList from "@/app/ui/dashboard/courses/addCourseForm/editableList/
 import CourseSchedulePicker from "@/app/ui/dashboard/courses/addCourseForm/courseSchedulePicker/CourseSchedulePicker";
 
 const AddCoursePage = async () => {
-    const categories = await fetchCategories();
+    const [instructors, categories] = await Promise.all([
+        fetchInstructors(),
+        fetchCategories(),
+    ]);
+
+    console.log("instructors are here", instructors);
+
     const categoriesJSON = JSON.parse(JSON.stringify(categories));
 
     return (
@@ -49,6 +55,21 @@ const AddCoursePage = async () => {
                 <div>
                     <label htmlFor="name">Category*</label>
                     <Category categories={categoriesJSON} />
+                </div>
+
+                <div>
+                    <label htmlFor="instructor">Instructor</label>
+                    <select
+                        name="instructor"
+                        id="instructor"
+                        defaultValue={instructors[0].id}
+                    >
+                        {instructors.map((instructor) => (
+                            <option value={instructor.id} key={instructor.id}>
+                                {instructor.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
 
                 <ImageUpload requiredInput={true} />
