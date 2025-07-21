@@ -97,18 +97,25 @@ const SingleProductPage = async ({ params }) => {
                         selected={course.category.category}
                     />
 
-                    <label htmlFor="instructor">Instructor</label>
-                    <select
-                        name="instructor"
-                        id="instructor"
-                        defaultValue={course.instructor.id}
-                    >
-                        {instructors.map((instructor) => (
-                            <option value={instructor.id} key={instructor.id}>
-                                {instructor.name}
-                            </option>
-                        ))}
-                    </select>
+                    <>
+                        <label htmlFor="instructor">Instructor</label>
+                        <select
+                            name="instructor"
+                            id="instructor"
+                            defaultValue={
+                                course.instructor?.id || instructors[0].id
+                            }
+                        >
+                            {instructors.map((instructor) => (
+                                <option
+                                    value={instructor.id}
+                                    key={instructor.id}
+                                >
+                                    {instructor.name}
+                                </option>
+                            ))}
+                        </select>
+                    </>
 
                     <EditableList
                         list={course.jobOpportunities}
