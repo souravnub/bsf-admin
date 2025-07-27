@@ -107,7 +107,6 @@ export const addInstructor = async (formData) => {
         connectToDB();
         const socialCategories = await SocialCategory.find();
         const socialCategorieNames = socialCategories.map((c) => c.category);
-        console.log(Object.fromEntries(formData));
         const { name, role, email, image1, description } =
             Object.fromEntries(formData);
 
@@ -577,8 +576,6 @@ export const updateAboutContent = async (_, formData) => {
         const { title, description, vission, mission, strategy, video1 } =
             Object.fromEntries(formData);
 
-        console.log(Object.fromEntries(formData));
-
         const dataToUpdate = {
             title,
             description,
@@ -657,7 +654,6 @@ export const updateHomeContent = async (_, formData) => {
 
         if (image1 !== "") {
             const img1 = getS3FileUrl(image1);
-            console.log(homeContent.section.cards[0].bannerImage);
             await deleteFile(
                 getS3FileKey(homeContent.section.cards[0].bannerImage)
             );

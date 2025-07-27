@@ -9,28 +9,45 @@ export async function POST(request) {
 
         const body = await request.json();
 
-        const customerExists = await Customer.findOne({ email: body.email });
+        const customer = await Customer.findOne({ email: body.email });
         const course = await Course.findOne({ _id: body.course });
-        if (customerExists) {
-            const currentDate = new Date();
-            const courseEnrolled = body.course;
 
-            customerExists.courses.push({
+        if (customer) {
+            // case: customer already exists
+
+            const now = new Date();
+            const courseEnrolled = body.course;
+            const isAlreadyEnrolledInCourse = customer.courses.find(
+                (course) => course.course === courseEnrolled
+            );
+
+            if (isAlreadyEnrolledInCourse) {
+                // should be an Invalid State as customer should not be able to enroll for a course twice
+                return NextResponse.json({
+                    message:
+                        "Success. (customer was already enrolled in course)",
+                });
+            }
+
+            customer.courses.push({
                 course: courseEnrolled,
-                purchaseDate: currentDate,
+                purchaseDate: now,
             });
-            course.customers.push(customerExists._id);
+            course.customers.push(customer._id);
 
             await course.save();
-            await customerExists.save();
-            return NextResponse.json({ message: "Success." });
+            const createdCustomer = await customer.save();
+            return NextResponse.json({
+                message: "Success",
+                customer: createdCustomer,
+            });
         } else {
             const customerCourses = [];
-            const currentDate = new Date();
+            const now = new Date();
 
             customerCourses.push({
                 course: body.course,
-                purchaseDate: currentDate,
+                purchaseDate: now,
             });
 
             const customerData = {
@@ -44,15 +61,18 @@ export async function POST(request) {
             course.customers.push(newCustomer._id);
 
             await course.save();
-            await newCustomer.save();
-
-            return NextResponse.json({ message: "Success." });
+            const createdCustomer = await newCustomer.save();
+            return NextResponse.json({
+                message: "Success",
+                customer: createdCustomer,
+            });
         }
     } catch (err) {
+        console.log("error while creating customer.", err);
         return NextResponse.json(
             {
-                errorMessage: "Error creating customer",
-                error: err.message,
+                errorMessage: err.message,
+                error: true,
             },
             { status: 500 }
         );

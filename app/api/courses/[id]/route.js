@@ -12,8 +12,6 @@ export async function GET(request) {
 
         const course = await Course.findById(id).populate("instructor").exec();
 
-        console.log(course);
-
         return NextResponse.json(course);
     } catch (err) {
         console.log(err);

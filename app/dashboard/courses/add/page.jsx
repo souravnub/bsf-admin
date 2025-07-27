@@ -13,8 +13,6 @@ const AddCoursePage = async () => {
         fetchCategories(),
     ]);
 
-    console.log("instructors are here", instructors);
-
     const categoriesJSON = JSON.parse(JSON.stringify(categories));
 
     return (

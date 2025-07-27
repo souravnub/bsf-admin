@@ -25,8 +25,6 @@ export async function GET(request) {
         if (withPagination === "false") {
             const courses = await Course.find();
 
-            console.log("inside here");
-
             return NextResponse.json({
                 courses,
             });

@@ -1,6 +1,6 @@
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
-import mongoose, { Document, Model, Types } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 import Env from "../config/env";
 
 import {
@@ -14,7 +14,7 @@ interface ICustomer {
     email: string;
     name: string;
     courses: {
-        course: Types.ObjectId;
+        course: Schema.Types.ObjectId;
         purchaseDate: mongoose.Date;
     }[];
     otp_token: string;
@@ -22,7 +22,7 @@ interface ICustomer {
 export interface ICustomerDocument extends ICustomer, Document {}
 interface ICustomerModle extends Model<ICustomerDocument> {}
 
-const customerSchema = new mongoose.Schema(
+const customerSchema = new Schema<ICustomer>(
     {
         email: {
             type: String,
@@ -36,7 +36,7 @@ const customerSchema = new mongoose.Schema(
         courses: [
             {
                 course: {
-                    type: mongoose.Schema.Types.ObjectId,
+                    type: Schema.Types.ObjectId,
                     ref: ModelNames.Course,
                 },
                 purchaseDate: {

@@ -13,6 +13,7 @@ export enum ModelNames {
     SocialCategory = "SocialCategory",
     Video = "Video",
     WebsiteContent = "WebsiteContent",
+    Payment = "Payment",
 }
 
 export function getModel(model: ModelNames, schema: Schema) {
