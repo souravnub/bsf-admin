@@ -51,7 +51,7 @@ export async function POST(request) {
             });
 
             const customerData = {
-                email: body.email,
+                email: body.email.toLowerCase(),
                 name: body.name,
                 courses: customerCourses,
             };

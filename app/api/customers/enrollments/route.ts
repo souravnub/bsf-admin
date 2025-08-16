@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         }
 
         const customer = await Customer.findOne({
-            email: customerEmail,
+            email: customerEmail.toLowerCase(),
         });
 
         return NextResponse.json({
