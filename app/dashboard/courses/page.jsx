@@ -4,6 +4,7 @@ import Search from "@/app/ui/dashboard/search/search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { fetchCourses } from "@/app/lib/data";
 import { deleteCourse } from "@/app/lib/actions";
+import { convertToDollars } from "@/app/lib/utils";
 
 const CoursesPage = async ({ searchParams }) => {
     const q = searchParams?.q || "";
@@ -37,7 +38,7 @@ const CoursesPage = async ({ searchParams }) => {
                                     {course.name}
                                 </div>
                             </td>
-                            <td>${course.price}</td>
+                            <td>${convertToDollars(course.price)}</td>
 
                             <td>{course.customers.length}</td>
                             <td>{course.category.category}</td>

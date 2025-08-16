@@ -108,6 +108,7 @@ const courseSchema = new mongoose.Schema(
             },
         ],
 
+        // course price in cents
         price: {
             type: Number,
             required: true,

@@ -139,3 +139,10 @@ export function getRandomColor() {
     const randomIdx = Math.floor(Math.random() * colors.length);
     return colors[randomIdx];
 }
+
+export function convertToDollars(amountInCents: number) {
+    return amountInCents / 100;
+}
+export function convertToCents(amountInDollars: number) {
+    return amountInDollars * 100;
+}

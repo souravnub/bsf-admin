@@ -13,21 +13,30 @@ const CustomerInfo = async ({ params }) => {
             <p className={styles.email}>{information.email}</p>
             <h3 className={styles.title}>Courses enrolled in:</h3>
 
-            {information.courses.map((course) => (
-                <div
-                    key={JSON.stringify(course._id)}
-                    className={styles.linksContainer}
-                >
-                    <Link
-                        href={`https://bsfsystems.com/courses/${course.course._id}`}
-                        className={styles.link}
-                        target="_blank"
+            {information.courses.map((course) => {
+                if (!course.course)
+                    return (
+                        <div className="text-red-400">
+                            This course was deleted
+                        </div>
+                    );
+
+                return (
+                    <div
+                        key={JSON.stringify(course._id)}
+                        className={styles.linksContainer}
                     >
-                        {course.course.name}
-                        <LiaExternalLinkAltSolid />
-                    </Link>
-                </div>
-            ))}
+                        <Link
+                            href={`https://bsfsystems.com/courses/${course._id}`}
+                            className={styles.link}
+                            target="_blank"
+                        >
+                            {course.course.name}
+                            <LiaExternalLinkAltSolid />
+                        </Link>
+                    </div>
+                );
+            })}
         </div>
     );
 };

@@ -10,7 +10,7 @@ import { Payment } from "./models/Payments";
 import { Review } from "./models/Review";
 import { SocialCategory } from "./models/SocialCategories";
 import { WebsiteContent } from "./models/WebsiteContent";
-import { connectToDB } from "./utils";
+import { connectToDB, convertToDollars } from "./utils";
 import moment from "moment";
 
 export const fetchAdmins = async (q, page) => {
@@ -253,13 +253,13 @@ export const dashboardData = async () => {
         const payments = await Payment.find()
             .populate<{ customerId: ICustomerDocument }>("customerId")
             .populate<{ courseId: ICourseDocument }>("courseId")
-            .sort([["createAt", -1]]);
+            .sort([["createdAt", -1]]);
 
         const latestPayments = payments.slice(0, 3).map((payment) => ({
             customer: payment.customerId.name,
             course: payment.courseId.name,
             date: moment(payment.createdAt).format("YYYY MMMM DD"),
-            amountPaid: payment.amountPaidCents / 100,
+            amountPaid: convertToDollars(payment.amountPaidCents),
         }));
 
         let revenue = payments.reduce(
@@ -273,7 +273,8 @@ export const dashboardData = async () => {
         return {
             studentsCount,
             latestPayments,
-            revenue: revenue / 100,
+            // revenue in dollars
+            revenue: convertToDollars(revenue),
             totalCoursesSold,
         };
     } catch (error) {

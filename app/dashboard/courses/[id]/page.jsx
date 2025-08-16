@@ -8,6 +8,7 @@ import styles from "@/app/ui/dashboard/courses/singleCourse/singleCourse.module.
 import addCoursePageStyles from "@/app/ui/dashboard/courses/addCourse/addCourse.module.css";
 import CourseSchedulePicker from "@/app/ui/dashboard/courses/addCourseForm/courseSchedulePicker/CourseSchedulePicker";
 import ColorPicker from "@/app/ui/dashboard/courses/colorPicker/ColorPicker";
+import { convertToDollars } from "@/app/lib/utils";
 
 const SingleProductPage = async ({ params }) => {
     const { id } = params;
@@ -72,7 +73,7 @@ const SingleProductPage = async ({ params }) => {
                     <input
                         type="number"
                         name="price"
-                        defaultValue={course.price}
+                        defaultValue={convertToDollars(course.price)}
                     />
                     <div class={addCoursePageStyles.taxContainer}>
                         <label htmlFor="tax">Price includes tax</label>

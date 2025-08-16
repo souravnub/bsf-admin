@@ -7,6 +7,7 @@ import { WebsiteContent } from "./models/WebsiteContent";
 import { CourseCategory } from "./models/CourseCategory";
 import {
     connectToDB,
+    convertToCents,
     deleteFileFromS3,
     getS3FileKey,
     getS3FileUrl,
@@ -287,7 +288,7 @@ export const addCourse = async (formData) => {
                 instructor,
                 prequisites,
                 jobOpportunities,
-                price: price,
+                price: convertToCents(price),
                 pageTitle,
                 pageSubTitle,
                 priceIncludesTax: priceIncludesTax == "on" ? true : false,
@@ -405,7 +406,7 @@ export const updateCourse = async (formData) => {
                 description,
                 email_link: link,
                 prequisites,
-                price,
+                price: convertToCents(price),
                 category: newCategoryId ? newCategoryId : categoryFound._id,
                 learnings: {
                     tools,
