@@ -19,12 +19,13 @@ export async function POST(request: NextRequest) {
         const payment = await Payment.create({
             courseId,
             customerId,
-            amountPaid,
+            amountPaidCents: amountPaid,
             isConfirmationEmailSent: isEmailSent,
         });
 
         return NextResponse.json({ success: true, payment });
     } catch (error) {
-        return NextResponse.json({ success: false, error });
+        console.log(error);
+        return NextResponse.json({ success: false, error }, { status: 500 });
     }
 }
