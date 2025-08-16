@@ -5,6 +5,7 @@ import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { fetchCourses } from "@/app/lib/data";
 import { deleteCourse } from "@/app/lib/actions";
 import { convertToDollars } from "@/app/lib/utils";
+import { FaCircle } from "react-icons/fa";
 
 const CoursesPage = async ({ searchParams }) => {
     const q = searchParams?.q || "";
@@ -22,6 +23,7 @@ const CoursesPage = async ({ searchParams }) => {
             <table className={styles.table}>
                 <thead>
                     <tr>
+                        <td>is Shown</td>
                         <td>Name</td>
                         <td>Price</td>
                         <td>Students Enrolled</td>
@@ -33,6 +35,15 @@ const CoursesPage = async ({ searchParams }) => {
                 <tbody>
                     {courses.map((course) => (
                         <tr key={JSON.stringify(course._id)}>
+                            <td>
+                                <FaCircle
+                                    className={` text-xs ${
+                                        course.isVisibleToCustomers
+                                            ? "text-green-400"
+                                            : "text-red-400"
+                                    }`}
+                                ></FaCircle>
+                            </td>
                             <td>
                                 <div className={styles.product}>
                                     {course.name}

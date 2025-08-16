@@ -250,6 +250,7 @@ export const addCourse = async (formData) => {
         priceIncludesTax,
         isInDemand,
         isActive,
+        isVisibleToCustomers,
         startDate,
         endDate,
         instructor,
@@ -294,6 +295,8 @@ export const addCourse = async (formData) => {
                 priceIncludesTax: priceIncludesTax == "on" ? true : false,
                 isInDemand: isInDemand == "on" ? true : false,
                 isActive: isActive == "on" ? true : false,
+                isVisibleToCustomers:
+                    isVisibleToCustomers == "on" ? true : false,
             });
 
             await newCourse.save();
@@ -371,6 +374,7 @@ export const updateCourse = async (formData) => {
         priceIncludesTax,
         isInDemand,
         isActive,
+        isVisibleToCustomers,
         background,
         textColor,
     } = Object.fromEntries(formData);
@@ -423,6 +427,8 @@ export const updateCourse = async (formData) => {
                 priceIncludesTax: priceIncludesTax == "true" ? true : false,
                 isInDemand: isInDemand == "on" ? true : false,
                 isActive: isActive == "on" ? true : false,
+                isVisibleToCustomers:
+                    isVisibleToCustomers == "on" ? true : false,
                 background,
                 textColor,
             };

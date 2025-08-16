@@ -32,6 +32,17 @@ const SingleProductPage = async ({ params }) => {
                         />
                     </div>
 
+                    <div className={addCoursePageStyles.demandInputContainer}>
+                        <label htmlFor="isActive">
+                            Is course visible to customers?
+                        </label>
+                        <input
+                            type="checkbox"
+                            name="isVisibleToCustomers"
+                            defaultChecked={course.isVisibleToCustomers}
+                        />
+                    </div>
+
                     <div className={styles.infoContainer}>
                         <ImageUpload source={course.image} />
                         {course.title}

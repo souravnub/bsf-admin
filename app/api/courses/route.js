@@ -5,7 +5,7 @@ import { CourseCategory } from "@/app/lib/models/CourseCategory";
 
 export async function GET(request) {
     try {
-        const page = request.nextUrl.searchParams.get(["page"]);
+        const page = request.nextUrl.searchParams.get(["page"]) || 1;
         const sortBy = request.nextUrl.searchParams.get(["sortBy"]);
         const category = request.nextUrl.searchParams.get(["category"]);
         const jobs = request.nextUrl.searchParams.get(["jobs"]);
@@ -14,8 +14,8 @@ export async function GET(request) {
         ]);
 
         connectToDB();
-        const ITEM_PER_PAGE = 10;
-        let query = Course.find({})
+        const ITEM_PER_PAGE = 9;
+        let query = Course.find({ isVisibleToCustomers: true })
             .select(
                 "name price description image category background textColor schedule isActive"
             )
@@ -23,14 +23,14 @@ export async function GET(request) {
             .sort({ isActive: -1 });
 
         if (withPagination === "false") {
-            const courses = await Course.find();
+            const courses = await Course.find({ isVisibleToCustomers: true });
 
             return NextResponse.json({
                 courses,
             });
         }
 
-        let countQuery = Course.find({});
+        let countQuery = Course.find({ isVisibleToCustomers: true });
 
         switch (sortBy) {
             case "latest":
@@ -49,7 +49,7 @@ export async function GET(request) {
 
         // Apply pagination
         query = query.limit(ITEM_PER_PAGE).skip(ITEM_PER_PAGE * (page - 1));
-        countQuery = countQuery.countDocuments();
+        countQuery = countQuery.countDocuments({ isVisibleToCustomers: true });
 
         if (category) {
             const categories = category.split(","); // Split categories by comma
@@ -61,12 +61,16 @@ export async function GET(request) {
 
             if (categoryIDs && categoryIDs.length > 0) {
                 query = query
-                    .find({ category: { $in: categoryIDs } })
+                    .find({
+                        category: { $in: categoryIDs },
+                        isVisibleToCustomers: true,
+                    })
                     .select("name price description image category")
                     .populate("category");
                 countQuery = countQuery
                     .find({
                         category: { $in: categoryIDs },
+                        isVisibleToCustomers: true,
                     })
                     .select("name price description image category")
                     .populate("category");
@@ -78,11 +82,17 @@ export async function GET(request) {
 
             // Find courses where jobOpportunities array contains any of the provided jobs
             query = query
-                .find({ jobOpportunities: { $in: jobOpportunities } })
+                .find({
+                    jobOpportunities: { $in: jobOpportunities },
+                    isVisibleToCustomers: true,
+                })
                 .select("name price description image category")
                 .populate("category");
             countQuery = countQuery
-                .find({ jobOpportunities: { $in: jobOpportunities } })
+                .find({
+                    jobOpportunities: { $in: jobOpportunities },
+                    isVisibleToCustomers: true,
+                })
                 .select("name price description image category")
                 .populate("category");
         }

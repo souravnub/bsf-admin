@@ -23,6 +23,17 @@ const AddCoursePage = async () => {
                     <input type="checkbox" name="isActive" id="isActive" />
                 </div>
 
+                <div className={styles.demandInputContainer}>
+                    <label htmlFor="isActive">
+                        Is coures visible to customers?
+                    </label>
+                    <input
+                        type="checkbox"
+                        name="isVisibleToCustomers"
+                        id="isVisibleToCustomers"
+                    />
+                </div>
+
                 <div>
                     <label htmlFor="name">Course Name*</label>
                     <input type="text" name="name" id="name" required />

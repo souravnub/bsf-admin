@@ -33,6 +33,7 @@ interface ICourse {
     background: string;
     textColor: string;
     isActive: boolean;
+    isVisibleToCustomers: boolean;
 }
 
 export interface ICourseDocument extends ICourse, Document {}
@@ -135,6 +136,11 @@ const courseSchema = new mongoose.Schema(
         isActive: {
             type: Boolean,
             default: false,
+            required: true,
+        },
+        isVisibleToCustomers: {
+            type: Boolean,
+            default: true,
             required: true,
         },
     },
