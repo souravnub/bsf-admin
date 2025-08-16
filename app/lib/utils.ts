@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import {
     DeleteObjectCommand,
     PutObjectCommand,
@@ -7,13 +7,20 @@ import {
 } from "@aws-sdk/client-s3";
 import Env from "./config/env";
 
-const connection = {};
+let connection: {
+    isConnected: boolean;
+    connectState?: mongoose.ConnectionStates;
+} = { isConnected: false };
 
 export const connectToDB = async () => {
     try {
         if (connection.isConnected) return;
         const db = await mongoose.connect(process.env.MONGO);
-        connection.isConnected = db.connections[0].readyState;
+
+        connection = {
+            isConnected: true,
+            connectState: db.connections[0].readyState,
+        };
     } catch (error) {
         throw new Error(error);
     }
@@ -73,4 +80,62 @@ export function isURL(text) {
 
     // Test the provided text against the regular expression
     return urlRegex.test(text);
+}
+
+export function getRandomColor() {
+    const colors = [
+        "#FF6633",
+        "#FFB399",
+        "#FF33FF",
+        "#FFFF99",
+        "#00B3E6",
+        "#E6B333",
+        "#3366E6",
+        "#999966",
+        "#99FF99",
+        "#B34D4D",
+        "#80B300",
+        "#809900",
+        "#E6B3B3",
+        "#6680B3",
+        "#66991A",
+        "#FF99E6",
+        "#CCFF1A",
+        "#FF1A66",
+        "#E6331A",
+        "#33FFCC",
+        "#66994D",
+        "#B366CC",
+        "#4D8000",
+        "#B33300",
+        "#CC80CC",
+        "#66664D",
+        "#991AFF",
+        "#E666FF",
+        "#4DB3FF",
+        "#1AB399",
+        "#E666B3",
+        "#33991A",
+        "#CC9999",
+        "#B3B31A",
+        "#00E680",
+        "#4D8066",
+        "#809980",
+        "#E6FF80",
+        "#1AFF33",
+        "#999933",
+        "#FF3380",
+        "#CCCC00",
+        "#66E64D",
+        "#4D80CC",
+        "#9900B3",
+        "#E64D66",
+        "#4DB380",
+        "#FF4D4D",
+        "#99E6E6",
+        "#6666FF",
+    ];
+
+    const randomIdx = Math.floor(Math.random() * colors.length);
+    return colors[randomIdx];
 }

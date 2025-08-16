@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectToDB } from "../../../lib/utils.js";
+import { connectToDB } from "../../../lib/utils";
 import { Course } from "../../../lib/models/Course";
 // import Instructor Model here, because was getting error: Instructor schema haven't been registered yet.
 import { Instructor } from "@/app/lib/models/Instructors";

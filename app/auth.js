@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { authConfig } from "./authconfig";
 import { connectToDB } from "./lib/utils";
 import { Admin } from "./lib/models/Admin";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 const login = async (credentials) => {
     try {
         connectToDB();

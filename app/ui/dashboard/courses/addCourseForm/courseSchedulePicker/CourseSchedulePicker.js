@@ -5,7 +5,7 @@ import styles from "./courseSchedulePicker.module.css";
 
 const CourseSchedulePicker = ({ info: aInfo }) => {
     const [isClassDaysShown, setIsClassDaysShown] = useState(false);
-    const [info, setInfo] = useState(
+    const [info] = useState(
         aInfo || {
             start: "",
             end: "",

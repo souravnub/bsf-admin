@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { connectToDB } from "../../../lib/utils.js";
+import { connectToDB } from "../../../lib/utils";
 import { Course } from "../../../lib/models/Course";
 
 export async function GET(request) {

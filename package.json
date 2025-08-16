@@ -16,7 +16,7 @@
         "@react-email/hr": "0.0.7",
         "@react-email/text": "0.0.7",
         "@tailwindcss/postcss": "^4.1.5",
-        "bcrypt": "5.1.1",
+        "bcryptjs": "^3.0.2",
         "cloudinary": "^1.41.0",
         "crypto": "^1.0.1",
         "crypto-random-string": "^5.0.0",

@@ -18,7 +18,7 @@ import { signIn } from "../auth";
 import { Video } from "./models/Video";
 import Env from "./config/env";
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
 
@@ -287,7 +287,7 @@ export const addCourse = async (formData) => {
                 instructor,
                 prequisites,
                 jobOpportunities,
-                price,
+                price: price,
                 pageTitle,
                 pageSubTitle,
                 priceIncludesTax: priceIncludesTax == "on" ? true : false,

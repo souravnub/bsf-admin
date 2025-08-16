@@ -35,7 +35,7 @@ interface ICourse {
     isActive: boolean;
 }
 
-interface ICourseDocument extends ICourse, Document {}
+export interface ICourseDocument extends ICourse, Document {}
 interface ICourseModel extends Model<ICourseDocument> {}
 
 const courseSchema = new mongoose.Schema(

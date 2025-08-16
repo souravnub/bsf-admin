@@ -2,7 +2,6 @@
 
 import { uploadFile } from "@/app/lib/actions";
 import styles from "./imageUpload.module.css";
-import Image from "next/image";
 import React, { useRef, useState } from "react";
 
 const ImageUpload = ({ index = 0, requiredInput, source }) => {

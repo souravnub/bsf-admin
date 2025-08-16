@@ -1,11 +1,12 @@
 import { AboutPageContent } from "./models/AboutPageContent";
 import { Admin } from "./models/Admin";
 import { Contact } from "./models/Contact";
-import { Course } from "./models/Course";
+import { Course, ICourseDocument } from "./models/Course";
 import { CourseCategory } from "./models/CourseCategory";
 import { Customer, ICustomerDocument } from "./models/Customer";
 import { HiringMessage } from "./models/HiringMessages";
 import { IInstructorDocument, Instructor } from "./models/Instructors";
+import { Payment } from "./models/Payments";
 import { Review } from "./models/Review";
 import { SocialCategory } from "./models/SocialCategories";
 import { WebsiteContent } from "./models/WebsiteContent";
@@ -249,47 +250,199 @@ export const dashboardData = async () => {
         connectToDB();
 
         const studentsCount = await Customer.countDocuments();
-        const courses = await Course.find().populate<{
-            customers: ICustomerDocument[];
-        }>("customers", "email");
+        const payments = await Payment.find()
+            .populate<{ customerId: ICustomerDocument }>("customerId")
+            .populate<{ courseId: ICourseDocument }>("courseId")
+            .sort([["createAt", -1]]);
 
-        let totalRevenue = 0;
-        let totalCoursesSold = 0;
+        const latestPayments = payments.slice(0, 3).map((payment) => ({
+            customer: payment.customerId.name,
+            course: payment.courseId.name,
+            date: moment(payment.createdAt).format("YYYY MMMM DD"),
+            amountPaid: payment.amountPaidCents / 100,
+        }));
 
-        courses.forEach((course) => {
-            const courseCustomers = course.customers.map(
-                (customer) => customer.email
-            );
-            const uniqueCustomers = new Set(courseCustomers);
-            const courseRevenue = course.price * uniqueCustomers.size;
+        let revenue = payments.reduce(
+            (accumulator, paymentDoc) =>
+                accumulator + paymentDoc.amountPaidCents,
+            0
+        );
 
-            totalRevenue += courseRevenue;
-            totalCoursesSold += uniqueCustomers.size;
-        });
+        let totalCoursesSold = payments.length;
 
-        const data = [
-            {
-                id: 1,
-                title: "Total Students",
-                number: studentsCount,
-            },
-            {
-                id: 2,
-                title: "Revenue",
-                number: "$" + totalRevenue,
-            },
-            {
-                id: 3,
-                title: "Total Courses Sold",
-                number: totalCoursesSold,
-            },
-        ];
-
-        return data;
+        return {
+            studentsCount,
+            latestPayments,
+            revenue: revenue / 100,
+            totalCoursesSold,
+        };
     } catch (error) {
         console.error("Error in dashboard data:", error);
         throw error;
     }
+};
+
+export type DashboardChartData = Record<string, number>[];
+
+export const getDashboardChartData = async (): Promise<DashboardChartData> => {
+    await connectToDB();
+
+    const dataForChart = await Payment.aggregate([
+        // Step 1: Get all courses once
+        {
+            $facet: {
+                courseList: [
+                    {
+                        $lookup: {
+                            from: "courses",
+                            pipeline: [{ $project: { _id: 1, name: 1 } }],
+                            as: "courses",
+                        },
+                    },
+                    { $unwind: "$courses" },
+                    { $replaceRoot: { newRoot: "$courses" } },
+                ],
+                sales: [
+                    {
+                        $group: {
+                            _id: {
+                                month: { $month: "$createdAt" },
+                                courseId: "$courseId",
+                            },
+                            totalAmount: { $sum: "$amountPaidCents" },
+                        },
+                    },
+                    {
+                        $set: {
+                            totalAmount: { $divide: ["$totalAmount", 100] },
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: "courses",
+                            localField: "_id.courseId",
+                            foreignField: "_id",
+                            as: "course",
+                        },
+                    },
+                    { $unwind: "$course" },
+                    {
+                        $project: {
+                            month: "$_id.month",
+                            courseName: "$course.name",
+                            totalAmount: 1,
+                        },
+                    },
+                ],
+            },
+        },
+
+        // Step 2: Cross join months and courses
+        {
+            $project: {
+                courseList: 1,
+                sales: 1,
+                months: [
+                    { num: 1, name: "jan" },
+                    { num: 2, name: "feb" },
+                    { num: 3, name: "mar" },
+                    { num: 4, name: "apr" },
+                    { num: 5, name: "may" },
+                    { num: 6, name: "jun" },
+                    { num: 7, name: "jul" },
+                    { num: 8, name: "aug" },
+                    { num: 9, name: "sep" },
+                    { num: 10, name: "oct" },
+                    { num: 11, name: "nov" },
+                    { num: 12, name: "dec" },
+                ],
+            },
+        },
+
+        // Step 3: For each month, fill in all courses
+        {
+            $project: {
+                months: {
+                    $map: {
+                        input: "$months",
+                        as: "m",
+                        in: {
+                            month: "$$m.name",
+                            courses: {
+                                $map: {
+                                    input: "$courseList",
+                                    as: "c",
+                                    in: {
+                                        k: "$$c.name",
+                                        v: {
+                                            $let: {
+                                                vars: {
+                                                    found: {
+                                                        $first: {
+                                                            $filter: {
+                                                                input: "$sales",
+                                                                cond: {
+                                                                    $and: [
+                                                                        {
+                                                                            $eq: [
+                                                                                "$$this.month",
+                                                                                "$$m.num",
+                                                                            ],
+                                                                        },
+                                                                        {
+                                                                            $eq: [
+                                                                                "$$this.courseName",
+                                                                                "$$c.name",
+                                                                            ],
+                                                                        },
+                                                                    ],
+                                                                },
+                                                                as: "this",
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                in: {
+                                                    $ifNull: [
+                                                        "$$found.totalAmount",
+                                                        0,
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+
+        // Step 4: Convert course array into object
+        {
+            $project: {
+                months: {
+                    $map: {
+                        input: "$months",
+                        as: "m",
+                        in: {
+                            $mergeObjects: [
+                                { month: "$$m.month" },
+                                { $arrayToObject: "$$m.courses" },
+                            ],
+                        },
+                    },
+                },
+            },
+        },
+
+        // Step 5: Flatten result
+        { $unwind: "$months" },
+        { $replaceRoot: { newRoot: "$months" } },
+    ]);
+
+    return dataForChart as unknown as DashboardChartData;
 };
 
 export const getLatestTransactions = async () => {

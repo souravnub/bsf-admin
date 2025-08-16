@@ -6,6 +6,7 @@ interface IPayment {
     customerId: Schema.Types.ObjectId;
     amountPaidCents: number;
     isConfirmationEmailSent: boolean;
+    createdAt: Date;
 }
 export interface IPaymentDocument extends IPayment, Document {}
 interface IPaymentModel extends Model<IPaymentDocument> {}

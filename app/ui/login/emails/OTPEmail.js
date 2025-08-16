@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Html, Button } from "@react-email/components";
+import { Html } from "@react-email/components";
 import { Heading } from "@react-email/heading";
 import { Text } from "@react-email/text";
 import { Hr } from "@react-email/hr";
