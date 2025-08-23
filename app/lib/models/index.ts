@@ -14,6 +14,7 @@ export enum ModelNames {
     Video = "Video",
     WebsiteContent = "WebsiteContent",
     Payment = "Payment",
+    NewsletterSubscription = "NewsletterSubscription",
 }
 
 export function getModel(model: ModelNames, schema: Schema) {
