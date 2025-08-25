@@ -23,25 +23,21 @@ import bcrypt from "bcryptjs";
 import cryptoRandomString from "crypto-random-string";
 import Cryptr from "cryptr";
 
-import {
-    renderEmailHtml,
-    sendRenderedEmail,
-} from "../ui/login/emails/renderAndSendEmail";
-import ForgotPasswordEmail from "../ui/login/emails/ForgotPasswordEmail";
+import ForgotPasswordEmail from "./emails/templates/ForgotPasswordEmail";
 import { Contact } from "./models/Contact";
 import { Customer } from "./models/Customer";
-import ReplyEmail from "../ui/login/emails/ReplyEmail";
-import EmailToAll from "../ui/login/emails/EmailToAll";
+import ReplyEmail from "./emails/templates/ReplyEmail";
+import EmailToAll from "./emails/templates/EmailToAll";
 import { AboutPageContent } from "./models/AboutPageContent";
-import EmailToEnrollees from "../ui/login/emails/EmailToEnrollees";
+import EmailToEnrollees from "./emails/templates/EmailToEnrollees";
 import { Review } from "./models/Review";
 import { HiringMessage } from "./models/HiringMessages";
 import { Instructor } from "./models/Instructors";
-import HiringReqReplyEmail from "../ui/login/emails/HiringReqReplyEmail";
+import HiringReqReplyEmail from "./emails/templates/HiringReqReplyEmail";
 import { SocialCategory } from "./models/SocialCategories";
 import { NewsletterActions } from "../api/newsletter/types";
 import { NewsletterSubscription } from "./models/NewsletterSubscriptions";
-import { MongooseError } from "mongoose";
+import { renderEmailHtml, sendEmail } from "./emails";
 
 export const addAdmin = async (formData) => {
     const { username, password, email, isAdmin } = Object.fromEntries(formData);
@@ -749,7 +745,7 @@ export const sendLink = async (prevState, formData) => {
                 ForgotPasswordEmail
             );
 
-            await sendRenderedEmail(
+            await sendEmail(
                 email,
                 "Reset Password | BSF Systems",
 
@@ -815,11 +811,7 @@ export const sendReplyToHiringReq = async (prevState, formData) => {
             },
             HiringReqReplyEmail
         );
-        await sendRenderedEmail(
-            email,
-            "Response from BSF systems",
-            renderedEmail
-        );
+        await sendEmail(email, "Response from BSF systems", renderedEmail);
         revalidatePath("/dashboard/hire-alumni");
     } catch (err) {
         console.error(err);
@@ -852,7 +844,7 @@ export const sendReply = async (prevState, formData) => {
             ReplyEmail
         );
 
-        await sendRenderedEmail(email, "Reply from BSF Systems", renderedEmail);
+        await sendEmail(email, "Reply from BSF Systems", renderedEmail);
         revalidatePath("/dashboard/messages");
         return "Reply has been sent successfully.";
     } catch (error) {
@@ -897,7 +889,7 @@ export const sendToAll = async (prevState, formData) => {
             EmailToAll
         );
 
-        await sendRenderedEmail(emails, subject, renderedEmail);
+        await sendEmail(emails, subject, renderedEmail);
 
         return "Email sent successfully.";
     } catch (error) {
@@ -959,7 +951,7 @@ export const sendToSelected = async (prevState, formData) => {
             EmailToEnrollees
         );
 
-        await sendRenderedEmail(emails, subject, renderedEmail);
+        await sendEmail(emails, subject, renderedEmail);
 
         return "Email sent successfully.";
     } catch (error) {

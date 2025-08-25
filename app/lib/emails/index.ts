@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
-import Env from "./env";
+import { render } from "@react-email/render";
+import { JSX } from "react";
 
 const smtpConfig = {
     host: process.env.SMTP_HOST,
@@ -16,9 +17,18 @@ const smtpConfig = {
 
 export const transporter = nodemailer.createTransport(smtpConfig);
 
-export const sendEmail = async (to, subject, html) => {
+export const renderEmailHtml = (
+    templateProps: any,
+    template: (templateProps: any) => JSX.Element
+) => render(template(templateProps));
+
+export const sendEmail = async (
+    to: string | string[],
+    subject: string,
+    html: string
+) => {
     const mailData = {
-        from: Env.EMAIL_FROM,
+        from: process.env.EMAIL_FROM,
         to,
         subject,
         html,

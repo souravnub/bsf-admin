@@ -3,12 +3,9 @@ import Cryptr from "cryptr";
 import mongoose, { Document, Model, Schema } from "mongoose";
 import Env from "../config/env";
 
-import {
-    renderEmailHtml,
-    sendRenderedEmail,
-} from "@/app/ui/login/emails/renderAndSendEmail";
-import OTPEmail from "@/app/ui/login/emails/OTPEmail";
+import OTPEmail from "@/app/lib/emails/templates/OTPEmail";
 import { getModel, ModelNames } from ".";
+import { renderEmailHtml, sendEmail } from "../emails";
 
 interface ICustomer {
     email: string;
@@ -70,7 +67,7 @@ customerSchema.methods.genAndSendOTP = async function () {
         OTPEmail
     );
 
-    await sendRenderedEmail(
+    await sendEmail(
         this.email,
         "Email Verification | BSF Systems",
 
