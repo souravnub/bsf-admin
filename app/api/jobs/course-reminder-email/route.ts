@@ -1,7 +1,9 @@
 import { renderEmailHtml, sendEmail } from "@/app/lib/emails";
 import CourseReminderEmail from "@/app/lib/emails/templates/CourseReminderEmail";
 import { Course } from "@/app/lib/models/Course";
+import { Customer } from "@/app/lib/models/Customer";
 import { NewsletterSubscription } from "@/app/lib/models/NewsletterSubscriptions";
+import { Payment } from "@/app/lib/models/Payments";
 import { connectToDB } from "@/app/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -35,25 +37,67 @@ export async function GET(request: NextRequest) {
             }
         });
 
-        const emailPromises = newsletterSubscriptions.map((subscription) => {
+        for await (const subscription of newsletterSubscriptions) {
+            const customer = await Customer.findOne({
+                email: subscription.email,
+            });
+
+            if (!customer) {
+                const emailContent = renderEmailHtml(
+                    {
+                        name: subscription.name,
+                        upcomingCourses: coursesToSendReminderFor,
+                    },
+                    CourseReminderEmail
+                );
+
+                await sendEmail(
+                    subscription.email,
+                    "Wohoo! Reminder for courses",
+                    emailContent
+                );
+            }
+
+            const payments = await Payment.find({
+                customerId: customer._id,
+            });
+
+            const coursesNotToSendInReminder = payments.map((payment) =>
+                payment.courseId.toString()
+            );
+
+            const coursesToSendInReminder = coursesToSendReminderFor.filter(
+                (course) => {
+                    if (
+                        !coursesNotToSendInReminder.includes(
+                            course._id.toString()
+                        )
+                    ) {
+                        return course;
+                    }
+                }
+            );
+
+            if (coursesToSendInReminder.length === 0) {
+                continue;
+            }
+
             const emailContent = renderEmailHtml(
                 {
                     name: subscription.name,
-                    upcomingCourses: coursesToSendReminderFor,
+                    upcomingCourses: coursesToSendInReminder,
                 },
                 CourseReminderEmail
             );
 
-            return sendEmail(
+            await sendEmail(
                 subscription.email,
                 "Wohoo! Reminder for courses",
                 emailContent
             );
-        });
+        }
 
-        await Promise.all(emailPromises);
-
-        return NextResponse.json({ success: true, message: "reminder sent" });
+        return NextResponse.json({ success: true, message: "reminders sent" });
     } catch (err) {
         return NextResponse.json(
             {
