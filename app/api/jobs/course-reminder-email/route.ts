@@ -60,47 +60,51 @@ export async function GET(request: NextRequest) {
             }
         });
 
-        for await (const subscription of newsletterSubscriptions) {
-            const customer = await Customer.findOne({
-                email: subscription.email,
-            });
+        const emailPromises = newsletterSubscriptions.map(
+            async (subscription) => {
+                const customer = await Customer.findOne({
+                    email: subscription.email,
+                });
 
-            if (!customer) {
-                await sendCourseReminderEmial(
+                if (!customer) {
+                    await sendCourseReminderEmial(
+                        subscription,
+                        coursesToSendReminderFor
+                    );
+                }
+
+                const payments = await Payment.find({
+                    customerId: customer._id,
+                });
+
+                const coursesNotToSendInReminder = payments.map((payment) =>
+                    payment.courseId.toString()
+                );
+
+                const coursesToSendInReminder = coursesToSendReminderFor.filter(
+                    (course) => {
+                        if (
+                            !coursesNotToSendInReminder.includes(
+                                course._id.toString()
+                            )
+                        ) {
+                            return course;
+                        }
+                    }
+                );
+
+                if (coursesToSendInReminder.length === 0) {
+                    return;
+                }
+
+                return sendCourseReminderEmial(
                     subscription,
-                    coursesToSendReminderFor
+                    coursesToSendInReminder
                 );
             }
+        );
 
-            const payments = await Payment.find({
-                customerId: customer._id,
-            });
-
-            const coursesNotToSendInReminder = payments.map((payment) =>
-                payment.courseId.toString()
-            );
-
-            const coursesToSendInReminder = coursesToSendReminderFor.filter(
-                (course) => {
-                    if (
-                        !coursesNotToSendInReminder.includes(
-                            course._id.toString()
-                        )
-                    ) {
-                        return course;
-                    }
-                }
-            );
-
-            if (coursesToSendInReminder.length === 0) {
-                continue;
-            }
-
-            await sendCourseReminderEmial(
-                subscription,
-                coursesToSendInReminder
-            );
-        }
+        await Promise.all(emailPromises);
 
         return NextResponse.json({ success: true, message: "reminders sent" });
     } catch (err) {
