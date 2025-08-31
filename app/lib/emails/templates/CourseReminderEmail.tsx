@@ -70,7 +70,9 @@ export default function CourseReminderEmail({
                 </Section>
 
                 <Section className="mt-5">
-                    <Text>Don't want to receive these emails anymore?</Text>
+                    <Text>
+                        Don&apos;t want to receive these emails anymore?
+                    </Text>
                     <Link
                         href={`https://bsfsystems.com/success/newsletter?encryptedEmail=${encryptedEmail}`}
                         className="m-0 text-sm"
