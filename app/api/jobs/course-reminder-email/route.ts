@@ -1,11 +1,34 @@
 import { renderEmailHtml, sendEmail } from "@/app/lib/emails";
 import CourseReminderEmail from "@/app/lib/emails/templates/CourseReminderEmail";
-import { Course } from "@/app/lib/models/Course";
+import { Course, ICourseDocument } from "@/app/lib/models/Course";
 import { Customer } from "@/app/lib/models/Customer";
-import { NewsletterSubscription } from "@/app/lib/models/NewsletterSubscriptions";
+import {
+    INewsletterSubscriptionDocument,
+    NewsletterSubscription,
+} from "@/app/lib/models/NewsletterSubscriptions";
 import { Payment } from "@/app/lib/models/Payments";
 import { connectToDB } from "@/app/lib/utils";
 import { NextRequest, NextResponse } from "next/server";
+
+async function sendCourseReminderEmial(
+    subscription: INewsletterSubscriptionDocument,
+    coursesToSendReminderFor: ICourseDocument[]
+) {
+    const emailContent = renderEmailHtml(
+        {
+            name: subscription.name,
+            upcomingCourses: coursesToSendReminderFor,
+            email: subscription.email,
+        },
+        CourseReminderEmail
+    );
+
+    await sendEmail(
+        subscription.email,
+        "Wohoo! Reminder for courses",
+        emailContent
+    );
+}
 
 export async function GET(request: NextRequest) {
     try {
@@ -43,18 +66,9 @@ export async function GET(request: NextRequest) {
             });
 
             if (!customer) {
-                const emailContent = renderEmailHtml(
-                    {
-                        name: subscription.name,
-                        upcomingCourses: coursesToSendReminderFor,
-                    },
-                    CourseReminderEmail
-                );
-
-                await sendEmail(
-                    subscription.email,
-                    "Wohoo! Reminder for courses",
-                    emailContent
+                await sendCourseReminderEmial(
+                    subscription,
+                    coursesToSendReminderFor
                 );
             }
 
@@ -82,18 +96,9 @@ export async function GET(request: NextRequest) {
                 continue;
             }
 
-            const emailContent = renderEmailHtml(
-                {
-                    name: subscription.name,
-                    upcomingCourses: coursesToSendInReminder,
-                },
-                CourseReminderEmail
-            );
-
-            await sendEmail(
-                subscription.email,
-                "Wohoo! Reminder for courses",
-                emailContent
+            await sendCourseReminderEmial(
+                subscription,
+                coursesToSendInReminder
             );
         }
 

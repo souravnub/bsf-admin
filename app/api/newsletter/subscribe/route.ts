@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
-import { validateRequest } from "../schema-validations";
-import { NewsletterActions } from "../types";
-import { handleNewsletterRequest } from "@/app/lib/actions";
+import { handleNewsletterSubscribe } from "@/app/lib/actions";
+import { validateSubscriptionRequest } from "../schema-validations";
 
-export async function POST(
-    request: Request,
-    { params }: { params: Promise<{ action: NewsletterActions }> }
-) {
-    const { action } = await params;
+export async function POST(request: Request) {
     const requestBody = await request.json();
 
-    const validationRes = validateRequest({ action, requestBody });
+    const validationRes = validateSubscriptionRequest({
+        requestBody,
+    });
 
     if ("error" in validationRes) {
         return NextResponse.json(
@@ -25,8 +22,7 @@ export async function POST(
 
     const { name, email } = validationRes;
 
-    const newsletterResponse = await handleNewsletterRequest({
-        action,
+    const newsletterResponse = await handleNewsletterSubscribe({
         data: { name, email },
     });
 

@@ -35,7 +35,6 @@ import { HiringMessage } from "./models/HiringMessages";
 import { Instructor } from "./models/Instructors";
 import HiringReqReplyEmail from "./emails/templates/HiringReqReplyEmail";
 import { SocialCategory } from "./models/SocialCategories";
-import { NewsletterActions } from "../api/newsletter/types";
 import { NewsletterSubscription } from "./models/NewsletterSubscriptions";
 import { renderEmailHtml, sendEmail } from "./emails";
 
@@ -959,66 +958,72 @@ export const sendToSelected = async (prevState, formData) => {
     }
 };
 
-export const handleNewsletterRequest = async (payload: {
-    action: NewsletterActions;
-    data: { name?: string; email: string };
-}): Promise<{ success: boolean; message: string; error?: any }> => {
+export const handleNewsletterSubscribe = async (payload: {
+    data: { name: string; email: string };
+}) => {
     connectToDB();
-    const { action } = payload;
 
-    try {
-        if (action === NewsletterActions.subscribe) {
-            const { email, name } = payload.data;
+    const { email, name } = payload.data;
 
-            const subscription = await NewsletterSubscription.findOne({
-                email,
-            });
+    const subscription = await NewsletterSubscription.findOne({
+        email,
+    });
 
-            if (!subscription) {
-                // action = subscribe &  no subscription exists: create a new subscription
-                await NewsletterSubscription.create({
-                    email,
-                    name,
-                    isSubscribed: true,
-                });
-                return {
-                    success: true,
-                    message: "newsletter updated successfully",
-                };
-            }
-
-            if (subscription.isSubscribed) {
-                // action = subscribe & susbscription exists & the customer is already subscribed: error
-                return {
-                    success: false,
-                    message: "subscription to newsletter already exists",
-                };
-            } else {
-                // action = subscribe & subscription exists but is not subscribed: subscribe the customer
-                await NewsletterSubscription.findOneAndUpdate(
-                    { email: payload.data.email },
-                    { isSubscribed: true }
-                );
-
-                return {
-                    success: true,
-                    message: '"newsletter updated successfully"',
-                };
-            }
-        } else {
-            // action = unsubscribe: update the subscription to unsubscribed
-            await NewsletterSubscription.findOneAndUpdate(
-                { email: payload.data.email },
-                { isSubscribed: false }
-            );
-        }
-
-        return { success: true, message: "newsletter updated successfully" };
-    } catch (error) {
+    if (!subscription) {
+        // action = subscribe &  no subscription exists: create a new subscription
+        await NewsletterSubscription.create({
+            email,
+            name,
+            isSubscribed: true,
+        });
         return {
-            success: false,
-            message: "unknown error while handling newsletter action",
-            error,
+            success: true,
+            message: "newsletter updated successfully",
         };
     }
+
+    if (subscription.isSubscribed) {
+        // action = subscribe & susbscription exists & the customer is already subscribed: error
+        return {
+            success: false,
+            message: "subscription to newsletter already exists",
+        };
+    } else {
+        // action = subscribe & subscription exists but is not subscribed: subscribe the customer
+        await NewsletterSubscription.findOneAndUpdate(
+            { email: payload.data.email },
+            { isSubscribed: true }
+        );
+
+        return {
+            success: true,
+            message: '"newsletter updated successfully"',
+        };
+    }
+};
+
+export const handleNewsletterUnsubscribe = async ({
+    encryptedEmail,
+}: {
+    encryptedEmail: string;
+}) => {
+    const cryptr = new Cryptr(process.env.AUTH_SECRET);
+    const email = cryptr.decrypt(encryptedEmail);
+
+    const updatedDoc = await NewsletterSubscription.findOneAndUpdate(
+        { email },
+        { isSubscribed: false }
+    );
+
+    if (!updatedDoc) {
+        return {
+            success: false,
+            message: "Unabled to update the subscription",
+        };
+    }
+
+    return {
+        success: true,
+        message: "Unsubscribed to newsletter!",
+    };
 };

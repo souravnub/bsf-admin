@@ -1,9 +1,8 @@
-export enum NewsletterActions {
-    subscribe = "subscribe",
-    unsubscribe = "unsubscribe",
-}
-
-export interface RequestBody {
+export interface SubscribeRequestBody {
     name: string;
     email: string;
+}
+
+export interface UnsubscribeRequestBody {
+    encryptedEmail: string;
 }

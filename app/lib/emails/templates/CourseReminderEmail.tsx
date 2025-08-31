@@ -1,4 +1,5 @@
 import React from "react";
+import Cryptr from "cryptr";
 
 import {
     Section,
@@ -14,11 +15,16 @@ import { ICourseDocument } from "../../models/Course";
 
 export default function CourseReminderEmail({
     name,
+    email,
     upcomingCourses,
 }: {
     name: string;
     upcomingCourses: ICourseDocument[];
+    email: string;
 }) {
+    const crypter = new Cryptr(process.env.AUTH_SECRET);
+    const encryptedEmail = crypter.encrypt(email);
+
     return (
         <Tailwind>
             <Section className="my-[16px]">
@@ -64,6 +70,16 @@ export default function CourseReminderEmail({
                 </Section>
 
                 <Section className="mt-5">
+                    <Text>Don't want to receive these emails anymore?</Text>
+                    <Link
+                        href={`https://bsfsystems.com/success/newsletter?encryptedEmail=${encryptedEmail}`}
+                        className="m-0 text-sm"
+                    >
+                        Unsubsribe to newsletter
+                    </Link>
+                </Section>
+
+                <Section className="mt-5">
                     <Row>
                         <strong>Warm regards,</strong>
                     </Row>
@@ -77,7 +93,7 @@ export default function CourseReminderEmail({
                     </Row>
                     <Row>
                         <Link
-                            href="https://bsfsystems.com"
+                            href="https://bsfsystems.com/"
                             className="m-0 text-sm"
                         >
                             BSF Systems Inc.
