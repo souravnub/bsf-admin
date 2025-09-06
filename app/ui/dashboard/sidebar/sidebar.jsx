@@ -14,6 +14,7 @@ import {
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { auth, signOut } from "@/app/auth";
 import { IoPersonAdd } from "react-icons/io5";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
 
 const menuItems = [
     {
@@ -48,6 +49,11 @@ const menuItems = [
                 title: "Reviews",
                 path: "/dashboard/course-reviews",
                 icon: <MdRateReview />,
+            },
+            {
+                title: "Payments",
+                path: "/dashboard/payments",
+                icon: <FaMoneyBillTransfer />,
             },
         ],
     },

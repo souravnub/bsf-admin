@@ -2,7 +2,6 @@ import React from "react";
 import styles from "@/app/ui/dashboard/courses/courses.module.css";
 import Link from "next/link";
 import { fetchInstructors } from "@/app/lib/data";
-import Image from "next/image";
 import instructorStyles from "@/app/ui/dashboard/instructors/instructors.module.css";
 import { deleteInstructor } from "@/app/lib/actions";
 

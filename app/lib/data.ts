@@ -1,3 +1,6 @@
+"use server";
+
+import { ObjectId } from "mongoose";
 import { AboutPageContent } from "./models/AboutPageContent";
 import { Admin } from "./models/Admin";
 import { Contact } from "./models/Contact";
@@ -6,7 +9,7 @@ import { CourseCategory } from "./models/CourseCategory";
 import { Customer, ICustomerDocument } from "./models/Customer";
 import { HiringMessage } from "./models/HiringMessages";
 import { IInstructorDocument, Instructor } from "./models/Instructors";
-import { Payment } from "./models/Payments";
+import { IPaymentDocument, Payment } from "./models/Payments";
 import { Review } from "./models/Review";
 import { SocialCategory } from "./models/SocialCategories";
 import { WebsiteContent } from "./models/WebsiteContent";
@@ -523,3 +526,32 @@ export const fetchContactInfo = async () => {
         throw new Error(`Error fetching about content`);
     }
 };
+
+export const fetchPayments = async (): Promise<
+    (Omit<IPaymentDocument, "courseId" | "customerId"> & {
+        courseId: { _id: ObjectId; name: string };
+        customerId: { _id: ObjectId; name: string };
+    })[]
+> => {
+    connectToDB();
+
+    try {
+        const payments = await Payment.find()
+            .populate<{ customerId: { _id: ObjectId; name: string } }>(
+                "customerId",
+                "name"
+            )
+            .populate<{ courseId: { _id: ObjectId; name: string } }>(
+                "courseId",
+                "name"
+            )
+            .exec();
+
+        return payments;
+    } catch (err) {
+        console.log("erorr while fetching payments", err);
+        throw new Error("Error fetching payments");
+    }
+};
+
+fetchPayments();
