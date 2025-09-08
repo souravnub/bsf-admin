@@ -13,7 +13,8 @@ export async function POST(request: Request) {
         return NextResponse.json(
             {
                 success: false,
-                message: "error while validating request",
+                message:
+                    "Error while verifying the inputs. Check your input and try again.",
                 error: validationRes.error,
             },
             { status: 404 }

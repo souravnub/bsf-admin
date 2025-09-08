@@ -978,7 +978,7 @@ export const handleNewsletterSubscribe = async (payload: {
         });
         return {
             success: true,
-            message: "newsletter updated successfully",
+            message: "You are now subscribed to newsletter!!",
         };
     }
 
@@ -986,7 +986,7 @@ export const handleNewsletterSubscribe = async (payload: {
         // action = subscribe & susbscription exists & the customer is already subscribed: error
         return {
             success: false,
-            message: "subscription to newsletter already exists",
+            message: "You are already subscribed to the newsletter.",
         };
     } else {
         // action = subscribe & subscription exists but is not subscribed: subscribe the customer
@@ -997,7 +997,7 @@ export const handleNewsletterSubscribe = async (payload: {
 
         return {
             success: true,
-            message: '"newsletter updated successfully"',
+            message: "You are now subscribed to newsletter!!",
         };
     }
 };
@@ -1018,12 +1018,12 @@ export const handleNewsletterUnsubscribe = async ({
     if (!updatedDoc) {
         return {
             success: false,
-            message: "Unabled to update the subscription",
+            message: "Unable to unsubscribe to the newsletter.",
         };
     }
 
     return {
         success: true,
-        message: "Unsubscribed to newsletter!",
+        message: "You are now unsubscribed to the newsletter!",
     };
 };
